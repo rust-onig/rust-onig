@@ -4,3 +4,6 @@ version = "0.0.1"
 authors = ["Will Speak <will@willspeak.me>"]
 build = "build.rs"
 links = "onig"
+
+[dependencies]
+libc = "0.1"
