@@ -2,12 +2,11 @@ extern crate libc;
 
 use libc::c_int;
 use std::ptr::null;
-use std::slice;
 use std::str;
 use std::fmt;
 
 mod onig_sys;
-mod utils;
+pub mod utils;
 
 pub struct Error {
     error: libc::c_int,
@@ -76,7 +75,7 @@ pub struct Regex {
 }
 
 impl Regex {
-    fn new(
+    pub fn new(
         pattern: &str,
         option: onig_sys::OnigOptionType,
         syntax: *const onig_sys::OnigSyntaxTypeStruct
@@ -86,7 +85,7 @@ impl Regex {
         // `onig_new`.
         let pattern_bytes = pattern.as_bytes();
         let mut reg: *const onig_sys::regex_t = null();
-        let mut reg_ptr = &mut reg as *mut *const onig_sys::regex_t;
+        let reg_ptr = &mut reg as *mut *const onig_sys::regex_t;
 
         // We can use this later to get an error message to pass back
         // if regex creation fails.
@@ -102,7 +101,7 @@ impl Regex {
                 pattern_bytes.as_ptr(),
                 pattern_bytes[pattern_bytes.len()..].as_ptr(),
                 option,
-                onig_sys::OnigEncoding::UTF8,
+                onig_sys::onig_encodings::UTF8,
                 syntax,
                 &mut error)
         };
@@ -144,7 +143,7 @@ mod test_lib {
     fn test_regex_create() {
         Regex::new(
             ".*", onig_sys::OnigOptionType::NONE,
-            onig_sys::OnigSyntaxType::RUBY).unwrap();
+            onig_sys::onig_syntax_types::RUBY).unwrap();
     }
     
     #[test]
@@ -153,6 +152,6 @@ mod test_lib {
         Regex::new(
             "\\p{foo}",
             onig_sys::OnigOptionType::NONE,
-            onig_sys::OnigSyntaxType::RUBY).unwrap();
+            onig_sys::onig_syntax_types::RUBY).unwrap();
     }
 }

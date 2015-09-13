@@ -8,6 +8,7 @@ pub enum OnigSyntaxTypeStruct {}
 pub enum OnigEncodingType {}
 
 #[repr(C)]
+#[allow(dead_code)]
 pub enum OnigOptionType {
     NONE = 0,
     IGNORECASE = 1,
@@ -26,16 +27,19 @@ pub enum OnigOptionType {
     MAXBIG = 4096
 }
 
+#[allow(dead_code)]
 extern "C" {
     pub static OnigEncodingUTF8: OnigEncodingType;
 }
 
-pub mod OnigEncoding {
+#[allow(dead_code)]
+pub mod onig_encodings {
     use super::*;
 
     pub static UTF8: *const OnigEncodingType = &OnigEncodingUTF8;
 }
 
+#[allow(dead_code)]
 extern "C" {
 
     pub static OnigSyntaxASIS: OnigSyntaxTypeStruct;
@@ -52,7 +56,8 @@ extern "C" {
     pub static OnigDefaultSyntax: *const OnigSyntaxTypeStruct;
 }
 
-pub mod OnigSyntaxType {
+#[allow(dead_code)]
+pub mod onig_syntax_types {
 
     use super::*;
 
