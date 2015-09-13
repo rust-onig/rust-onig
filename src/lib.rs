@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate bitflags;
 extern crate libc;
 
 use libc::c_int;
@@ -100,7 +102,7 @@ impl Regex {
                 reg_ptr,
                 pattern_bytes.as_ptr(),
                 pattern_bytes[pattern_bytes.len()..].as_ptr(),
-                option,
+                option.bits(),
                 onig_sys::onig_encodings::UTF8,
                 syntax,
                 &mut error)
@@ -142,7 +144,7 @@ mod test_lib {
     #[test]
     fn test_regex_create() {
         Regex::new(
-            ".*", onig_sys::OnigOptionType::NONE,
+            ".*", onig_sys::ONIG_OPTION_NONE,
             onig_sys::onig_syntax_types::RUBY).unwrap();
     }
     
@@ -151,7 +153,7 @@ mod test_lib {
     fn test_regex_invalid() {
         Regex::new(
             "\\p{foo}",
-            onig_sys::OnigOptionType::NONE,
+            onig_sys::ONIG_OPTION_NONE,
             onig_sys::onig_syntax_types::RUBY).unwrap();
     }
 }

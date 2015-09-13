@@ -7,25 +7,50 @@ pub enum OnigRegion {}
 pub enum OnigSyntaxTypeStruct {}
 pub enum OnigEncodingType {}
 
-#[repr(C)]
-#[allow(dead_code)]
-pub enum OnigOptionType {
-    NONE = 0,
-    IGNORECASE = 1,
-    EXTEND = 2,
-    MULTILINE = 4,
-    SINGLELINE = 8,
-    FIND_LONGEST = 16,
-    FIND_NOT_EMPTY = 32,
-    NEGATE_SINGLELINE = 64,
-    DONT_CAPTURE_GROUP = 128,
-    CAPTURE_GROUP = 256,
-    
-    NOTBOL = 512,
-    NOTEOL = 1024,
-    POSIX_REGION = 2048,
-    MAXBIG = 4096
+// Type alias for option bitflags values
+pub type OnigOptionTypeBits = libc::c_int;
+
+mod option_bitflags {
+
+    // the bitflags! macro generates some methods we don't want to use
+    #![allow(dead_code)]
+
+    use super::OnigOptionTypeBits;
+
+    /// # Option Bitflags
+    ///
+    /// This bitflags structure defines the same set of options as the
+    /// Oniguruma header file.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    //  let flags = ONIG_OPTION_SINGLELINE | ONIG_OPTION_IGNORECASE
+    /// ```
+    bitflags!{
+        flags OnigOptionType: OnigOptionTypeBits {
+            const ONIG_OPTION_NONE = 0,
+            const ONIG_OPTION_IGNORECASE = 1,
+            const ONIG_OPTION_EXTEND = 2,
+            const ONIG_OPTION_MULTILINE = 4,
+            const ONIG_OPTION_SINGLELINE = 8,
+            const ONIG_OPTION_FIND_LONGEST = 16,
+            const ONIG_OPTION_FIND_NOT_EMPTY = 32,
+            const ONIG_OPTION_NEGATE_SINGLELINE = 64,
+            const ONIG_OPTION_DONT_CAPTURE_GROUP = 128,
+            const ONIG_OPTION_CAPTURE_GROUP = 256,
+            
+            const ONIG_OPTION_NOTBOL = 512,
+            const ONIG_OPTION_NOTEOL = 1024,
+            const ONIG_OPTION_POSIX_REGION = 2048,
+            const ONIG_OPTION_MAXBIT = 4096
+        }
+    }
 }
+
+// re-export all of the option bitflags from their inner module so
+// people can actually use them when calling the ffi functions
+pub use self::option_bitflags::*;
 
 #[allow(dead_code)]
 extern "C" {
@@ -138,7 +163,7 @@ extern "C" {
 //             OnigErrorInfo* err_info)
     pub fn onig_new(
         reg: *mut *const regex_t, pattern: *const u8, pattern_end: *const u8,
-        option: OnigOptionType, enc: *const OnigEncodingType, syntax: *const OnigSyntaxTypeStruct,
+        option: OnigOptionTypeBits, enc: *const OnigEncodingType, syntax: *const OnigSyntaxTypeStruct,
         err_info: *mut OnigErrorInfo) -> libc::c_int;
 // 
 //   Create a regex object.

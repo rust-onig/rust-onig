@@ -7,3 +7,4 @@ links = "onig"
 
 [dependencies]
 libc = "0.1"
+bitflags = "0.3"
