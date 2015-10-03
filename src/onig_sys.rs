@@ -50,7 +50,22 @@ mod option_bitflags {
 
 // re-export all of the option bitflags from their inner module so
 // people can actually use them when calling the ffi functions
-pub use self::option_bitflags::*;
+pub use self::option_bitflags::OnigOptionType;
+pub use self::option_bitflags::ONIG_OPTION_NONE;
+pub use self::option_bitflags::ONIG_OPTION_IGNORECASE;
+pub use self::option_bitflags::ONIG_OPTION_EXTEND;
+pub use self::option_bitflags::ONIG_OPTION_MULTILINE;
+pub use self::option_bitflags::ONIG_OPTION_SINGLELINE;
+pub use self::option_bitflags::ONIG_OPTION_FIND_LONGEST;
+pub use self::option_bitflags::ONIG_OPTION_FIND_NOT_EMPTY;
+pub use self::option_bitflags::ONIG_OPTION_NEGATE_SINGLELINE;
+pub use self::option_bitflags::ONIG_OPTION_DONT_CAPTURE_GROUP;
+pub use self::option_bitflags::ONIG_OPTION_CAPTURE_GROUP;
+pub use self::option_bitflags::ONIG_OPTION_NOTBOL;
+pub use self::option_bitflags::ONIG_OPTION_NOTEOL;
+pub use self::option_bitflags::ONIG_OPTION_POSIX_REGION;
+pub use self::option_bitflags::ONIG_OPTION_MAXBIT;
+
 
 #[allow(dead_code)]
 extern "C" {
