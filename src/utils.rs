@@ -2,17 +2,13 @@ use onig_sys;
 use std::ffi::CStr;
 
 pub fn onig_version() -> String {
-    let raw_version = unsafe {
-        CStr::from_ptr(onig_sys::onig_version())
-    };
-
-    // TODO: convert the CStr directly when that becomes stable
-    String::from_utf8_lossy(raw_version.to_bytes()).to_string()
+    let raw_version = unsafe { CStr::from_ptr(onig_sys::onig_version()) };
+    raw_version.to_string_lossy().into_owned()
 }
 
 #[cfg(test)]
 mod tests {
-    
+
     use super::*;
 
     #[test]
