@@ -10,12 +10,12 @@ use std::fmt;
 mod onig_sys;
 pub mod utils;
 
-pub struct Error {
+pub struct OnigError {
     error: libc::c_int,
     error_info: Option<onig_sys::OnigErrorInfo>
 }
 
-impl fmt::Debug for Error {
+impl fmt::Debug for OnigError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut err_buff = &mut [0 as u8; 1024];
         let len  = unsafe {
@@ -81,7 +81,7 @@ impl Regex {
         pattern: &str,
         option: onig_sys::OnigOptionType,
         syntax: *const onig_sys::OnigSyntaxTypeStruct
-            ) -> Result<Regex, Error> {
+            ) -> Result<Regex, OnigError> {
 
         // Convert the rust types to those required for the call to
         // `onig_new`.
@@ -111,7 +111,7 @@ impl Regex {
         if err == 0 {
             Ok(Regex{ raw: reg })
         } else { 
-            Err(Error{ error: err, error_info: Some(error) })
+            Err(OnigError{ error: err, error_info: Some(error) })
         }
     }
 }
