@@ -9,8 +9,9 @@ pub enum OnigEncodingType {}
 
 // Type alias for option bitflags values
 pub type OnigOptionTypeBits = libc::c_int;
+pub use self::onig_option_type::OnigOptionType;
 
-mod option_bitflags {
+pub mod onig_option_type {
 
     // the bitflags! macro generates some methods we don't want to use
     #![allow(dead_code)]
@@ -47,25 +48,6 @@ mod option_bitflags {
     }
 }
 
-// re-export all of the option bitflags from their inner module so
-// people can actually use them when calling the ffi functions
-pub use self::option_bitflags::OnigOptionType;
-pub use self::option_bitflags::ONIG_OPTION_NONE;
-pub use self::option_bitflags::ONIG_OPTION_IGNORECASE;
-pub use self::option_bitflags::ONIG_OPTION_EXTEND;
-pub use self::option_bitflags::ONIG_OPTION_MULTILINE;
-pub use self::option_bitflags::ONIG_OPTION_SINGLELINE;
-pub use self::option_bitflags::ONIG_OPTION_FIND_LONGEST;
-pub use self::option_bitflags::ONIG_OPTION_FIND_NOT_EMPTY;
-pub use self::option_bitflags::ONIG_OPTION_NEGATE_SINGLELINE;
-pub use self::option_bitflags::ONIG_OPTION_DONT_CAPTURE_GROUP;
-pub use self::option_bitflags::ONIG_OPTION_CAPTURE_GROUP;
-pub use self::option_bitflags::ONIG_OPTION_NOTBOL;
-pub use self::option_bitflags::ONIG_OPTION_NOTEOL;
-pub use self::option_bitflags::ONIG_OPTION_POSIX_REGION;
-pub use self::option_bitflags::ONIG_OPTION_MAXBIT;
-
-
 #[allow(dead_code)]
 extern "C" {
     pub static OnigEncodingUTF8: OnigEncodingType;
@@ -96,7 +78,7 @@ extern "C" {
 }
 
 #[allow(dead_code)]
-pub mod onig_syntax_types {
+pub mod onig_syntax_type {
 
     use super::*;
 
@@ -337,7 +319,14 @@ extern "C" {
     //
     // # int onig_search(regex_t* reg, const UChar* str, const UChar* end, const UChar* start,
     //                    const UChar* range, OnigRegion* region, OnigOptionType option)
-    //
+    pub fn onig_search(reg: *const regex_t,
+                       str: *const u8,
+                       end: *const u8,
+                       start: *const u8,
+                       range: *const u8,
+                       region: *const OnigRegion,
+                       option: OnigOptionTypeBits)
+                       -> libc::c_int;
     //   Search string and return search result and matching region.
     //
     //   normal return: match position offset (i.e.  p - str >= 0)
