@@ -360,8 +360,14 @@ extern "C" {
     //
     //
     // # int onig_match(regex_t* reg, const UChar* str, const UChar* end, const UChar* at,
-    // 		 OnigRegion* region, OnigOptionType option)
-    //
+    //                   OnigRegion* region, OnigOptionType option)
+    pub fn onig_match(reg: *const regex_t,
+                      str: *const u8,
+                      end: *const u8,
+                      at: *const u8,
+                      region: *const OnigRegion,
+                      option: OnigOptionTypeBits)
+                      -> libc::c_int;
     //   Match string and return result and matching region.
     //
     //   normal return: match length  (>= 0)

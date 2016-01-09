@@ -109,6 +109,23 @@ impl Regex {
             })
         }
     }
+
+    pub fn match_str(&self, str: &str, option: onig_sys::OnigOptionType) -> Option<i32> {
+        let ret = unsafe {
+            let str_end = str.as_ptr().offset(str.len() as isize);
+            onig_sys::onig_match(self.raw,
+                                 str.as_ptr(),
+                                 str_end,
+                                 str.as_ptr(),
+                                 0 as *const onig_sys::OnigRegion,
+                                 option.bits())
+        };
+
+        match ret {
+            r if r < 0 => None,
+            r => Some(r as i32),
+        }
+    }
 }
 
 impl Drop for Regex {
@@ -124,6 +141,13 @@ mod test_lib {
 
     use super::*;
     use super::onig_sys;
+
+    fn create_regex(regex: &str) -> Regex {
+        Regex::new(regex,
+                   onig_sys::ONIG_OPTION_NONE,
+                   onig_sys::onig_syntax_types::RUBY)
+            .unwrap()
+    }
 
     #[test]
     fn test_region_create() {
@@ -147,9 +171,33 @@ mod test_lib {
     #[test]
     #[should_panic(expected = "Oniguruma error: invalid character property name {foo}")]
     fn test_regex_invalid() {
-        Regex::new("\\p{foo}",
-                   onig_sys::ONIG_OPTION_NONE,
-                   onig_sys::onig_syntax_types::RUBY)
-            .unwrap();
+        create_regex("\\p{foo}");
+    }
+
+    #[test]
+    fn test_simple_match() {
+        let r = create_regex(".*");
+
+        let res = r.match_str("hello wolrld", onig_sys::ONIG_OPTION_NONE);
+
+        assert!(res.is_some());
+        assert!(res.unwrap() == 12);
+    }
+
+    #[test]
+    fn test_failed_match() {
+        let r = create_regex("foo");
+
+        let res = r.match_str("bar", onig_sys::ONIG_OPTION_NONE);
+        assert!(res.is_none());
+    }
+
+    #[test]
+    fn test_partial_match() {
+        let r = create_regex("hello");
+        let res = r.match_str("hello world", onig_sys::ONIG_OPTION_NONE);
+
+        assert!(res.is_some());
+        assert!(res.unwrap() == 5);
     }
 }
