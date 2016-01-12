@@ -7,8 +7,7 @@ use std::ptr::null;
 use std::str;
 use std::fmt;
 
-mod onig_sys;
-
+pub mod onig_sys;
 pub mod utils;
 
 /// Options
@@ -260,10 +259,9 @@ impl Drop for Regex {
 }
 
 #[cfg(test)]
-mod test_lib {
+mod tests {
 
     use super::*;
-    use super::onig_sys;
 
     fn create_regex(regex: &str) -> Regex {
         Regex::new(regex,
