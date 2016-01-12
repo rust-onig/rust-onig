@@ -52,26 +52,60 @@ impl fmt::Debug for OnigError {
 #[allow(raw_pointer_derive)]
 #[derive(Debug)]
 pub struct OnigRegion {
-    raw: *const onig_sys::OnigRegion,
+    raw: *mut onig_sys::OnigRegion,
 }
 
 impl OnigRegion {
+    /// Create a new empty `OnigRegion`
+    ///
+    /// Creates an onig region object which can be used to collect
+    /// matches. See [`onig_sys::onig_region_new`][region_new] for
+    /// more info.
+    ///
+    /// [region_new]: ./onig_sys/fn.onig_region_new.html
     pub fn new() -> OnigRegion {
         let raw = unsafe { onig_sys::onig_region_new() };
         OnigRegion { raw: raw }
     }
 
+    /// Clear the Region
+    ///
+    /// This can be used to clear out a region so it can be used
+    /// again. See [`onig_sys::onig_region_clear`][region_clear]
+    ///
+    /// [region_clear]: ./onig_sys/fn.onig_region_clear.html
+    ///
+    /// # Arguments
+    ///
+    ///  * `self` - The region to clear
     pub fn clear(&mut self) {
         unsafe {
             onig_sys::onig_region_clear(self.raw);
         }
     }
 
+    /// Resize the Region
+    ///
+    /// Updates the region to contain `new_size` slots. See
+    /// [`onig_sys::onig_region_resize`][region_resize] for mor
+    /// information.
+    ///
+    /// [region_resize]: ./onig_sys/fn.onig_region_resize.html
+    ///
+    /// # Arguments
+    ///
+    ///  * `self` - The region to resize
+    ///  * `new_size` - The new number of groups in the region.
     pub fn resize(&mut self, new_size: usize) -> usize {
         unsafe { onig_sys::onig_region_resize(self.raw, new_size as c_int) as usize }
     }
 }
 
+/// Clears up the underlying Oniguruma object. When dropped calls
+/// [`onig_sys::onig_region_free`][region_free] on the contained raw
+/// onig region pointer.
+///
+/// [region_free]: ./onig_sys/fn.onig_region_free.html
 impl Drop for OnigRegion {
     fn drop(&mut self) {
         unsafe {
@@ -99,7 +133,6 @@ fn result_to_match(res: libc::c_int) -> Option<i32> {
 }
 
 impl Regex {
-
     /// Create a new Regex
     ///
     /// Attempts to compile a pattern into a new `Regex` instance.
@@ -197,7 +230,7 @@ impl Regex {
                                  str.as_ptr(),
                                  end,
                                  str.as_ptr(),
-                                 0 as *const onig_sys::OnigRegion,
+                                 0 as *mut onig_sys::OnigRegion,
                                  options.bits())
         };
         result_to_match(ret)
@@ -243,7 +276,7 @@ impl Regex {
                                   end,
                                   start,
                                   end,
-                                  0 as *const onig_sys::OnigRegion,
+                                  0 as *mut onig_sys::OnigRegion,
                                   options.bits())
         };
         result_to_match(ret)

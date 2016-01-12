@@ -7,27 +7,34 @@ pub enum OnigRegion {}
 pub enum OnigSyntaxTypeStruct {}
 pub enum OnigEncodingType {}
 
-// Type alias for option bitflags values
+#[repr(C)]
+pub struct OnigErrorInfo {
+    pub enc: *const OnigEncodingType,
+    pub par: *const u8,
+    pub par_end: *const u8,
+}
+
+/// Type alias for option bitflags values
 pub type OnigOptionTypeBits = libc::c_int;
 pub use self::onig_option_type::OnigOptionType;
 
 pub mod onig_option_type {
+
+    //! This bitflags structure defines the same set of options as the
+    //! Oniguruma header file.
+    //!
+    //! # Examples
+    //!
+    //! ```
+    //! # use onig::onig_sys::onig_option_type::*;
+    //! let flags = ONIG_OPTION_SINGLELINE | ONIG_OPTION_IGNORECASE;
+    //! ```
 
     // the bitflags! macro generates some methods we don't want to use
     #![allow(dead_code)]
 
     use super::OnigOptionTypeBits;
 
-    /// # Option Bitflags
-    ///
-    /// This bitflags structure defines the same set of options as the
-    /// Oniguruma header file.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let flags = ONIG_OPTION_SINGLELINE | ONIG_OPTION_IGNORECASE
-    /// ```
     bitflags!{
         flags OnigOptionType: OnigOptionTypeBits {
             const ONIG_OPTION_NONE = 0,
@@ -48,39 +55,50 @@ pub mod onig_option_type {
     }
 }
 
-#[allow(dead_code)]
-extern "C" {
-    pub static OnigEncodingUTF8: OnigEncodingType;
-}
-
-#[allow(dead_code)]
 pub mod onig_encodings {
-    use super::*;
+
+    //! Encoding Types
+    //!
+    //! Currently only a single encodingtype is supported, UTF8. It's
+    //! difficult to use other types at the moment as strings are
+    //! passed arount as Rust `&str` refrences, which must be UTF8
+    //! encoded.
+
+    use super::OnigEncodingType;
+
+    extern "C" {
+        static OnigEncodingUTF8: OnigEncodingType;
+    }
 
     pub static UTF8: *const OnigEncodingType = &OnigEncodingUTF8;
 }
 
-#[allow(dead_code)]
-extern "C" {
-
-    pub static OnigSyntaxASIS: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxPosixBasic: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxPosixExtended: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxEmacs: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxGrep: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxGnuRegex: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxJava: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxPerl: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxPerl_NG: OnigSyntaxTypeStruct;
-    pub static OnigSyntaxRuby: OnigSyntaxTypeStruct;
-
-    pub static OnigDefaultSyntax: *const OnigSyntaxTypeStruct;
-}
-
-#[allow(dead_code)]
 pub mod onig_syntax_type {
 
-    use super::*;
+    //! Syntax Types
+    //!
+    //! This module contains `'static` definitions of all of the
+    //! syntax types supprted by Oniguruma.
+    //!
+    //! For more information about syntax types see `onig_new()`
+
+    use super::OnigSyntaxTypeStruct;
+
+    extern "C" {
+
+        static OnigSyntaxASIS: OnigSyntaxTypeStruct;
+        static OnigSyntaxPosixBasic: OnigSyntaxTypeStruct;
+        static OnigSyntaxPosixExtended: OnigSyntaxTypeStruct;
+        static OnigSyntaxEmacs: OnigSyntaxTypeStruct;
+        static OnigSyntaxGrep: OnigSyntaxTypeStruct;
+        static OnigSyntaxGnuRegex: OnigSyntaxTypeStruct;
+        static OnigSyntaxJava: OnigSyntaxTypeStruct;
+        static OnigSyntaxPerl: OnigSyntaxTypeStruct;
+        static OnigSyntaxPerl_NG: OnigSyntaxTypeStruct;
+        static OnigSyntaxRuby: OnigSyntaxTypeStruct;
+
+        pub static OnigDefaultSyntax: *const OnigSyntaxTypeStruct;
+    }
 
     pub static ASIS: *const OnigSyntaxTypeStruct = &OnigSyntaxASIS;
     pub static POSIX_BASIC: *const OnigSyntaxTypeStruct = &OnigSyntaxPosixBasic;
@@ -94,17 +112,10 @@ pub mod onig_syntax_type {
     pub static RUBY: *const OnigSyntaxTypeStruct = &OnigSyntaxRuby;
 }
 
-#[repr(C)]
-pub struct OnigErrorInfo {
-    pub enc: *const OnigEncodingType,
-    pub par: *const u8,
-    pub par_end: *const u8,
-}
-
 extern "C" {
 
-    //     Oniguruma API  Version 5.9.2  2008/02/19
-    //
+    //! Oniguruma API  Version 5.9.2  2008/02/19
+
     // #include <oniguruma.h>
     //
     //
@@ -113,23 +124,22 @@ extern "C" {
     //   Initialize library.
     //
     //   You don't have to call it explicitly, because it is called in onig_new().
-    //
-    //
-    // # int onig_error_code_to_str(UChar* err_buf, int err_code, ...)
+
+    ///   Get error message string.
+    ///   If this function is used for onig_new(),
+    ///   don't call this after the pattern argument of onig_new() is freed.
+    ///
+    ///   `int onig_error_code_to_str(UChar* err_buf, int err_code, ...)`
+    ///
+    ///   normal return: error message string length
+    ///
+    ///   arguments
+    ///   1 err_buf:              error message string buffer.
+    ///                           (required size: ONIG_MAX_ERROR_MESSAGE_LEN)
+    ///   2 err_code:             error code returned by other API functions.
+    ///   3 err_info (optional):  error info returned by onig_new().
     pub fn onig_error_code_to_str(err_buff: *mut u8, err_code: libc::c_int, ...) -> libc::c_int;
-    //   Get error message string.
-    //   If this function is used for onig_new(),
-    //   don't call this after the pattern argument of onig_new() is freed.
-    //
-    //   normal return: error message string length
-    //
-    //   arguments
-    //   1 err_buf:              error message string buffer.
-    //                           (required size: ONIG_MAX_ERROR_MESSAGE_LEN)
-    //   2 err_code:             error code returned by other API functions.
-    //   3 err_info (optional):  error info returned by onig_new().
-    //
-    //
+
     // # void onig_set_warn_func(OnigWarnFunc func)
     //
     //   Set warning function.
@@ -151,11 +161,8 @@ extern "C" {
     //
     //   arguments
     //   1 func:     function pointer.    void (*func)(char* warning_message)
-    //
-    //
-    // # int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
-    //             OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
-    //             OnigErrorInfo* err_info)
+
+
     pub fn onig_new(reg: *mut *const regex_t,
                     pattern: *const u8,
                     pattern_end: *const u8,
@@ -164,6 +171,9 @@ extern "C" {
                     syntax: *const OnigSyntaxTypeStruct,
                     err_info: *mut OnigErrorInfo)
                     -> libc::c_int;
+    // # int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
+    //             OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
+    //             OnigErrorInfo* err_info)
     //   Create a regex object.
     //
     //   normal return: ONIG_NORMAL
@@ -324,7 +334,7 @@ extern "C" {
                        end: *const u8,
                        start: *const u8,
                        range: *const u8,
-                       region: *const OnigRegion,
+                       region: *mut OnigRegion,
                        option: OnigOptionTypeBits)
                        -> libc::c_int;
     //   Search string and return search result and matching region.
@@ -354,7 +364,7 @@ extern "C" {
                       str: *const u8,
                       end: *const u8,
                       at: *const u8,
-                      region: *const OnigRegion,
+                      region: *mut OnigRegion,
                       option: OnigOptionTypeBits)
                       -> libc::c_int;
     //   Match string and return result and matching region.
@@ -373,50 +383,57 @@ extern "C" {
     //     ONIG_OPTION_NOTBOL       string head(str) isn't considered as begin of line
     //     ONIG_OPTION_NOTEOL       string end (end) isn't considered as end of line
     //     ONIG_OPTION_POSIX_REGION region argument is regmatch_t[] type of POSIX API.
-    //
-    //
-    // # OnigRegion* onig_region_new(void)
-    //
-    //   Create a region.
-    //
-    pub fn onig_region_new() -> *const OnigRegion;
-    // # void onig_region_free(OnigRegion* region, int free_self)
-    //
-    //   Free memory used by region.
-    //
-    //   arguments
-    //   1 region:    target region
-    //   2 free_self: [1: free all, 0: free memory used in region but not self]
-    //
-    pub fn onig_region_free(region: *const OnigRegion, free_self: libc::c_int);
-    // # void onig_region_copy(OnigRegion* to, OnigRegion* from)
-    //
-    //   Copy contents of region.
-    //
-    //   arguments
-    //   1 to:   target region
-    //   2 from: source region
-    //
-    //
-    // # void onig_region_clear(OnigRegion* region)
-    //
-    //   Clear contents of region.
-    //
-    //   arguments
-    //   1 region: target region
-    //
+
+    ///   Create a region.
+    ///
+    ///   `OnigRegion* onig_region_new(void)`
+    pub fn onig_region_new() -> *mut OnigRegion;
+
+    ///   Free memory used by region.
+    ///
+    ///  `void onig_region_free(OnigRegion* region, int free_self)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `region`:    target region
+    ///   2. `free_self`: [1: free all, 0: free memory used in region
+    ///   but not self]
+    ///
+    pub fn onig_region_free(region: *mut OnigRegion, free_self: libc::c_int);
+
+    ///   Copy contents of region.
+    ///
+    ///   `void onig_region_copy(OnigRegion* to, OnigRegion* from)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `to`:   target region
+    ///   2. `from`: source region
+    pub fn onig_region_copy(to: *mut OnigRegion, from: *mut OnigRegion);
+
+    ///   Clear contents of region.
+    ///
+    ///   `void onig_region_clear(OnigRegion* region)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `region`: target region
     pub fn onig_region_clear(region: *const OnigRegion);
-    // # int onig_region_resize(OnigRegion* region, int n)
-    //
-    //   Resize group range area of region.
-    //
-    //   normal return: ONIG_NORMAL
-    //
-    //   arguments
-    //   1 region: target region
-    //   2 n:      new size
-    //
+
+    ///   Resize group range area of region.
+    ///
+    ///   `int onig_region_resize(OnigRegion* region, int n)`
+    ///
+    /// # Returns
+    ///
+    ///   normal return: ONIG_NORMAL
+    ///
+    /// # Arguments
+    /// 
+    ///   1. `region`: target region
+    ///   2. `n`:      new size
     pub fn onig_region_resize(region: *const OnigRegion, n: libc::c_int) -> libc::c_int;
+
     // # int onig_name_to_group_numbers(regex_t* reg, const UChar* name, const UChar* name_end,
     //                                   int** num_list)
     //
@@ -432,8 +449,8 @@ extern "C" {
     //   2 name:      group name.
     //   3 name_end:  terminate address of group name.
     //   4 num_list:  return list of group number.
-    //
-    //
+
+
     // # int onig_name_to_backref_number(regex_t* reg, const UChar* name, const UChar* name_end,
     //                                   OnigRegion *region)
     //
@@ -448,8 +465,8 @@ extern "C" {
     //   2 name:     group name.
     //   3 name_end: terminate address of group name.
     //   4 region:   search/match result region.
-    //
-    //
+
+
     // # int onig_foreach_name(regex_t* reg,
     //                         int (*func)(const UChar*, const UChar*, int,int*,regex_t*,void*),
     //                         void* arg)
@@ -466,8 +483,8 @@ extern "C" {
     //                   reg, arg);
     //              if func does not return 0, then iteration is stopped.
     //   3 arg:     argument for func.
-    //
-    //
+
+
     // # int onig_number_of_names(regex_t* reg)
     //
     //   Return the number of names defined in the pattern.
@@ -475,8 +492,8 @@ extern "C" {
     //
     //   arguments
     //   1 reg:     regex object.
-    //
-    //
+
+
     // # OnigEncoding     onig_get_encoding(regex_t* reg)
     // # OnigOptionType   onig_get_options(regex_t* reg)
     // # OnigCaseFoldType onig_get_case_fold_flag(regex_t* reg)
@@ -486,16 +503,16 @@ extern "C" {
     //
     //   arguments
     //   1 reg:     regex object.
-    //
-    //
+
+
     // # int onig_number_of_captures(regex_t* reg)
     //
     //   Return the number of capture group in the pattern.
     //
     //   arguments
     //   1 reg:     regex object.
-    //
-    //
+
+
     // # int onig_number_of_capture_histories(regex_t* reg)
     //
     //   Return the number of capture history defined in the pattern.
@@ -505,9 +522,8 @@ extern "C" {
     //
     //   arguments
     //   1 reg:     regex object.
-    //
-    //
-    //
+
+
     // # OnigCaptureTreeNode* onig_get_capture_tree(OnigRegion* region)
     //
     //   Return the root node of capture history data tree.
@@ -516,8 +532,8 @@ extern "C" {
     //
     //   arguments
     //   1 region: matching result.
-    //
-    //
+
+
     // # int onig_capture_tree_traverse(OnigRegion* region, int at,
     //                   int(*func)(int,int,int,int,int,void*), void* arg)
     //
@@ -551,8 +567,8 @@ extern "C" {
     //                arg:   optional callback argument
     //
     //   4 arg;     optional callback argument.
-    //
-    //
+
+
     // # int onig_noname_group_capture_is_active(regex_t* reg)
     //
     //   Return noname group capture activity.
@@ -572,8 +588,8 @@ extern "C" {
     //     --> inactive
     //
     //   else --> active
-    //
-    //
+
+
     // # UChar* onigenc_get_prev_char_head(OnigEncoding enc, const UChar* start, const UChar* s)
     //
     //   Return previous character head address.
@@ -582,8 +598,8 @@ extern "C" {
     //   1 enc:   character encoding
     //   2 start: string address
     //   3 s:     target address of string
-    //
-    //
+
+
     // # UChar* onigenc_get_left_adjust_char_head(OnigEncoding enc,
     //                                            const UChar* start, const UChar* s)
     //
@@ -593,8 +609,8 @@ extern "C" {
     //   1 enc:   character encoding
     //   2 start: string address
     //   3 s:     target address of string
-    //
-    //
+
+
     // # UChar* onigenc_get_right_adjust_char_head(OnigEncoding enc,
     //                                             const UChar* start, const UChar* s)
     //
@@ -604,27 +620,27 @@ extern "C" {
     //   1 enc:   character encoding
     //   2 start: string address
     //   3 s:     target address of string
-    //
-    //
+
+
     // # int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)
     // # int onigenc_strlen_null(OnigEncoding enc, const UChar* s)
     //
     //   Return number of characters in the string.
-    //
-    //
+
+
     // # int onigenc_str_bytelen_null(OnigEncoding enc, const UChar* s)
     //
     //   Return number of bytes in the string.
-    //
-    //
+
+
     // # int onig_set_default_syntax(OnigSyntaxType* syntax)
     //
     //   Set default syntax.
     //
     //   arguments
     //   1 syntax: address of pattern syntax definition.
-    //
-    //
+
+
     // # void onig_copy_syntax(OnigSyntaxType* to, OnigSyntaxType* from)
     //
     //   Copy syntax.
@@ -632,8 +648,8 @@ extern "C" {
     //   arguments
     //   1 to:   destination address.
     //   2 from: source address.
-    //
-    //
+
+
     // # unsigned int onig_get_syntax_op(OnigSyntaxType* syntax)
     // # unsigned int onig_get_syntax_op2(OnigSyntaxType* syntax)
     // # unsigned int onig_get_syntax_behavior(OnigSyntaxType* syntax)
@@ -649,8 +665,8 @@ extern "C" {
     //   arguments
     //   1 syntax:  syntax
     //   2 op, op2, behavior, options: value of element.
-    //
-    //
+
+
     // # void onig_copy_encoding(OnigEncoding to, OnigOnigEncoding from)
     //
     //   Copy encoding.
@@ -658,8 +674,8 @@ extern "C" {
     //   arguments
     //   1 to:   destination address.
     //   2 from: source address.
-    //
-    //
+
+
     // # int onig_set_meta_char(OnigSyntaxType* syntax, unsigned int what,
     //                          OnigCodePoint code)
     //
@@ -682,34 +698,34 @@ extern "C" {
     //           ONIG_META_CHAR_ANYCHAR_ANYTIME
     //
     //   3 code: meta character or ONIG_INEFFECTIVE_META_CHAR.
-    //
-    //
+
+
     // # OnigCaseFoldType onig_get_default_case_fold_flag()
     //
     //   Get default case fold flag.
-    //
-    //
+
+
     // # int onig_set_default_case_fold_flag(OnigCaseFoldType case_fold_flag)
     //
     //   Set default case fold flag.
     //
     //   1 case_fold_flag: case fold flag
-    //
-    //
+
+
     // # unsigned int onig_get_match_stack_limit_size(void)
     //
     //   Return the maximum number of stack size.
     //   (default: 0 == unlimited)
-    //
-    //
+
+
     // # int onig_set_match_stack_limit_size(unsigned int size)
     //
     //   Set the maximum number of stack size.
     //   (size = 0: unlimited)
     //
     //   normal return: ONIG_NORMAL
-    //
-    //
+
+
     // # int onig_end(void)
     //
     //   The use of this library is finished.
@@ -718,12 +734,10 @@ extern "C" {
     //
     //   It is not allowed to use regex objects which created
     //   before onig_end() call.
-    //
-    //
-    // # const char* onig_version(void)
-    //
-    //   Return version string.  (ex. "5.0.3")
-    //
+
+    ///   Return version string.  (ex. "5.0.3")
+    ///
+    ///   `const char* onig_version(void)`
     pub fn onig_version() -> *const libc::c_char;
 
 }
