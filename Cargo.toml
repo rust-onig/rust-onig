@@ -14,3 +14,4 @@ libc = "0.1"
 
 [dependencies.onig_sys]
 path = "onig_sys"
+version = "0.1.0"

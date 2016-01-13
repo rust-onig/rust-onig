@@ -1,3 +1,16 @@
+//!
+//! This crate provides a safe wrapper around the Oniguruma regular
+//! expression library.
+//!
+//! # Examples
+//!
+//! ```
+//! # use onig::{options,syntax_types,Regex};
+//! let regex = Regex::new(r#"hello (\w*)"#, onig::options::ONIG_OPTION_NONE, onig::syntax_types::RUBY).unwrap();
+//! let result = regex.search_str("hello world", onig::options::ONIG_OPTION_NONE);
+//! assert!(result.is_some());
+//! ```
+
 extern crate libc;
 extern crate onig_sys;
 
@@ -8,17 +21,8 @@ use std::fmt;
 
 pub mod utils;
 
-/// Options
-///
-/// This module contains all of the options bitflags which can be
-/// passed to a function expecting an `OnigOptionType`. Not all
-/// functions will pay attention to all options.
+// re-export the onig types publically
 pub use onig_sys::onig_option_type as options;
-
-/// Syntax Types
-///
-/// This module contains the list of supported syntax types. At the
-/// moment it's just `RUBY`.
 pub use onig_sys::onig_syntax_type as syntax_types;
 
 /// Onig Error
@@ -306,10 +310,7 @@ mod tests {
     use super::*;
 
     fn create_regex(regex: &str) -> Regex {
-        Regex::new(regex,
-                   options::ONIG_OPTION_NONE,
-                   syntax_types::RUBY)
-            .unwrap()
+        Regex::new(regex, options::ONIG_OPTION_NONE, syntax_types::RUBY).unwrap()
     }
 
     #[test]
@@ -325,10 +326,7 @@ mod tests {
 
     #[test]
     fn test_regex_create() {
-        Regex::new(".*",
-                   options::ONIG_OPTION_NONE,
-                   syntax_types::RUBY)
-            .unwrap();
+        Regex::new(".*", options::ONIG_OPTION_NONE, syntax_types::RUBY).unwrap();
     }
 
     #[test]
