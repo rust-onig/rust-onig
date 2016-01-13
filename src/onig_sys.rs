@@ -116,9 +116,6 @@ extern "C" {
 
     //! Oniguruma API  Version 5.9.2  2008/02/19
 
-    // #include <oniguruma.h>
-    //
-    //
     // # int onig_init(void)
     //
     //   Initialize library.
@@ -150,8 +147,8 @@ extern "C" {
     //
     //   arguments
     //   1 func:     function pointer.    void (*func)(char* warning_message)
-    //
-    //
+
+
     // # void onig_set_verb_warn_func(OnigWarnFunc func)
     //
     //   Set verbose warning function.
@@ -162,7 +159,99 @@ extern "C" {
     //   arguments
     //   1 func:     function pointer.    void (*func)(char* warning_message)
 
-
+    ///   Create a regex object.
+    ///
+    ///   `int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
+    ///             OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
+    ///             OnigErrorInfo* err_info)`
+    ///
+    ///   normal return: ONIG_NORMAL
+    ///
+    /// # Arguments
+    ///
+    ///   1. `reg`:         return regex object's address.
+    ///   2. `pattern`:     regex pattern string.
+    ///   3. `pattern_end`: terminate address of pattern. (pattern + pattern length)
+    ///   4. `option`:      compile time options.
+    ///
+    ///     *  ONIG_OPTION_NONE               no option
+    ///     *  ONIG_OPTION_SINGLELINE         '^' -> '\A', '$' -> '\Z'
+    ///     *  ONIG_OPTION_MULTILINE          '.' match with newline
+    ///     *  ONIG_OPTION_IGNORECASE         ambiguity match on
+    ///     *  ONIG_OPTION_EXTEND             extended pattern form
+    ///     *  ONIG_OPTION_FIND_LONGEST       find longest match
+    ///     *  ONIG_OPTION_FIND_NOT_EMPTY     ignore empty match
+    ///     *  ONIG_OPTION_NEGATE_SINGLELINE
+    ///             clear ONIG_OPTION_SINGLELINE which is enabled on
+    ///             ONIG_SYNTAX_POSIX_BASIC, ONIG_SYNTAX_POSIX_EXTENDED,
+    ///             ONIG_SYNTAX_PERL, ONIG_SYNTAX_PERL_NG, ONIG_SYNTAX_JAVA
+    ///
+    ///     *  ONIG_OPTION_DONT_CAPTURE_GROUP only named group captured.
+    ///     *  ONIG_OPTION_CAPTURE_GROUP      named and no-named group captured.
+    ///
+    ///   5. `enc`:        character encoding.
+    ///
+    ///      * ONIG_ENCODING_ASCII         ASCII
+    ///      * ONIG_ENCODING_ISO_8859_1    ISO 8859-1
+    ///      * ONIG_ENCODING_ISO_8859_2    ISO 8859-2
+    ///      * ONIG_ENCODING_ISO_8859_3    ISO 8859-3
+    ///      * ONIG_ENCODING_ISO_8859_4    ISO 8859-4
+    ///      * ONIG_ENCODING_ISO_8859_5    ISO 8859-5
+    ///      * ONIG_ENCODING_ISO_8859_6    ISO 8859-6
+    ///      * ONIG_ENCODING_ISO_8859_7    ISO 8859-7
+    ///      * ONIG_ENCODING_ISO_8859_8    ISO 8859-8
+    ///      * ONIG_ENCODING_ISO_8859_9    ISO 8859-9
+    ///      * ONIG_ENCODING_ISO_8859_10   ISO 8859-10
+    ///      * ONIG_ENCODING_ISO_8859_11   ISO 8859-11
+    ///      * ONIG_ENCODING_ISO_8859_13   ISO 8859-13
+    ///      * ONIG_ENCODING_ISO_8859_14   ISO 8859-14
+    ///      * ONIG_ENCODING_ISO_8859_15   ISO 8859-15
+    ///      * ONIG_ENCODING_ISO_8859_16   ISO 8859-16
+    ///      * ONIG_ENCODING_UTF8          UTF-8
+    ///      * ONIG_ENCODING_UTF16_BE      UTF-16BE
+    ///      * ONIG_ENCODING_UTF16_LE      UTF-16LE
+    ///      * ONIG_ENCODING_UTF32_BE      UTF-32BE
+    ///      * ONIG_ENCODING_UTF32_LE      UTF-32LE
+    ///      * ONIG_ENCODING_EUC_JP        EUC-JP
+    ///      * ONIG_ENCODING_EUC_TW        EUC-TW
+    ///      * ONIG_ENCODING_EUC_KR        EUC-KR
+    ///      * ONIG_ENCODING_EUC_CN        EUC-CN
+    ///      * ONIG_ENCODING_SJIS          Shift_JIS
+    ///      * ONIG_ENCODING_KOI8_R        KOI8-R
+    ///      * ONIG_ENCODING_CP1251        CP1251
+    ///      * ONIG_ENCODING_BIG5          Big5
+    ///      * ONIG_ENCODING_GB18030       GB18030
+    ///
+    ///
+    ///       or any OnigEncodingType data address defined by user.
+    ///
+    ///
+    ///
+    ///   6. `syntax`:     address of pattern syntax definition.
+    ///
+    ///
+    ///      * ONIG_SYNTAX_ASIS              plain text
+    ///      * ONIG_SYNTAX_POSIX_BASIC       POSIX Basic RE
+    ///      * ONIG_SYNTAX_POSIX_EXTENDED    POSIX Extended RE
+    ///      * ONIG_SYNTAX_EMACS             Emacs
+    ///      * ONIG_SYNTAX_GREP              grep
+    ///      * ONIG_SYNTAX_GNU_REGEX         GNU regex
+    ///      * ONIG_SYNTAX_JAVA              Java (Sun java.util.regex)
+    ///      * ONIG_SYNTAX_PERL              Perl
+    ///      * ONIG_SYNTAX_PERL_NG           Perl + named group
+    ///      * ONIG_SYNTAX_RUBY              Ruby
+    ///      * ONIG_SYNTAX_DEFAULT           default (== Ruby)
+    ///                                    onig_set_default_syntax()
+    ///
+    ///
+    ///       or any OnigSyntaxType data address defined by user.
+    ///
+    ///
+    ///
+    ///   7. `err_info`: address for return optional error info.
+    ///
+    ///      Use this value as 3rd argument of onig_error_code_to_str().
+    ///
     pub fn onig_new(reg: *mut *const regex_t,
                     pattern: *const u8,
                     pattern_end: *const u8,
@@ -171,91 +260,7 @@ extern "C" {
                     syntax: *const OnigSyntaxTypeStruct,
                     err_info: *mut OnigErrorInfo)
                     -> libc::c_int;
-    // # int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
-    //             OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
-    //             OnigErrorInfo* err_info)
-    //   Create a regex object.
-    //
-    //   normal return: ONIG_NORMAL
-    //
-    //   arguments
-    //   1 reg:         return regex object's address.
-    //   2 pattern:     regex pattern string.
-    //   3 pattern_end: terminate address of pattern. (pattern + pattern length)
-    //   4 option:      compile time options.
-    //
-    //       ONIG_OPTION_NONE               no option
-    //       ONIG_OPTION_SINGLELINE         '^' -> '\A', '$' -> '\Z'
-    //       ONIG_OPTION_MULTILINE          '.' match with newline
-    //       ONIG_OPTION_IGNORECASE         ambiguity match on
-    //       ONIG_OPTION_EXTEND             extended pattern form
-    //       ONIG_OPTION_FIND_LONGEST       find longest match
-    //       ONIG_OPTION_FIND_NOT_EMPTY     ignore empty match
-    //       ONIG_OPTION_NEGATE_SINGLELINE
-    //             clear ONIG_OPTION_SINGLELINE which is enabled on
-    //             ONIG_SYNTAX_POSIX_BASIC, ONIG_SYNTAX_POSIX_EXTENDED,
-    //             ONIG_SYNTAX_PERL, ONIG_SYNTAX_PERL_NG, ONIG_SYNTAX_JAVA
-    //
-    //       ONIG_OPTION_DONT_CAPTURE_GROUP only named group captured.
-    //       ONIG_OPTION_CAPTURE_GROUP      named and no-named group captured.
-    //
-    //   5 enc:        character encoding.
-    //
-    //       ONIG_ENCODING_ASCII         ASCII
-    //       ONIG_ENCODING_ISO_8859_1    ISO 8859-1
-    //       ONIG_ENCODING_ISO_8859_2    ISO 8859-2
-    //       ONIG_ENCODING_ISO_8859_3    ISO 8859-3
-    //       ONIG_ENCODING_ISO_8859_4    ISO 8859-4
-    //       ONIG_ENCODING_ISO_8859_5    ISO 8859-5
-    //       ONIG_ENCODING_ISO_8859_6    ISO 8859-6
-    //       ONIG_ENCODING_ISO_8859_7    ISO 8859-7
-    //       ONIG_ENCODING_ISO_8859_8    ISO 8859-8
-    //       ONIG_ENCODING_ISO_8859_9    ISO 8859-9
-    //       ONIG_ENCODING_ISO_8859_10   ISO 8859-10
-    //       ONIG_ENCODING_ISO_8859_11   ISO 8859-11
-    //       ONIG_ENCODING_ISO_8859_13   ISO 8859-13
-    //       ONIG_ENCODING_ISO_8859_14   ISO 8859-14
-    //       ONIG_ENCODING_ISO_8859_15   ISO 8859-15
-    //       ONIG_ENCODING_ISO_8859_16   ISO 8859-16
-    //       ONIG_ENCODING_UTF8          UTF-8
-    //       ONIG_ENCODING_UTF16_BE      UTF-16BE
-    //       ONIG_ENCODING_UTF16_LE      UTF-16LE
-    //       ONIG_ENCODING_UTF32_BE      UTF-32BE
-    //       ONIG_ENCODING_UTF32_LE      UTF-32LE
-    //       ONIG_ENCODING_EUC_JP        EUC-JP
-    //       ONIG_ENCODING_EUC_TW        EUC-TW
-    //       ONIG_ENCODING_EUC_KR        EUC-KR
-    //       ONIG_ENCODING_EUC_CN        EUC-CN
-    //       ONIG_ENCODING_SJIS          Shift_JIS
-    //       ONIG_ENCODING_KOI8_R        KOI8-R
-    //       ONIG_ENCODING_CP1251        CP1251
-    //       ONIG_ENCODING_BIG5          Big5
-    //       ONIG_ENCODING_GB18030       GB18030
-    //
-    //       or any OnigEncodingType data address defined by user.
-    //
-    //   6 syntax:     address of pattern syntax definition.
-    //
-    //       ONIG_SYNTAX_ASIS              plain text
-    //       ONIG_SYNTAX_POSIX_BASIC       POSIX Basic RE
-    //       ONIG_SYNTAX_POSIX_EXTENDED    POSIX Extended RE
-    //       ONIG_SYNTAX_EMACS             Emacs
-    //       ONIG_SYNTAX_GREP              grep
-    //       ONIG_SYNTAX_GNU_REGEX         GNU regex
-    //       ONIG_SYNTAX_JAVA              Java (Sun java.util.regex)
-    //       ONIG_SYNTAX_PERL              Perl
-    //       ONIG_SYNTAX_PERL_NG           Perl + named group
-    //       ONIG_SYNTAX_RUBY              Ruby
-    //       ONIG_SYNTAX_DEFAULT           default (== Ruby)
-    //                                    onig_set_default_syntax()
-    //
-    //       or any OnigSyntaxType data address defined by user.
-    //
-    //   7 err_info: address for return optional error info.
-    //               Use this value as 3rd argument of onig_error_code_to_str().
-    //
-    //
-    //
+
     // # int onig_new_without_alloc(regex_t* reg, const UChar* pattern,
     //             const UChar* pattern_end,
     //             OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
@@ -309,26 +314,50 @@ extern "C" {
     //
     //     pattern_enc: UTF32_BE/LE
     //     target_enc:  UTF32_LE/BE
-    //
-    //
-    // # void onig_free(regex_t* reg)
+
+    ///   Free memory used by regex object.
+    ///
+    ///   `void onig_free(regex_t* reg)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `reg`: regex object.
     pub fn onig_free(reg: *const regex_t);
-    //   Free memory used by regex object.
-    //
-    //   arguments
-    //   1 reg: regex object.
-    //
-    //
+
+
     // # void onig_free_body(regex_t* reg)
     //
     //   Free memory used by regex object. (Except reg oneself.)
     //
     //   arguments
     //   1 reg: regex object.
-    //
-    //
-    // # int onig_search(regex_t* reg, const UChar* str, const UChar* end, const UChar* start,
-    //                    const UChar* range, OnigRegion* region, OnigOptionType option)
+
+
+    ///   Search string and return search result and matching region.
+    ///
+    ///   `int onig_search(regex_t* reg, const UChar* str, const UChar* end, const UChar* start,
+    ///                    const UChar* range, OnigRegion* region, OnigOptionType option)`
+    ///
+    /// # Returns
+    ///
+    ///   normal return: match position offset (i.e.  p - str >= 0)
+    ///   not found:     ONIG_MISMATCH (< 0)
+    ///
+    /// # Arguments
+    ///
+    ///   1. `reg`:    regex object
+    ///   2. `str`:    target string
+    ///   3. `end`:    terminate address of target string
+    ///   4. `start`:  search start address of target string
+    ///   5. `range`:  search terminate address of target string
+    ///     in forward search  (start <= searched string < range)
+    ///     in backward search (range <= searched string <= start)
+    ///   6. `region`: address for return group match range info (NULL is allowed)
+    ///   7. `option`: search time option
+    ///
+    ///    * ONIG_OPTION_NOTBOL        string head(str) isn't considered as begin of line
+    ///    * ONIG_OPTION_NOTEOL        string end (end) isn't considered as end of line
+    ///    * ONIG_OPTION_POSIX_REGION  region argument is regmatch_t[] of POSIX API.
     pub fn onig_search(reg: *const regex_t,
                        str: *const u8,
                        end: *const u8,
@@ -337,29 +366,29 @@ extern "C" {
                        region: *mut OnigRegion,
                        option: OnigOptionTypeBits)
                        -> libc::c_int;
-    //   Search string and return search result and matching region.
-    //
-    //   normal return: match position offset (i.e.  p - str >= 0)
-    //   not found:     ONIG_MISMATCH (< 0)
-    //
-    //   arguments
-    //   1 reg:    regex object
-    //   2 str:    target string
-    //   3 end:    terminate address of target string
-    //   4 start:  search start address of target string
-    //   5 range:  search terminate address of target string
-    //     in forward search  (start <= searched string < range)
-    //     in backward search (range <= searched string <= start)
-    //   6 region: address for return group match range info (NULL is allowed)
-    //   7 option: search time option
-    //
-    //     ONIG_OPTION_NOTBOL        string head(str) isn't considered as begin of line
-    //     ONIG_OPTION_NOTEOL        string end (end) isn't considered as end of line
-    //     ONIG_OPTION_POSIX_REGION  region argument is regmatch_t[] of POSIX API.
-    //
-    //
-    // # int onig_match(regex_t* reg, const UChar* str, const UChar* end, const UChar* at,
-    //                   OnigRegion* region, OnigOptionType option)
+
+    ///   Match string and return result and matching region.
+    ///
+    ///   `int onig_match(regex_t* reg, const UChar* str, const UChar* end, const UChar* at,
+    ///                   OnigRegion* region, OnigOptionType option)`
+    ///
+    /// # Returns
+    ///
+    ///   normal return: match length  (>= 0)
+    ///   not match:     ONIG_MISMATCH ( < 0)
+    ///
+    /// # Arguments
+    ///
+    ///   1. `reg`:    regex object
+    ///   2. `str`:    target string
+    ///   3. `end`:    terminate address of target string
+    ///   4. `at`:     match address of target string
+    ///   5. `region`: address for return group match range info (NULL is allowed)
+    ///   6. `option`: search time option
+    ///
+    ///    * ONIG_OPTION_NOTBOL       string head(str) isn't considered as begin of line
+    ///    * ONIG_OPTION_NOTEOL       string end (end) isn't considered as end of line
+    ///    * ONIG_OPTION_POSIX_REGION region argument is regmatch_t[] type of POSIX API.
     pub fn onig_match(reg: *const regex_t,
                       str: *const u8,
                       end: *const u8,
@@ -367,22 +396,6 @@ extern "C" {
                       region: *mut OnigRegion,
                       option: OnigOptionTypeBits)
                       -> libc::c_int;
-    //   Match string and return result and matching region.
-    //
-    //   normal return: match length  (>= 0)
-    //   not match:     ONIG_MISMATCH ( < 0)
-    //
-    //   arguments
-    //   1 reg:    regex object
-    //   2 str:    target string
-    //   3 end:    terminate address of target string
-    //   4 at:     match address of target string
-    //   5 region: address for return group match range info (NULL is allowed)
-    //   6 option: search time option
-    //
-    //     ONIG_OPTION_NOTBOL       string head(str) isn't considered as begin of line
-    //     ONIG_OPTION_NOTEOL       string end (end) isn't considered as end of line
-    //     ONIG_OPTION_POSIX_REGION region argument is regmatch_t[] type of POSIX API.
 
     ///   Create a region.
     ///
@@ -429,7 +442,7 @@ extern "C" {
     ///   normal return: ONIG_NORMAL
     ///
     /// # Arguments
-    /// 
+    ///
     ///   1. `region`: target region
     ///   2. `n`:      new size
     pub fn onig_region_resize(region: *const OnigRegion, n: libc::c_int) -> libc::c_int;

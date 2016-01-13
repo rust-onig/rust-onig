@@ -25,7 +25,7 @@ pub use onig_sys::onig_syntax_type as syntax_types;
 
 /// Onig Error
 ///
-/// This struture represents an error from the unerlying Oniguruma libray.
+/// This struture represents an error from the underlying Oniguruma libray.
 pub struct OnigError {
     error: libc::c_int,
     error_info: Option<onig_sys::OnigErrorInfo>,
@@ -49,6 +49,9 @@ impl fmt::Debug for OnigError {
     }
 }
 
+/// Onig Region
+///
+/// Represents a set of capture groups found in a search or match.
 #[allow(raw_pointer_derive)]
 #[derive(Debug)]
 pub struct OnigRegion {
@@ -114,6 +117,11 @@ impl Drop for OnigRegion {
     }
 }
 
+/// Oniguruma Regular Expression
+///
+/// This struct is a wrapper around an Oniguruma regular expression
+/// pointer. This represents a compiled regex which can be used in
+/// search and match operations.
 #[allow(raw_pointer_derive)]
 #[derive(Debug)]
 pub struct Regex {
@@ -123,7 +131,8 @@ pub struct Regex {
 impl Regex {
     /// Create a new Regex
     ///
-    /// Attempts to compile a pattern into a new `Regex` instance.
+    /// Attempts to compile a pattern into a new `Regex` instance. See
+    /// [`onig_sys::onig_new`][regex_new] for more information.
     ///
     /// # Arguments
     ///
@@ -140,6 +149,8 @@ impl Regex {
     ///                    syntax_types::RUBY);
     /// assert!(r.is_ok());
     /// ```
+    ///
+    /// [regex_new]: ./onig_sys/fn.onig_new.html
     pub fn new(pattern: &str,
                option: onig_sys::OnigOptionType,
                syntax: *const onig_sys::OnigSyntaxTypeStruct)
