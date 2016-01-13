@@ -2,8 +2,6 @@
 name = "onig"
 version = "0.0.1"
 authors = ["Will Speak <will@willspeak.me>"]
-build = "build.rs"
-links = "onig"
 
 description = """Rust-Onig is a set of rust bindings for the
             oniguruma regular expression library."""
@@ -13,4 +11,6 @@ license = "MIT"
 
 [dependencies]
 libc = "0.1"
-bitflags = "0.3"
+
+[dependencies.onig_sys]
+path = "onig_sys"

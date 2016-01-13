@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate bitflags;
 extern crate libc;
 
 // All the opaque types that Oniguruma expects pointers to
@@ -26,7 +28,7 @@ pub mod onig_option_type {
     //! # Examples
     //!
     //! ```
-    //! # use onig::onig_sys::onig_option_type::*;
+    //! # use onig_sys::onig_option_type::*;
     //! let flags = ONIG_OPTION_SINGLELINE | ONIG_OPTION_IGNORECASE;
     //! ```
 

@@ -1,0 +1,21 @@
+[package]
+name = "onig_sys"
+version = "0.1.0"
+authors = ["Will Speak <will@willspeak.me>"]
+build = "build.rs"
+links = "onig"
+
+description = """The Onig Sys crate contains raw rust bindings to the
+oniguruma library. This crate exposes a set of unsafe functions which
+can then be used by other craetes to create safe wrappers around
+Oniguruma.
+
+You probably don't want to link to this crate directly."""
+
+repository = "http://github.com/iwillspeak/rust-onig"
+readme = "../README.md"
+license = "MIT"
+
+[dependencies]
+libc = "0.1"
+bitflags = "0.3"

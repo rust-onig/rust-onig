@@ -1,13 +1,11 @@
-#[macro_use]
-extern crate bitflags;
 extern crate libc;
+extern crate onig_sys;
 
 use libc::c_int;
 use std::ptr::null;
 use std::str;
 use std::fmt;
 
-pub mod onig_sys;
 pub mod utils;
 
 /// Options
@@ -309,8 +307,8 @@ mod tests {
 
     fn create_regex(regex: &str) -> Regex {
         Regex::new(regex,
-                   onig_sys::onig_option_type::ONIG_OPTION_NONE,
-                   onig_sys::onig_syntax_type::RUBY)
+                   options::ONIG_OPTION_NONE,
+                   syntax_types::RUBY)
             .unwrap()
     }
 
@@ -328,8 +326,8 @@ mod tests {
     #[test]
     fn test_regex_create() {
         Regex::new(".*",
-                   onig_sys::onig_option_type::ONIG_OPTION_NONE,
-                   onig_sys::onig_syntax_type::RUBY)
+                   options::ONIG_OPTION_NONE,
+                   syntax_types::RUBY)
             .unwrap();
     }
 
@@ -343,7 +341,7 @@ mod tests {
     fn test_simple_match() {
         let r = create_regex(".*");
 
-        let res = r.match_str("hello wolrld", onig_sys::onig_option_type::ONIG_OPTION_NONE);
+        let res = r.match_str("hello wolrld", options::ONIG_OPTION_NONE);
 
         assert!(res.is_some());
         assert!(res.unwrap() == 12);
@@ -353,14 +351,14 @@ mod tests {
     fn test_failed_match() {
         let r = create_regex("foo");
 
-        let res = r.match_str("bar", onig_sys::onig_option_type::ONIG_OPTION_NONE);
+        let res = r.match_str("bar", options::ONIG_OPTION_NONE);
         assert!(res.is_none());
     }
 
     #[test]
     fn test_partial_match() {
         let r = create_regex("hello");
-        let res = r.match_str("hello world", onig_sys::onig_option_type::ONIG_OPTION_NONE);
+        let res = r.match_str("hello world", options::ONIG_OPTION_NONE);
 
         assert!(res.is_some());
         assert!(res.unwrap() == 5);
