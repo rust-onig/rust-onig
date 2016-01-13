@@ -1,4 +1,3 @@
-//!
 //! This crate provides a safe wrapper around the Oniguruma regular
 //! expression library.
 //!
@@ -16,8 +15,8 @@ extern crate onig_sys;
 
 use libc::c_int;
 use std::ptr::null;
-use std::str;
-use std::fmt;
+use std::{str,fmt};
+use std::error::Error;
 
 pub mod utils;
 
@@ -30,24 +29,39 @@ pub use onig_sys::onig_syntax_type as syntax_types;
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct OnigError {
     error: libc::c_int,
-    error_info: Option<onig_sys::OnigErrorInfo>,
+    description: String,
+}
+
+impl OnigError {
+    fn new(error: libc::c_int, error_info: &onig_sys::OnigErrorInfo) -> Self {
+        let mut err_buff = &mut [0 as u8; 1024];
+        let len = unsafe {
+            onig_sys::onig_error_code_to_str(err_buff.as_mut_ptr(),
+                                             error,
+                                             error_info as *const onig_sys::OnigErrorInfo)
+        };
+        OnigError {
+            error: error,
+            description: str::from_utf8(&err_buff[..len as usize]).unwrap().to_string()
+        }
+    }
+}
+
+impl Error for OnigError {
+    fn description(&self) -> &str {
+        &self.description
+    }
+}
+
+impl fmt::Display for OnigError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Oniguruma error: {}", self.description())
+    }
 }
 
 impl fmt::Debug for OnigError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut err_buff = &mut [0 as u8; 1024];
-        let len = unsafe {
-            match self.error_info {
-                Some(ref error_info) => {
-                    onig_sys::onig_error_code_to_str(err_buff.as_mut_ptr(),
-                                                     self.error,
-                                                     error_info as *const onig_sys::OnigErrorInfo)
-                }
-                None => onig_sys::onig_error_code_to_str(err_buff.as_mut_ptr(), self.error),
-            }
-        };
-        let err_str_slice = str::from_utf8(&err_buff[..len as usize]).unwrap();
-        write!(f, "Oniguruma error: {}", err_str_slice)
+        write!(f, "Oniguruma error({}): {}", self.error, self.description())
     }
 }
 
@@ -185,10 +199,7 @@ impl Regex {
         if err == 0 {
             Ok(Regex { raw: reg })
         } else {
-            Err(OnigError {
-                error: err,
-                error_info: Some(error),
-            })
+            Err(OnigError::new(err, &error))
         }
     }
 
@@ -330,7 +341,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Oniguruma error: invalid character property name {foo}")]
+    #[should_panic(expected = "Oniguruma error(-223): invalid character property name {foo}")]
     fn test_regex_invalid() {
         create_regex("\\p{foo}");
     }
