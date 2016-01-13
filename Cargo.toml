@@ -5,6 +5,11 @@ authors = ["Will Speak <will@willspeak.me>"]
 build = "build.rs"
 links = "onig"
 
+description = "Rust-Onig is a set of rust bindings for the oniguruma
+regular expression library."
+repository = "http://github.com/iwillspeak/rust-onig"
+readme = "README.md"
+
 [dependencies]
 libc = "0.1"
 bitflags = "0.3"
