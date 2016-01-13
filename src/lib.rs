@@ -120,18 +120,6 @@ pub struct Regex {
     raw: *const onig_sys::regex_t,
 }
 
-unsafe fn str_end(str: &str) -> *const u8 {
-    str.as_ptr().offset(str.len() as isize)
-}
-
-fn result_to_match(res: libc::c_int) -> Option<i32> {
-    if res < 0 {
-        None
-    } else {
-        Some(res)
-    }
-}
-
 impl Regex {
     /// Create a new Regex
     ///
@@ -225,7 +213,7 @@ impl Regex {
     /// ```
     pub fn match_str(&self, str: &str, options: onig_sys::OnigOptionType) -> Option<i32> {
         let ret = unsafe {
-            let end = str_end(str);
+            let end = Self::str_end(str);
             onig_sys::onig_match(self.raw,
                                  str.as_ptr(),
                                  end,
@@ -233,7 +221,7 @@ impl Regex {
                                  0 as *mut onig_sys::OnigRegion,
                                  options.bits())
         };
-        result_to_match(ret)
+        Self::result_to_match(ret)
     }
 
     /// Search Str
@@ -270,7 +258,7 @@ impl Regex {
     pub fn search_str(&self, str: &str, options: onig_sys::OnigOptionType) -> Option<i32> {
         let ret = unsafe {
             let start = str.as_ptr();
-            let end = str_end(str);
+            let end = Self::str_end(str);
             onig_sys::onig_search(self.raw,
                                   start,
                                   end,
@@ -279,7 +267,19 @@ impl Regex {
                                   0 as *mut onig_sys::OnigRegion,
                                   options.bits())
         };
-        result_to_match(ret)
+        Self::result_to_match(ret)
+    }
+
+    unsafe fn str_end(str: &str) -> *const u8 {
+        str.as_ptr().offset(str.len() as isize)
+    }
+
+    fn result_to_match(res: libc::c_int) -> Option<i32> {
+        if res < 0 {
+            None
+        } else {
+            Some(res)
+        }
     }
 }
 
