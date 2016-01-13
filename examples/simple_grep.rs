@@ -10,7 +10,7 @@ fn main() {
     let mut regexes = HashMap::new();
     for arg in env::args().skip(1) {
         println!("Compiling '{}'", arg);
-        let regex_compilation = Regex::new(
+        let regex_compilation = Regex::new_with_options(
             &arg,
             onig::options::ONIG_OPTION_SINGLELINE,
             onig::syntax_types::EMACS);

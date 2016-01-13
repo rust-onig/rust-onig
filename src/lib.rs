@@ -5,8 +5,9 @@
 //!
 //! ```
 //! # use onig::{options,syntax_types,Regex};
-//! let regex = Regex::new(r#"hello (\w*)"#, onig::options::ONIG_OPTION_NONE, onig::syntax_types::RUBY).unwrap();
-//! let result = regex.search_str("hello world", onig::options::ONIG_OPTION_NONE);
+//! let regex = Regex::new(r#"hello (\w*)"#).unwrap();
+//! let result = regex.search_str("hello world",
+//!                               onig::options::ONIG_OPTION_NONE);
 //! assert!(result.is_some());
 //! ```
 
@@ -145,6 +146,24 @@ pub struct Regex {
 }
 
 impl Regex {
+    /// Simple regular expression constructor. Compiles a new regular
+    /// expression with the default options using the ruby syntax.
+    ///
+    /// # Arguments
+    ///
+    /// * `pattern` - The regex pattern to compile
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use onig::{options,syntax_types,Regex};
+    /// let r = Regex::new(r#"hello (\w+)"#);
+    /// assert!(r.is_ok());
+    /// ```
+    pub fn new(pattern: &str) -> Result<Regex, OnigError> {
+        Self::new_with_options(pattern, options::ONIG_OPTION_NONE, syntax_types::RUBY)
+    }
+
     /// Create a new Regex
     ///
     /// Attempts to compile a pattern into a new `Regex` instance. See
@@ -160,17 +179,17 @@ impl Regex {
     ///
     /// ```
     /// use onig::{options,syntax_types,Regex};
-    /// let r = Regex::new("hello.*world",
+    /// let r = Regex::new_with_options("hello.*world",
     ///                    options::ONIG_OPTION_NONE,
     ///                    syntax_types::RUBY);
     /// assert!(r.is_ok());
     /// ```
     ///
     /// [regex_new]: ./onig_sys/fn.onig_new.html
-    pub fn new(pattern: &str,
-               option: onig_sys::OnigOptionType,
-               syntax: *const onig_sys::OnigSyntaxTypeStruct)
-               -> Result<Regex, OnigError> {
+    pub fn new_with_options(pattern: &str,
+                            option: onig_sys::OnigOptionType,
+                            syntax: *const onig_sys::OnigSyntaxTypeStruct)
+                            -> Result<Regex, OnigError> {
 
         // Convert the rust types to those required for the call to
         // `onig_new`.
@@ -228,9 +247,7 @@ impl Regex {
     /// use onig::Regex;
     /// use onig::{options,syntax_types};
     ///
-    /// let r = Regex::new(".*",
-    ///                    options::ONIG_OPTION_NONE,
-    ///                    syntax_types::RUBY).unwrap();
+    /// let r = Regex::new(".*").unwrap();
     /// let res = r.match_str("hello", options::ONIG_OPTION_NONE);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
@@ -272,9 +289,7 @@ impl Regex {
     /// use onig::Regex;
     /// use onig::{options,syntax_types};
     ///
-    /// let r = Regex::new("l{1,2}",
-    ///                    options::ONIG_OPTION_NONE,
-    ///                    syntax_types::RUBY).unwrap();
+    /// let r = Regex::new("l{1,2}").unwrap();
     /// let res = r.search_str("hello", options::ONIG_OPTION_NONE);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
@@ -321,7 +336,7 @@ mod tests {
     use super::*;
 
     fn create_regex(regex: &str) -> Regex {
-        Regex::new(regex, options::ONIG_OPTION_NONE, syntax_types::RUBY).unwrap()
+        Regex::new(regex).unwrap()
     }
 
     #[test]
@@ -337,7 +352,8 @@ mod tests {
 
     #[test]
     fn test_regex_create() {
-        Regex::new(".*", options::ONIG_OPTION_NONE, syntax_types::RUBY).unwrap();
+        Regex::new_with_options(".*", options::ONIG_OPTION_NONE, syntax_types::RUBY).unwrap();
+        Regex::new(r#"a \w+ word"#).unwrap();
     }
 
     #[test]
