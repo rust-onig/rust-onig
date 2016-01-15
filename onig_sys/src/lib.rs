@@ -5,9 +5,18 @@ extern crate libc;
 // All the opaque types that Oniguruma expects pointers to
 #[allow(non_camel_case_types)]
 pub enum regex_t {}
-pub enum OnigRegion {}
 pub enum OnigSyntaxTypeStruct {}
+pub enum OnigCaptureTreeNode {}
 pub enum OnigEncodingType {}
+
+#[repr(C)]
+pub struct OnigRegion {
+    allocated: libc::c_int,
+    pub num_regs: libc::c_int,
+    pub beg: *const libc::c_int,
+    pub end: *const libc::c_int,
+    history_root: *const OnigCaptureTreeNode,
+}
 
 #[repr(C)]
 pub struct OnigErrorInfo {

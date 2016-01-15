@@ -16,7 +16,7 @@ extern crate onig_sys;
 
 use libc::c_int;
 use std::ptr::null;
-use std::{str,fmt};
+use std::{str, fmt};
 use std::error::Error;
 
 pub mod utils;
@@ -43,7 +43,7 @@ impl OnigError {
         };
         OnigError {
             error: error,
-            description: str::from_utf8(&err_buff[..len as usize]).unwrap().to_string()
+            description: str::from_utf8(&err_buff[..len as usize]).unwrap().to_string(),
         }
     }
 }
@@ -88,6 +88,20 @@ impl OnigRegion {
         OnigRegion { raw: raw }
     }
 
+    /// Create a new region with a given size. This function allocates
+    /// a new region object as in `OnigRegion::new` and resizes it to
+    /// contain at least `size` regions.
+    ///
+    /// # Arguments
+    ///
+    /// * `size` - the number of captures this region should be
+    /// capable of storing without allocation.
+    pub fn new_with_size(size: usize) -> OnigRegion {
+        let mut region = Self::new();
+        region.resize(size);
+        region
+    }
+
     /// Clear the Region
     ///
     /// This can be used to clear out a region so it can be used
@@ -118,6 +132,12 @@ impl OnigRegion {
     ///  * `new_size` - The new number of groups in the region.
     pub fn resize(&mut self, new_size: usize) -> usize {
         unsafe { onig_sys::onig_region_resize(self.raw, new_size as c_int) as usize }
+    }
+
+    /// Get the size of the region. Returns the number of registers in
+    /// the region.
+    pub fn size(&self) -> isize {
+        unsafe { (*self.raw).num_regs as isize }
     }
 }
 
@@ -348,6 +368,25 @@ mod tests {
     fn test_region_clear() {
         let mut region = OnigRegion::new();
         region.clear();
+    }
+
+    #[test]
+    fn test_region_resize() {
+        {
+            let mut region = OnigRegion::new();
+            assert!(region.size() == 0);
+            region.resize(100);
+            {
+                // can still get the size without a mutable borrow
+                let region_borrowed = &region;
+                assert!(region_borrowed.size() == 100);
+            }
+        }
+
+        {
+            let region = OnigRegion::new_with_size(10);
+            assert!(region.size() == 10);
+        }
     }
 
     #[test]
