@@ -16,55 +16,14 @@ extern crate onig_sys;
 
 use libc::c_int;
 use std::ptr::null;
-use std::{str, fmt};
-use std::error::Error;
 
 pub mod utils;
+pub mod err;
 
 // re-export the onig types publically
 pub use onig_sys::onig_option_type as options;
 pub use onig_sys::onig_syntax_type as syntax_types;
-
-/// Onig Error
-///
-/// This struture represents an error from the underlying Oniguruma libray.
-pub struct OnigError {
-    error: libc::c_int,
-    description: String,
-}
-
-impl OnigError {
-    fn new(error: libc::c_int, error_info: &onig_sys::OnigErrorInfo) -> Self {
-        let mut err_buff = &mut [0 as u8; 1024];
-        let len = unsafe {
-            onig_sys::onig_error_code_to_str(err_buff.as_mut_ptr(),
-                                             error,
-                                             error_info as *const onig_sys::OnigErrorInfo)
-        };
-        OnigError {
-            error: error,
-            description: str::from_utf8(&err_buff[..len as usize]).unwrap().to_string(),
-        }
-    }
-}
-
-impl Error for OnigError {
-    fn description(&self) -> &str {
-        &self.description
-    }
-}
-
-impl fmt::Display for OnigError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Oniguruma error: {}", self.description())
-    }
-}
-
-impl fmt::Debug for OnigError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Oniguruma error({}): {}", self.error, self.description())
-    }
-}
+pub use self::err::OnigError;
 
 /// Onig Region
 ///
