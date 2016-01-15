@@ -1,7 +1,7 @@
 use libc;
 use std::error::Error;
 use std::{fmt, str};
-use super::onig_sys;
+use onig_sys;
 
 /// Onig Error
 ///
