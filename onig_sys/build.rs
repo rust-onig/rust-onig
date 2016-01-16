@@ -21,17 +21,22 @@ pub fn main() {
     let out_dir_str = env::var("OUT_DIR").unwrap();
     let out_dir = Path::new(&out_dir_str);
     let out_file = out_dir.join(LIB_NAME);
+    let onig_tar_out_dir = Path::new("./onig-5.9.6/");
 
     // If the file already exists then skip compiling it
     if !check_exists(&out_file) {
-        fs::remove_dir_all("./onig-5.9.6/").unwrap();
+        if onig_tar_out_dir.exists() {
+            fs::remove_dir_all(onig_tar_out_dir).unwrap_or_else(|err| {
+                panic!("Could not remove tar output directory: {}", err);
+            });
+        }
         Command::new("tar")
             .arg("zxf")
             .arg("onig-5.9.6.tar.gz")
             .status().unwrap_or_else(|err| {
                 panic!("Error extracting onig tar file: {}", err);
             });
-        env::set_current_dir("./onig-5.9.6/").unwrap();
+        env::set_current_dir(onig_tar_out_dir).unwrap();
         Command::new("./configure")
             .status().unwrap_or_else(|err| {
                 panic!("Error running configure: {}", err);
