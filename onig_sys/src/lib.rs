@@ -460,13 +460,14 @@ extern "C" {
     //              if func does not return 0, then iteration is stopped.
     //   3 arg:     argument for func.
 
-    // # int onig_number_of_names(regex_t* reg)
-    //
-    //   Return the number of names defined in the pattern.
-    //   Multiple definitions of one name is counted as one.
-    //
-    //   arguments
-    //   1 reg:     regex object.
+    ///   Return the number of names defined in the pattern.
+    ///   Multiple definitions of one name is counted as one.
+    ///
+    ///   `int onig_number_of_names(regex_t* reg)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `reg`:     regex object.
     pub fn onig_number_of_names(reg: OnigRegex) -> c_int;
 
     // # OnigEncoding     onig_get_encoding(regex_t* reg)
@@ -479,33 +480,36 @@ extern "C" {
     //   arguments
     //   1 reg:     regex object.
 
-    // # int onig_number_of_captures(regex_t* reg)
-    //
-    //   Return the number of capture group in the pattern.
-    //
-    //   arguments
-    //   1 reg:     regex object.
+    ///   Return the number of capture group in the pattern.
+    ///
+    ///   `int onig_number_of_captures(regex_t* reg)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `reg`:     regex object.
     pub fn onig_number_of_captures(reg: OnigRegex) -> c_int;
 
-    // # int onig_number_of_capture_histories(regex_t* reg)
-    //
-    //   Return the number of capture history defined in the pattern.
-    //
-    //   You can't use capture history if ONIG_SYN_OP2_ATMARK_CAPTURE_HISTORY
-    //   is disabled in the pattern syntax.(disabled in the default syntax)
-    //
-    //   arguments
-    //   1 reg:     regex object.
+    ///   Return the number of capture history defined in the pattern.
+    ///
+    ///   `int onig_number_of_capture_histories(regex_t* reg)`
+    ///
+    ///   You can't use capture history if ONIG_SYN_OP2_ATMARK_CAPTURE_HISTORY
+    ///   is disabled in the pattern syntax.(disabled in the default syntax)
+    ///
+    /// # arguments
+    ///
+    ///   1. `reg`:     regex object.
     pub fn onig_number_of_capture_histories(reg: OnigRegex) -> c_int;
 
-    // # OnigCaptureTreeNode* onig_get_capture_tree(OnigRegion* region)
-    //
-    //   Return the root node of capture history data tree.
-    //
-    //   This value is undefined if matching has faild.
-    //
-    //   arguments
-    //   1 region: matching result.
+    ///   Return the root node of capture history data tree.
+    ///
+    ///   `OnigCaptureTreeNode* onig_get_capture_tree(OnigRegion* region)`
+    ///
+    ///   This value is undefined if matching has faild.
+    ///
+    /// # Arguments
+    ///
+    ///   1. `region`: matching result.
     pub fn onig_get_capture_tree(region: *const OnigRegion) -> *const OnigCaptureTreeNode;
 
     // # int onig_capture_tree_traverse(OnigRegion* region, int at,
@@ -607,37 +611,38 @@ extern "C" {
     //   arguments
     //   1 syntax: address of pattern syntax definition.
 
-    // # void onig_copy_syntax(OnigSyntaxType* to, OnigSyntaxType* from)
-    //
-    //   Copy syntax.
-    //
-    //   arguments
-    //   1 to:   destination address.
-    //   2 from: source address.
+    ///   Copy syntax.
+    ///
+    ///   `void onig_copy_syntax(OnigSyntaxType* to, OnigSyntaxType* from)`
+    ///
+    /// # Arguments
+    ///
+    ///   1. `to`:   destination address.
+    ///   2. `from`: source address.
     pub fn onig_copy_syntax(to: *const OnigSyntax, from: *const OnigSyntax);
 
-    // # unsigned int onig_get_syntax_op(OnigSyntaxType* syntax)
+    /// `unsigned int onig_get_syntax_op(OnigSyntaxType* syntax)`
     pub fn onig_get_syntax_op(syntax: *const OnigSyntax) -> OnigSyntaxOp;
 
-    // # unsigned int onig_get_syntax_op2(OnigSyntaxType* syntax)
+    /// `unsigned int onig_get_syntax_op2(OnigSyntaxType* syntax)`
     pub fn onig_get_syntax_op2(syntax: *const OnigSyntax) -> OnigSyntaxOp2;
 
-    // # unsigned int onig_get_syntax_behavior(OnigSyntaxType* syntax)
+    /// `unsigned int onig_get_syntax_behavior(OnigSyntaxType* syntax)`
     pub fn onig_get_syntax_behavior(syntax: *const OnigSyntax) -> OnigSyntaxBehavior;
 
-    // # OnigOptionType onig_get_syntax_options(OnigSyntaxType* syntax)
+    /// `OnigOptionType onig_get_syntax_options(OnigSyntaxType* syntax)`
     pub fn onig_get_syntax_options(syntax: *const OnigSyntax) -> OnigOptions;
 
-    // # void onig_set_syntax_op(OnigSyntaxType* syntax, unsigned int op)
+    /// `void onig_set_syntax_op(OnigSyntaxType* syntax, unsigned int op)`
     pub fn onig_set_syntax_op(syntax: *mut OnigSyntax, op: OnigSyntaxOp);
 
-    // # void onig_set_syntax_op2(OnigSyntaxType* syntax, unsigned int op2)
+    /// `void onig_set_syntax_op2(OnigSyntaxType* syntax, unsigned int op2)`
     pub fn onig_set_syntax_op2(syntax: *mut OnigSyntax, op2: OnigSyntaxOp2);
 
-    // # void onig_set_syntax_behavior(OnigSyntaxType* syntax, unsigned int behavior)
+    /// `void onig_set_syntax_behavior(OnigSyntaxType* syntax, unsigned int behavior)`
     pub fn onig_set_syntax_behavior(syntax: *mut OnigSyntax, behavior: OnigSyntaxBehavior);
 
-    // # void onig_set_syntax_options(OnigSyntaxType* syntax, OnigOptionType options)
+    /// `void onig_set_syntax_options(OnigSyntaxType* syntax, OnigOptionType options)`
     pub fn onig_set_syntax_options(syntax: *mut OnigSyntax, options: OnigOptions);
 
     //
