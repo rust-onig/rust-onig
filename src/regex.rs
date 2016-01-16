@@ -8,16 +8,12 @@ use super::{
     Syntax, Region, Captures
 };
 
-/// Onig Error
-///
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct Error {
     error: c_int,
     description: String,
 }
 
-/// Oniguruma Regular Expression
-///
 /// This struct is a wrapper around an Oniguruma regular expression
 /// pointer. This represents a compiled regex which can be used in
 /// search and match operations.

@@ -1,6 +1,6 @@
 [package]
 name = "onig"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Will Speak <will@willspeak.me>"]
 
 description = """Rust-Onig is a set of rust bindings for the
