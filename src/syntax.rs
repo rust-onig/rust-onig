@@ -87,7 +87,7 @@ impl Syntax {
 
     /// Default syntax (Ruby syntax)
     pub fn default() -> &'static Syntax {
-        Syntax::ruby()  // TODO: use onig_get_default_syntax here
+        unsafe { transmute(onig_sys::OnigDefaultSyntax) }
     }
 
     pub fn get_operators(&self) -> SyntaxOperator {
