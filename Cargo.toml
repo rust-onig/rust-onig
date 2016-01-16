@@ -1,6 +1,6 @@
 [package]
 name = "onig"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Will Speak <will@willspeak.me>"]
 
 description = """Rust-Onig is a set of rust bindings for the
@@ -11,7 +11,5 @@ license = "MIT"
 
 [dependencies]
 libc = "0.1"
-
-[dependencies.onig_sys]
-path = "onig_sys"
-version = "0.1.0"
+bitflags = "0.3"
+onig_sys = "0.2"
