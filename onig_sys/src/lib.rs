@@ -64,7 +64,6 @@ pub struct OnigErrorInfo {
     pub par_end: *const u8,
 }
 
-#[link(name="onig")]
 extern "C" {
     pub static OnigEncodingUTF8: OnigEncoding;
     // TODO: add other encodings

@@ -45,11 +45,6 @@ pub fn main() {
             .status().unwrap_or_else(|err| {
                 panic!("Error running make: {}", err);
             });
-        Command::new("make")
-            .arg("install")
-            .status().unwrap_or_else(|err| {
-                panic!("Error calling make install: {}", err);
-            });
         fs::copy(fs::canonicalize(Path::new(".libs").join(LIB_NAME)).unwrap(), out_file)
             .unwrap_or_else(|err| {
                 panic!("Error copying file to output: {}", err);
