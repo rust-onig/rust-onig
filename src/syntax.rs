@@ -63,7 +63,7 @@ impl Syntax {
         unsafe { transmute(onig_sys::OnigDefaultSyntax) }
     }
 
-    pub fn get_operators(&self) -> SyntaxOperator {
+    pub fn operators(&self) -> SyntaxOperator {
         unsafe {
             let op = onig_sys::onig_get_syntax_op(&self.raw);
             let op2 = onig_sys::onig_get_syntax_op2(&self.raw);
@@ -81,16 +81,16 @@ impl Syntax {
     }
 
     pub fn enable_operators(&mut self, operators: SyntaxOperator) {
-        let operators = self.get_operators() | operators;
+        let operators = self.operators() | operators;
         self.set_operators(operators)
     }
 
     pub fn disable_operators(&mut self, operators: SyntaxOperator) {
-        let operators = self.get_operators() & !operators;
+        let operators = self.operators() & !operators;
         self.set_operators(operators)
     }
 
-    pub fn get_behavior(&self) -> SyntaxBehavior {
+    pub fn behavior(&self) -> SyntaxBehavior {
         SyntaxBehavior::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_behavior(&self.raw) })
     }
 
@@ -102,16 +102,16 @@ impl Syntax {
     }
 
     pub fn enable_behavior(&mut self, behavior: SyntaxBehavior) {
-        let behavior = self.get_behavior() | behavior;
+        let behavior = self.behavior() | behavior;
         self.set_behavior(behavior)
     }
 
     pub fn disable_behavior(&mut self, behavior: SyntaxBehavior) {
-        let behavior = self.get_behavior() & !behavior;
+        let behavior = self.behavior() & !behavior;
         self.set_behavior(behavior)
     }
 
-    pub fn get_options(&self) -> RegexOptions {
+    pub fn options(&self) -> RegexOptions {
         RegexOptions::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_options(&self.raw) })
     }
 
