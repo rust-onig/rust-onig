@@ -20,8 +20,8 @@ impl Region {
                 num_regs: 0,
                 beg: null(),
                 end: null(),
-                history_root: null()
-            }
+                history_root: null(),
+            },
         }
     }
 
@@ -63,9 +63,7 @@ impl Region {
     ///
     ///  * `new_capacity` - The new number of groups in the region.
     pub fn reserve(&mut self, new_capacity: usize) {
-        let r = unsafe {
-            onig_sys::onig_region_resize(&self.raw, new_capacity as c_int)
-        };
+        let r = unsafe { onig_sys::onig_region_resize(&self.raw, new_capacity as c_int) };
         if r != 0 {
             panic!("Onig: fail to memory allocation during region resize")
         }
@@ -83,13 +81,11 @@ impl Region {
     /// respect to the original string matched.
     pub fn pos(&self, pos: usize) -> Option<(usize, usize)> {
         if pos >= self.len() {
-            return None
+            return None;
         }
         let (beg, end) = unsafe {
-            (
-                *self.raw.beg.offset(pos as isize),
-                *self.raw.end.offset(pos as isize)
-            )
+            (*self.raw.beg.offset(pos as isize),
+             *self.raw.end.offset(pos as isize))
         };
         if beg >= 0 {
             Some((beg as usize, end as usize))
@@ -99,16 +95,13 @@ impl Region {
     }
 
     pub fn tree(&self) -> Option<&CaptureTreeNode> {
-        let tree = unsafe {
-            onig_sys::onig_get_capture_tree(&self.raw)
-        };
+        let tree = unsafe { onig_sys::onig_get_capture_tree(&self.raw) };
         if tree.is_null() {
             None
         } else {
             Some(unsafe { transmute(tree) })
         }
     }
-
 }
 
 impl Drop for Region {

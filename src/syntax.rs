@@ -4,7 +4,7 @@ use super::{SyntaxOperator, SyntaxBehavior, RegexOptions};
 
 #[derive(Debug)]
 pub struct Syntax {
-    raw: onig_sys::OnigSyntax
+    raw: onig_sys::OnigSyntax,
 }
 
 impl Clone for Syntax {
@@ -22,17 +22,15 @@ impl Clone for Syntax {
                     zero_or_one_time: 0,
                     one_or_more_time: 0,
                     anychar_anytime: 0,
-                }
-            }
+                },
+            },
         };
         Syntax::clone_from(&mut syntax, self);
         syntax
     }
 
     fn clone_from(&mut self, source: &Syntax) {
-        unsafe {
-            onig_sys::onig_copy_syntax(&mut self.raw, &source.raw)
-        }
+        unsafe { onig_sys::onig_copy_syntax(&mut self.raw, &source.raw) }
     }
 }
 
@@ -96,9 +94,7 @@ impl Syntax {
         unsafe {
             let op = onig_sys::onig_get_syntax_op(&self.raw);
             let op2 = onig_sys::onig_get_syntax_op2(&self.raw);
-            SyntaxOperator::from_bits_truncate(
-                op as u64 + ((op2 as u64) << 32)
-            )
+            SyntaxOperator::from_bits_truncate(op as u64 + ((op2 as u64) << 32))
         }
     }
 
@@ -122,9 +118,7 @@ impl Syntax {
     }
 
     pub fn get_behavior(&self) -> SyntaxBehavior {
-        SyntaxBehavior::from_bits_truncate(unsafe {
-            onig_sys::onig_get_syntax_behavior(&self.raw)
-        })
+        SyntaxBehavior::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_behavior(&self.raw) })
     }
 
     pub fn set_behavior(&mut self, behavior: SyntaxBehavior) {
@@ -145,9 +139,7 @@ impl Syntax {
     }
 
     pub fn get_options(&self) -> RegexOptions {
-        RegexOptions::from_bits_truncate(unsafe {
-            onig_sys::onig_get_syntax_options(&self.raw)
-        })
+        RegexOptions::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_options(&self.raw) })
     }
 
     pub fn set_options(&mut self, options: RegexOptions) {

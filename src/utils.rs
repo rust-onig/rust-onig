@@ -2,9 +2,7 @@ use std::ffi::CStr;
 use onig_sys;
 
 pub fn version() -> String {
-    let raw_version = unsafe {
-        CStr::from_ptr(onig_sys::onig_version())
-    };
+    let raw_version = unsafe { CStr::from_ptr(onig_sys::onig_version()) };
     raw_version.to_string_lossy().into_owned()
 }
 

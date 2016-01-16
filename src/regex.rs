@@ -4,10 +4,8 @@ use std::mem::transmute;
 use std::ptr::null;
 use libc::c_int;
 use onig_sys;
-use super::{
-    RegexOptions, SearchOptions, REGEX_OPTION_NONE, SEARCH_OPTION_NONE,
-    Syntax, Region, Captures
-};
+use super::{RegexOptions, SearchOptions, REGEX_OPTION_NONE, SEARCH_OPTION_NONE, Syntax, Region,
+            Captures};
 
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct Error {
@@ -26,11 +24,12 @@ pub struct Regex {
 impl Error {
     fn new(error: c_int, info: onig_sys::OnigErrorInfo) -> Error {
         let mut buff = &mut [0 as u8; 90];
-        let len = unsafe {
-            onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), error, &info)
-        };
+        let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), error, &info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
-        Error { error: error, description: description.to_owned() }
+        Error {
+            error: error,
+            description: description.to_owned(),
+        }
     }
 
     /// Return Oniguruma engine error code.
@@ -185,16 +184,15 @@ impl Regex {
                               -> Option<usize> {
         let (beg, end) = (str.as_ptr(), str[str.len()..].as_ptr());
         let r = unsafe {
-            onig_sys::onig_match(
-                self.raw,
-                beg, end,
-                beg,
-                match region {
-                    Some(region) => transmute(region),
-                    None => 0 as *mut onig_sys::OnigRegion,
-                },
-                options.bits()
-            )
+            onig_sys::onig_match(self.raw,
+                                 beg,
+                                 end,
+                                 beg,
+                                 match region {
+                                     Some(region) => transmute(region),
+                                     None => 0 as *mut onig_sys::OnigRegion,
+                                 },
+                                 options.bits())
         };
 
         if r >= 0 {
@@ -241,15 +239,16 @@ impl Regex {
                                -> Option<usize> {
         let (beg, end) = (str.as_ptr(), str[str.len()..].as_ptr());
         let r = unsafe {
-            onig_sys::onig_search(
-                self.raw,
-                beg, end,
-                beg, end,
-                match region {
-                    Some(region) => transmute(region),
-                    None => 0 as *mut onig_sys::OnigRegion,
-                },
-                options.bits())
+            onig_sys::onig_search(self.raw,
+                                  beg,
+                                  end,
+                                  beg,
+                                  end,
+                                  match region {
+                                      Some(region) => transmute(region),
+                                      None => 0 as *mut onig_sys::OnigRegion,
+                                  },
+                                  options.bits())
         };
 
         if r >= 0 {
@@ -291,21 +290,15 @@ impl Regex {
     }
 
     pub fn captures_len(&self) -> usize {
-        unsafe {
-            onig_sys::onig_number_of_captures(self.raw) as usize
-        }
+        unsafe { onig_sys::onig_number_of_captures(self.raw) as usize }
     }
 
     pub fn capture_histories_len(&self) -> usize {
-        unsafe {
-            onig_sys::onig_number_of_capture_histories(self.raw) as usize
-        }
+        unsafe { onig_sys::onig_number_of_capture_histories(self.raw) as usize }
     }
 
     pub fn names_len(&self) -> usize {
-        unsafe {
-            onig_sys::onig_number_of_names(self.raw) as usize
-        }
+        unsafe { onig_sys::onig_number_of_names(self.raw) as usize }
     }
 }
 
@@ -328,11 +321,7 @@ mod tests {
 
     #[test]
     fn test_regex_create() {
-        Regex::with_options(
-            ".*",
-            REGEX_OPTION_NONE,
-            Syntax::default()
-        ).unwrap();
+        Regex::with_options(".*", REGEX_OPTION_NONE, Syntax::default()).unwrap();
 
         Regex::new(r#"a \w+ word"#).unwrap();
     }
@@ -356,11 +345,7 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("e(l+)").unwrap();
 
-        let r = regex.search_with_options(
-            "hello",
-            SEARCH_OPTION_NONE,
-            Some(&mut region)
-        );
+        let r = regex.search_with_options("hello", SEARCH_OPTION_NONE, Some(&mut region));
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(1));
@@ -376,11 +361,7 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("he(l+)").unwrap();
 
-        let r = regex.match_with_options(
-            "hello",
-            SEARCH_OPTION_NONE,
-            Some(&mut region)
-        );
+        let r = regex.match_with_options("hello", SEARCH_OPTION_NONE, Some(&mut region));
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(4));
@@ -455,17 +436,10 @@ mod tests {
         let mut syntax = Syntax::ruby().clone();
         syntax.enable_operators(SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
 
-        let regex = Regex::with_options(
-            "(?@a+(?@b+))|(?@c+(?@d+))",
-            REGEX_OPTION_NONE,
-            &syntax
-        ).unwrap();
+        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))", REGEX_OPTION_NONE, &syntax)
+                        .unwrap();
 
-        let r = regex.search_with_options(
-            "- cd aaabbb -",
-            SEARCH_OPTION_NONE,
-            Some(&mut region)
-        );
+        let r = regex.search_with_options("- cd aaabbb -", SEARCH_OPTION_NONE, Some(&mut region));
 
         assert_eq!(r, Some(2));
         assert_eq!(region.len(), 5);

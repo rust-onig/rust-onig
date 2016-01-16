@@ -6,7 +6,7 @@ use onig_sys;
 #[repr(C)]
 #[derive(Debug)]
 pub struct CaptureTreeNode {
-    raw: onig_sys::OnigCaptureTreeNode
+    raw: onig_sys::OnigCaptureTreeNode,
 }
 
 impl CaptureTreeNode {
@@ -23,7 +23,10 @@ impl CaptureTreeNode {
     }
 
     pub fn childs<'t>(&'t self) -> CaptureTreeNodeIter<'t> {
-        CaptureTreeNodeIter { idx: 0, node: self }
+        CaptureTreeNodeIter {
+            idx: 0,
+            node: self,
+        }
     }
 }
 
@@ -34,16 +37,14 @@ impl Index<usize> for CaptureTreeNode {
         if index >= self.len() {
             panic!("capture tree node index overflow")
         }
-        unsafe {
-            transmute(*self.raw.childs.offset(index as isize))
-        }
+        unsafe { transmute(*self.raw.childs.offset(index as isize)) }
     }
 }
 
 #[derive(Debug)]
 pub struct CaptureTreeNodeIter<'t> {
     idx: usize,
-    node: &'t CaptureTreeNode
+    node: &'t CaptureTreeNode,
 }
 
 impl<'t> Iterator for CaptureTreeNodeIter<'t> {

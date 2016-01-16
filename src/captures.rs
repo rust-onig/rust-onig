@@ -11,14 +11,14 @@ use super::Region;
 #[derive(Debug)]
 pub struct Captures<'t> {
     text: &'t str,
-    region: Region
+    region: Region,
 }
 
 impl<'t> Captures<'t> {
     pub fn new(text: &'t str, region: Region) -> Captures<'t> {
         Captures {
             text: text,
-            region: region
+            region: region,
         }
     }
 
@@ -47,16 +47,22 @@ impl<'t> Captures<'t> {
     }
 
     /// Creates an iterator of all the capture groups in order of appearance in
-    // the regular expression.
+    /// the regular expression.
     pub fn iter(&'t self) -> SubCaptures<'t> {
-        SubCaptures { idx: 0, caps: self }
+        SubCaptures {
+            idx: 0,
+            caps: self,
+        }
     }
 
     /// Creates an iterator of all the capture group positions in order of
     /// appearance in the regular expression. Positions are byte indices in
     /// terms of the original string matched.
     pub fn iter_pos(&'t self) -> SubCapturesPos<'t> {
-        SubCapturesPos { idx: 0, caps: self }
+        SubCapturesPos {
+            idx: 0,
+            caps: self,
+        }
     }
 }
 
@@ -66,7 +72,7 @@ impl<'t> Captures<'t> {
 ///`'t` is the lifetime of the matched text.
 pub struct SubCaptures<'t> {
     idx: usize,
-    caps: &'t Captures<'t>
+    caps: &'t Captures<'t>,
 }
 
 impl<'t> Iterator for SubCaptures<'t> {
@@ -89,7 +95,7 @@ impl<'t> Iterator for SubCaptures<'t> {
 /// string matched. `'t` is the lifetime of the matched text.
 pub struct SubCapturesPos<'t> {
     idx: usize,
-    caps: &'t Captures<'t>
+    caps: &'t Captures<'t>,
 }
 
 impl<'t> Iterator for SubCapturesPos<'t> {
