@@ -24,13 +24,14 @@ pub fn main() {
 
     // If the file already exists then skip compiling it
     if !check_exists(&out_file) {
+        fs::remove_dir_all("./onig-5.9.6/").unwrap();
         Command::new("tar")
             .arg("zxf")
             .arg("onig-5.9.6.tar.gz")
             .status().unwrap_or_else(|err| {
                 panic!("Error extracting onig tar file: {}", err);
             });
-        env::set_current_dir("onig-5.9.6").unwrap();
+        env::set_current_dir("./onig-5.9.6/").unwrap();
         Command::new("./configure")
             .status().unwrap_or_else(|err| {
                 panic!("Error running configure: {}", err);
@@ -39,7 +40,7 @@ pub fn main() {
             .status().unwrap_or_else(|err| {
                 panic!("Error running make: {}", err);
             });
-        fs::copy(Path::new(".libs").join(LIB_NAME), out_file)
+        fs::copy(fs::canonicalize(Path::new(".libs").join(LIB_NAME)).unwrap(), out_file)
             .unwrap_or_else(|err| {
                 panic!("Error copying file to output: {}", err);
             });
