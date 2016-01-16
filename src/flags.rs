@@ -1,38 +1,42 @@
 use onig_sys::{OnigOptions, OnigSyntaxBehavior};
 
 bitflags! {
-    /// Regex parsing, compilation and evaluation options.
-    flags Options: OnigOptions {
-        /// Default options. This is both compile and search time option.
-        const OPTION_NONE = 0,
-        /// Ambiguity match on. This is compile time option.
-        const OPTION_IGNORECASE = 1,
-        /// Extended pattern form. This is compile time option.
-        const OPTION_EXTEND = 2,
-        /// `'.'` match with newline. This is compile time option.
-        const OPTION_MULTILINE = 4,
-        /// `'^'` -> `'\A'`, `'$'` -> `'\Z'`. This is compile time option.
-        const OPTION_SINGLELINE = 8,
-        /// Find longest match. This is compile time option.
-        const OPTION_FIND_LONGEST = 16,
-        /// Ignore empty match. This is compile time option.
-        const OPTION_FIND_NOT_EMPTY = 32,
+    /// Regex parsing and compilation options.
+    flags RegexOptions: OnigOptions {
+        /// Default options.
+        const REGEX_OPTION_NONE = 0,
+        /// Ambiguity match on.
+        const REGEX_OPTION_IGNORECASE = 1,
+        /// Extended pattern form.
+        const REGEX_OPTION_EXTEND = 2,
+        /// `'.'` match with newline.
+        const REGEX_OPTION_MULTILINE = 4,
+        /// `'^'` -> `'\A'`, `'$'` -> `'\Z'`.
+        const REGEX_OPTION_SINGLELINE = 8,
+        /// Find longest match.
+        const REGEX_OPTION_FIND_LONGEST = 16,
+        /// Ignore empty match.
+        const REGEX_OPTION_FIND_NOT_EMPTY = 32,
         /// Clear `OPTION_SINGLELINE` which is enabled on
         /// `SYNTAX_POSIX_BASIC`, `SYNTAX_POSIX_EXTENDED`,
         /// `SYNTAX_PERL`, `SYNTAX_PERL_NG`, `SYNTAX_JAVA`.
-        /// This is compile time option.
-        const OPTION_NEGATE_SINGLELINE = 64,
-        /// Only named group captured. This is search time option.
-        const OPTION_DONT_CAPTURE_GROUP = 128,
-        /// Named and no-named group captured. This is search time option.
-        const OPTION_CAPTURE_GROUP = 256,
+        const REGEX_OPTION_NEGATE_SINGLELINE = 64
+    }
+}
 
-        /// String head isn't considered as begin of line
-        const OPTION_NOTBOL = 512,
-        /// String end isn't considered as end of line
-        const OPTION_NOTEOL = 1024,
-        // const OPTION_POSIX_REGION = 2048,
-        // const OPTION_MAXBIT = 4096
+bitflags! {
+    /// Regex evaluation options.
+    flags SearchOptions: OnigOptions {
+        /// Default options.
+        const SEARCH_OPTION_NONE = 0,
+        /// Only named group captured.
+        const SEARCH_OPTION_DONT_CAPTURE_GROUP = 128,
+        /// Named and no-named group captured.
+        const SEARCH_OPTION_CAPTURE_GROUP = 256,
+        /// String head isn't considered as begin of line.
+        const SEARCH_OPTION_NOTBOL = 512,
+        /// String end isn't considered as end of line.
+        const SEARCH_OPTION_NOTEOL = 1024
     }
 }
 

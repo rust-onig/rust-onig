@@ -1,6 +1,6 @@
 use std::mem::transmute;
 use onig_sys;
-use super::{SyntaxOperator, SyntaxBehavior, Options};
+use super::{SyntaxOperator, SyntaxBehavior, RegexOptions};
 
 #[derive(Debug)]
 pub struct Syntax {
@@ -144,13 +144,13 @@ impl Syntax {
         self.set_behavior(behavior)
     }
 
-    pub fn get_options(&self) -> Options {
-        Options::from_bits_truncate(unsafe {
+    pub fn get_options(&self) -> RegexOptions {
+        RegexOptions::from_bits_truncate(unsafe {
             onig_sys::onig_get_syntax_options(&self.raw)
         })
     }
 
-    pub fn set_options(&mut self, options: Options) {
+    pub fn set_options(&mut self, options: RegexOptions) {
         let options = options.bits() as onig_sys::OnigOptions;
         unsafe {
             onig_sys::onig_set_syntax_options(&mut self.raw, options);

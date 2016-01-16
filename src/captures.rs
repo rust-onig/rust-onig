@@ -15,6 +15,13 @@ pub struct Captures<'t> {
 }
 
 impl<'t> Captures<'t> {
+    pub fn new(text: &'t str, region: Region) -> Captures<'t> {
+        Captures {
+            text: text,
+            region: region
+        }
+    }
+
     /// Returns the start and end positions of the Nth capture group. Returns
     /// `None` if i is not a valid capture group or if the capture group did
     /// not match anything. The positions returned are always byte indices with

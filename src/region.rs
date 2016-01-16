@@ -5,8 +5,6 @@ use onig_sys;
 
 use super::CaptureTreeNode;
 
-/// Onig Region
-///
 /// Represents a set of capture groups found in a search or match.
 #[derive(Debug)]
 pub struct Region {
@@ -27,7 +25,7 @@ impl Region {
         }
     }
 
-    /// Create a new region with a given size. This function allocates
+    /// Create a new region with a given capacity. This function allocates
     /// a new region object as in `Region::new` and resizes it to
     /// contain at least `capacity` regions.
     ///
@@ -41,16 +39,10 @@ impl Region {
         region
     }
 
-    /// Clear the Region
-    ///
     /// This can be used to clear out a region so it can be used
     /// again. See [`onig_sys::onig_region_clear`][region_clear]
     ///
     /// [region_clear]: ./onig_sys/fn.onig_region_clear.html
-    ///
-    /// # Arguments
-    ///
-    ///  * `self` - The region to clear
     pub fn clear(&mut self) {
         unsafe {
             onig_sys::onig_region_clear(&self.raw);
@@ -61,8 +53,6 @@ impl Region {
         self.raw.allocated as usize
     }
 
-    /// Resize the Region
-    ///
     /// Updates the region to contain `new_capacity` slots. See
     /// [`onig_sys::onig_region_resize`][region_resize] for mor
     /// information.
@@ -71,14 +61,13 @@ impl Region {
     ///
     /// # Arguments
     ///
-    ///  * `self` - The region to resize
     ///  * `new_capacity` - The new number of groups in the region.
     pub fn reserve(&mut self, new_capacity: usize) {
         let r = unsafe {
             onig_sys::onig_region_resize(&self.raw, new_capacity as c_int)
         };
         if r != 0 {
-            panic!("Onig: Memory overflow during region resize")
+            panic!("Onig: fail to memory allocation during region resize")
         }
     }
 
@@ -150,10 +139,10 @@ mod tests {
     fn test_region_resize() {
         {
             let mut region = Region::new();
-            assert!(region.len() == 0);
+            assert!(region.capacity() == 0);
             region.reserve(100);
             {
-                // can still get the size without a mutable borrow
+                // can still get the capacity without a mutable borrow
                 let region_borrowed = &region;
                 assert!(region_borrowed.capacity() == 100);
             }
