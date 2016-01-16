@@ -2,7 +2,6 @@ use std::mem::transmute;
 use onig_sys;
 use super::{SyntaxOperator, SyntaxBehavior, Options};
 
-#[repr(C)]
 #[derive(Debug)]
 pub struct Syntax {
     raw: onig_sys::OnigSyntax

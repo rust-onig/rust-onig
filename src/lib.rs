@@ -26,11 +26,13 @@ pub mod region;
 
 mod flags;
 mod syntax;
+mod tree;
 
 // re-export the onig types publically
 pub use flags::*;
 pub use err::OnigError;
-pub use region::OnigRegion;
+pub use region::{Region};
+pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
 
 pub type Encoding = c_void;
