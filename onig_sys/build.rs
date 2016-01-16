@@ -12,7 +12,10 @@ fn check_exists(file: &PathBuf) -> bool {
     }
 }
 
-static LIB_NAME: &'static str = "libonig.a";
+#[cfg(target_os = "macos")]
+static LIB_NAME: &'static str = "libonig.dylib";
+#[cfg(not(target_os = "macos"))]
+static LIB_NAME: &'static str = "libonig.so";
 
 pub fn main() {
     let out_dir_str = env::var("OUT_DIR").unwrap();
@@ -43,6 +46,6 @@ pub fn main() {
     }
 
     println!("cargo:rustc-link-search=native={}", out_dir.to_str().unwrap());
-    println!("cargo:rustc-link-lib=static=onig");
+    println!("cargo:rustc-link-lib=dylib=onig");
 
 }
