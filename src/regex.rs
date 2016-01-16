@@ -1,4 +1,5 @@
 use std::{error, fmt, str};
+use std::sync::Mutex;
 use std::mem::transmute;
 use std::ptr::null;
 use libc::c_int;
@@ -59,6 +60,10 @@ impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Error({}, {})", self.error, self.description())
     }
+}
+
+lazy_static! {
+    static ref REGEX_NEW_MUTEX: Mutex<()> = Mutex::new(());
 }
 
 impl Regex {
@@ -124,6 +129,9 @@ impl Regex {
             par_end: null(),
         };
 
+        // Grab a lock to make sure that `onig_new` isn't called by
+        // more than one thread at a time.
+        let _ = REGEX_NEW_MUTEX.lock().unwrap();
         let err = unsafe {
             onig_sys::onig_new(reg_ptr,
                                pattern_bytes.as_ptr(),

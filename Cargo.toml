@@ -12,6 +12,7 @@ license = "MIT"
 [dependencies]
 libc = "0.1"
 bitflags = "0.3"
+lazy_static = "0.1"
 
 [dependencies.onig_sys]
 version = "0.2"
