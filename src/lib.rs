@@ -24,6 +24,7 @@ pub mod utils;
 pub mod err;
 pub mod region;
 
+mod captures;
 mod flags;
 mod syntax;
 mod tree;
@@ -32,6 +33,7 @@ mod tree;
 pub use flags::*;
 pub use err::OnigError;
 pub use region::{Region};
+pub use captures::{Captures, SubCaptures, SubCapturesPos};
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
 
@@ -209,6 +211,8 @@ impl Regex {
         };
         Self::result_to_match(ret)
     }
+
+    // TODO: add method `captures`
 
     unsafe fn str_end(str: &str) -> *const u8 {
         str.as_ptr().offset(str.len() as isize)
