@@ -4,7 +4,6 @@ use onig_sys;
 /// Onig Region
 ///
 /// Represents a set of capture groups found in a search or match.
-#[allow(raw_pointer_derive)]
 #[derive(Debug)]
 pub struct OnigRegion {
     raw: *mut onig_sys::OnigRegion,
@@ -19,21 +18,23 @@ impl OnigRegion {
     ///
     /// [region_new]: ./onig_sys/fn.onig_region_new.html
     pub fn new() -> OnigRegion {
-        let raw = unsafe { onig_sys::onig_region_new() };
+        let raw = unsafe {
+            onig_sys::onig_region_new()
+        };
         OnigRegion { raw: raw }
     }
 
     /// Create a new region with a given size. This function allocates
     /// a new region object as in `OnigRegion::new` and resizes it to
-    /// contain at least `size` regions.
+    /// contain at least `capacity` regions.
     ///
     /// # Arguments
     ///
-    /// * `size` - the number of captures this region should be
+    /// * `capacity` - the number of captures this region should be
     /// capable of storing without allocation.
-    pub fn new_with_size(size: usize) -> OnigRegion {
+    pub fn with_capacity(capacity: usize) -> OnigRegion {
         let mut region = Self::new();
-        region.resize(size);
+        region.reserve(capacity);
         region
     }
 
@@ -53,9 +54,15 @@ impl OnigRegion {
         }
     }
 
+    pub fn capacity(&self) -> usize {
+        unsafe {
+            (*self.raw).allocated as usize
+        }
+    }
+
     /// Resize the Region
     ///
-    /// Updates the region to contain `new_size` slots. See
+    /// Updates the region to contain `new_capacity` slots. See
     /// [`onig_sys::onig_region_resize`][region_resize] for mor
     /// information.
     ///
@@ -64,15 +71,22 @@ impl OnigRegion {
     /// # Arguments
     ///
     ///  * `self` - The region to resize
-    ///  * `new_size` - The new number of groups in the region.
-    pub fn resize(&mut self, new_size: usize) -> usize {
-        unsafe { onig_sys::onig_region_resize(self.raw, new_size as c_int) as usize }
+    ///  * `new_capacity` - The new number of groups in the region.
+    pub fn reserve(&mut self, new_capacity: usize) {
+        let r = unsafe {
+            onig_sys::onig_region_resize(self.raw, new_capacity as c_int)
+        };
+        if r != 0 {
+            panic!("Onig: Memory overflow during region resize")
+        }
     }
 
     /// Get the size of the region. Returns the number of registers in
     /// the region.
-    pub fn size(&self) -> isize {
-        unsafe { (*self.raw).num_regs as isize }
+    pub fn len(&self) -> usize {
+        unsafe {
+            (*self.raw).num_regs as usize
+        }
     }
 }
 
@@ -93,7 +107,7 @@ impl Drop for OnigRegion {
 mod tests {
 
     use super::*;
-    
+
     #[test]
     fn test_region_create() {
         OnigRegion::new();
@@ -109,18 +123,18 @@ mod tests {
     fn test_region_resize() {
         {
             let mut region = OnigRegion::new();
-            assert!(region.size() == 0);
-            region.resize(100);
+            assert!(region.len() == 0);
+            region.reserve(100);
             {
                 // can still get the size without a mutable borrow
                 let region_borrowed = &region;
-                assert!(region_borrowed.size() == 100);
+                assert!(region_borrowed.capacity() == 100);
             }
         }
 
         {
-            let region = OnigRegion::new_with_size(10);
-            assert!(region.size() == 10);
+            let region = OnigRegion::with_capacity(10);
+            assert!(region.capacity() == 10);
         }
     }
 }

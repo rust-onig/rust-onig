@@ -4,38 +4,46 @@
 //! # Examples
 //!
 //! ```
-//! # use onig::{options,syntax_types,Regex};
+//! # use onig::{Regex, OPTION_NONE};
 //! let regex = Regex::new(r#"hello (\w*)"#).unwrap();
 //! let result = regex.search_str("hello world",
-//!                               onig::options::ONIG_OPTION_NONE);
+//!                               onig::OPTION_NONE);
 //! assert!(result.is_some());
 //! ```
 
+#[macro_use]
+extern crate bitflags;
 extern crate libc;
 extern crate onig_sys;
 
-use libc::c_int;
+use libc::c_void;
+use std::mem::transmute;
 use std::ptr::null;
 
 pub mod utils;
 pub mod err;
 pub mod region;
 
+mod flags;
+mod syntax;
+
 // re-export the onig types publically
-pub use onig_sys::onig_option_type as options;
-pub use onig_sys::onig_syntax_type as syntax_types;
+pub use flags::*;
 pub use err::OnigError;
 pub use region::OnigRegion;
+pub use syntax::Syntax;
+
+pub type Encoding = c_void;
+pub static ENCODING_UTF8: &'static Encoding = &onig_sys::OnigEncodingUTF8;
 
 /// Oniguruma Regular Expression
 ///
 /// This struct is a wrapper around an Oniguruma regular expression
 /// pointer. This represents a compiled regex which can be used in
 /// search and match operations.
-#[allow(raw_pointer_derive)]
 #[derive(Debug)]
 pub struct Regex {
-    raw: *const onig_sys::regex_t,
+    raw: onig_sys::OnigRegex,
 }
 
 impl Regex {
@@ -49,12 +57,12 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{options,syntax_types,Regex};
+    /// use onig::Regex;
     /// let r = Regex::new(r#"hello (\w+)"#);
     /// assert!(r.is_ok());
     /// ```
     pub fn new(pattern: &str) -> Result<Regex, OnigError> {
-        Self::new_with_options(pattern, options::ONIG_OPTION_NONE, syntax_types::RUBY)
+        Self::new_with_options(pattern, OPTION_NONE, Syntax::default())
     }
 
     /// Create a new Regex
@@ -71,24 +79,24 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{options,syntax_types,Regex};
+    /// use onig::{Regex, Syntax, OPTION_NONE};
     /// let r = Regex::new_with_options("hello.*world",
-    ///                    options::ONIG_OPTION_NONE,
-    ///                    syntax_types::RUBY);
+    ///                    OPTION_NONE,
+    ///                    Syntax::default());
     /// assert!(r.is_ok());
     /// ```
     ///
     /// [regex_new]: ./onig_sys/fn.onig_new.html
     pub fn new_with_options(pattern: &str,
-                            option: onig_sys::OnigOptionType,
-                            syntax: *const onig_sys::OnigSyntaxTypeStruct)
+                            option: Options,
+                            syntax: &Syntax)
                             -> Result<Regex, OnigError> {
 
         // Convert the rust types to those required for the call to
         // `onig_new`.
         let pattern_bytes = pattern.as_bytes();
-        let mut reg: *const onig_sys::regex_t = null();
-        let reg_ptr = &mut reg as *mut *const onig_sys::regex_t;
+        let mut reg: onig_sys::OnigRegex = null();
+        let reg_ptr = &mut reg as *mut onig_sys::OnigRegex;
 
         // We can use this later to get an error message to pass back
         // if regex creation fails.
@@ -103,8 +111,8 @@ impl Regex {
                                pattern_bytes.as_ptr(),
                                pattern_bytes[pattern_bytes.len()..].as_ptr(),
                                option.bits(),
-                               onig_sys::onig_encodings::UTF8,
-                               syntax,
+                               ENCODING_UTF8,
+                               transmute(syntax),
                                &mut error)
         };
 
@@ -137,15 +145,14 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::Regex;
-    /// use onig::{options,syntax_types};
+    /// use onig::{Regex, OPTION_NONE};
     ///
     /// let r = Regex::new(".*").unwrap();
-    /// let res = r.match_str("hello", options::ONIG_OPTION_NONE);
+    /// let res = r.match_str("hello", OPTION_NONE);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
     /// ```
-    pub fn match_str(&self, str: &str, options: onig_sys::OnigOptionType) -> Option<i32> {
+    pub fn match_str(&self, str: &str, options: Options) -> Option<i32> {
         let ret = unsafe {
             let end = Self::str_end(str);
             onig_sys::onig_match(self.raw,
@@ -179,15 +186,14 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::Regex;
-    /// use onig::{options,syntax_types};
+    /// use onig::{Regex, OPTION_NONE};
     ///
     /// let r = Regex::new("l{1,2}").unwrap();
-    /// let res = r.search_str("hello", options::ONIG_OPTION_NONE);
+    /// let res = r.search_str("hello", OPTION_NONE);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
     /// ```
-    pub fn search_str(&self, str: &str, options: onig_sys::OnigOptionType) -> Option<i32> {
+    pub fn search_str(&self, str: &str, options: Options) -> Option<i32> {
         let ret = unsafe {
             let start = str.as_ptr();
             let end = Self::str_end(str);
@@ -234,7 +240,7 @@ mod tests {
 
     #[test]
     fn test_regex_create() {
-        Regex::new_with_options(".*", options::ONIG_OPTION_NONE, syntax_types::RUBY).unwrap();
+        Regex::new_with_options(".*", OPTION_NONE, Syntax::default()).unwrap();
         Regex::new(r#"a \w+ word"#).unwrap();
     }
 
@@ -248,7 +254,7 @@ mod tests {
     fn test_simple_match() {
         let r = create_regex(".*");
 
-        let res = r.match_str("hello wolrld", options::ONIG_OPTION_NONE);
+        let res = r.match_str("hello wolrld", OPTION_NONE);
 
         assert!(res.is_some());
         assert!(res.unwrap() == 12);
@@ -258,14 +264,14 @@ mod tests {
     fn test_failed_match() {
         let r = create_regex("foo");
 
-        let res = r.match_str("bar", options::ONIG_OPTION_NONE);
+        let res = r.match_str("bar", OPTION_NONE);
         assert!(res.is_none());
     }
 
     #[test]
     fn test_partial_match() {
         let r = create_regex("hello");
-        let res = r.match_str("hello world", options::ONIG_OPTION_NONE);
+        let res = r.match_str("hello world", OPTION_NONE);
 
         assert!(res.is_some());
         assert!(res.unwrap() == 5);
@@ -274,7 +280,7 @@ mod tests {
     #[test]
     fn test_simple_search() {
         let r = create_regex("hello");
-        let res = r.search_str("just came to say hello :-)", options::ONIG_OPTION_NONE);
+        let res = r.search_str("just came to say hello :-)", OPTION_NONE);
 
         assert!(res.is_some());
         assert!(res.unwrap() == 17);
