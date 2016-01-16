@@ -35,7 +35,7 @@ pub struct OnigCaptureTreeNode {
 }
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct OnigSyntax {
     pub op: c_uint,
     pub op2: c_uint,
@@ -45,7 +45,7 @@ pub struct OnigSyntax {
 }
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct OnigMetaCharTable {
     pub esc: OnigCodePoint,
     pub anychar: OnigCodePoint,

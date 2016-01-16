@@ -2,36 +2,9 @@ use std::mem::transmute;
 use onig_sys;
 use super::{SyntaxOperator, SyntaxBehavior, RegexOptions};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Syntax {
     raw: onig_sys::OnigSyntax,
-}
-
-impl Clone for Syntax {
-    fn clone(&self) -> Syntax {
-        let mut syntax = Syntax {
-            raw: onig_sys::OnigSyntax {
-                op: 0,
-                op2: 0,
-                behavior: 0,
-                options: 0,
-                meta_char_table: onig_sys::OnigMetaCharTable {
-                    esc: 0,
-                    anychar: 0,
-                    anytime: 0,
-                    zero_or_one_time: 0,
-                    one_or_more_time: 0,
-                    anychar_anytime: 0,
-                },
-            },
-        };
-        Syntax::clone_from(&mut syntax, self);
-        syntax
-    }
-
-    fn clone_from(&mut self, source: &Syntax) {
-        unsafe { onig_sys::onig_copy_syntax(&mut self.raw, &source.raw) }
-    }
 }
 
 impl Syntax {
