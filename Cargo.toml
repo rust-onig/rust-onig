@@ -12,4 +12,7 @@ license = "MIT"
 [dependencies]
 libc = "0.1"
 bitflags = "0.3"
-onig_sys = "0.2"
+
+[dependencies.onig_sys]
+version = "0.2"
+path = "onig_sys"
