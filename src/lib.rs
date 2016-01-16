@@ -16,29 +16,26 @@ extern crate bitflags;
 extern crate libc;
 extern crate onig_sys;
 
-use libc::c_void;
 use std::mem::transmute;
 use std::ptr::null;
 
 pub mod utils;
-pub mod err;
-pub mod region;
 
+
+mod error;
 mod captures;
 mod flags;
+mod region;
 mod syntax;
 mod tree;
 
 // re-export the onig types publically
 pub use flags::*;
-pub use err::OnigError;
-pub use region::{Region};
+pub use error::Error;
+pub use region::Region;
 pub use captures::{Captures, SubCaptures, SubCapturesPos};
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
-
-pub type Encoding = c_void;
-pub static ENCODING_UTF8: &'static Encoding = &onig_sys::OnigEncodingUTF8;
 
 /// Oniguruma Regular Expression
 ///
@@ -65,7 +62,7 @@ impl Regex {
     /// let r = Regex::new(r#"hello (\w+)"#);
     /// assert!(r.is_ok());
     /// ```
-    pub fn new(pattern: &str) -> Result<Regex, OnigError> {
+    pub fn new(pattern: &str) -> Result<Regex, Error> {
         Self::new_with_options(pattern, OPTION_NONE, Syntax::default())
     }
 
@@ -94,7 +91,7 @@ impl Regex {
     pub fn new_with_options(pattern: &str,
                             option: Options,
                             syntax: &Syntax)
-                            -> Result<Regex, OnigError> {
+                            -> Result<Regex, Error> {
 
         // Convert the rust types to those required for the call to
         // `onig_new`.
@@ -115,7 +112,7 @@ impl Regex {
                                pattern_bytes.as_ptr(),
                                pattern_bytes[pattern_bytes.len()..].as_ptr(),
                                option.bits(),
-                               ENCODING_UTF8,
+                               &onig_sys::OnigEncodingUTF8,
                                transmute(syntax),
                                &mut error)
         };
@@ -123,7 +120,7 @@ impl Regex {
         if err == 0 {
             Ok(Regex { raw: reg })
         } else {
-            Err(OnigError::new(err, &error))
+            Err(Error::new(err, Some(error)))
         }
     }
 
