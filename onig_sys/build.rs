@@ -12,10 +12,12 @@ fn check_exists(file: &PathBuf) -> bool {
     }
 }
 
+static LIB_NAME: &'static str = "libonig.a";
+
 pub fn main() {
     let out_dir_str = env::var("OUT_DIR").unwrap();
     let out_dir = Path::new(&out_dir_str);
-    let out_file = out_dir.join("libonig.dylib");
+    let out_file = out_dir.join(LIB_NAME);
 
     // If the file already exists then skip compiling it
     if !check_exists(&out_file) {
@@ -34,13 +36,13 @@ pub fn main() {
             .status().unwrap_or_else(|err| {
                 panic!("Error running make: {}", err);
             });
-        fs::copy(".libs/libonig.dylib", out_file)
+        fs::copy(Path::new(".libs").join(LIB_NAME), out_file)
             .unwrap_or_else(|err| {
                 panic!("Error copying file to output: {}", err);
             });
     }
 
     println!("cargo:rustc-link-search=native={}", out_dir.to_str().unwrap());
-    println!("cargo:rustc-link-lib=dylib=onig");
+    println!("cargo:rustc-link-lib=static=onig");
 
 }
