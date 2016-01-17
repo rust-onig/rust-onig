@@ -12,9 +12,9 @@ static LIB_NAME: &'static str = "libonig.so";
 
 fn compile_with_make() {
     let out_dir_str = env!("OUT_DIR");
-    let out_dir = Path::new(out_dir_str);
     let onig_tar_out_dir = Path::new("./onig-5.9.6/");
-    let out_file = out_dir.join(LIB_NAME);
+    let lib_dir = Path::new(out_dir_str).join("lib");
+    let out_file = lib_dir.join(LIB_NAME);
 
     // If the file already exists then skip compiling it
     if !out_file.exists() {
@@ -44,13 +44,9 @@ fn compile_with_make() {
             .status().unwrap_or_else(|err| {
                 panic!("Error running make install: {}", err);
             });
-        fs::copy(fs::canonicalize(Path::new(".libs").join(LIB_NAME)).unwrap(), out_file)
-            .unwrap_or_else(|err| {
-                panic!("Error copying file to output: {}", err);
-            });
     }
 
-    println!("cargo:rustc-link-search=native={}", out_dir.to_str().unwrap());
+    println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-link-lib=dylib=onig");
 
 }
