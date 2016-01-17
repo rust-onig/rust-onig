@@ -1,5 +1,7 @@
 # Rust Onig
 
+[![Build Status](https://travis-ci.org/rust-onig/rust-onig.svg?branch=master)](https://travis-ci.org/rust-onig/rust-onig)
+
 Rust bindings for the [Oniguruma regex library][Onig_wiki].
 
 **This crate is still under development at the moment.**
