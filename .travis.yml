@@ -1,4 +1,8 @@
 language: rust
+script:
+  - cargo build --verbose
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export LD_LIBRARY_PATH=`pwd`/target/debug/build/onig_sys-*/out/lib/:$LD_LIBRARY_PATH; fi
+  - cargo test --verbose
 rust:
   - stable
   - beta
