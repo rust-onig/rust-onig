@@ -4,7 +4,9 @@ script:
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]
     then
-      export LD_LIBRARY_PATH=$(dirname `pwd`/target/debug/build/onig_sys-*/out/lib/):$LD_LIBRARY_PATH
+      p=$(cd ./target/debug/build/onig_sys-*/out/lib/ && pwd)
+      echo "adding $p to linker path"
+      export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
     fi
   - cargo test --verbose
 rust:
