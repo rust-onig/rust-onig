@@ -1,5 +1,4 @@
 language: rust
-sudo: false
 
 os:
 - osx
@@ -24,7 +23,7 @@ script:
 
 after_success:
 - |
-  if ["$TRAVIS_PULL_REQUEST" == "false"] && ["$TRAVIS_OS_NAME" == "linux"] && ["$TRAVIS_RUST_VERSION" == "stable"]
+  if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_RUST_VERSION" == "stable" ];
   then
     git clone https://github.com/davisp/ghp-import
     ./ghp-import/ghp-import -n target/doc
