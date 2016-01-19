@@ -13,6 +13,7 @@ Oniguruma.
 You probably don't want to link to this crate directly."""
 
 repository = "http://github.com/iwillspeak/rust-onig"
+documentation = "http://rust-onig.github.io/rust-onig/onig_sys/"
 readme = "../README.md"
 license = "MIT"
 

@@ -4,6 +4,8 @@
 
 Rust bindings for the [Oniguruma regex library][Onig_wiki].
 
+[Documentation](http://rust-onig.github.io/rust-onig/onig/)
+
 **This crate is still under development at the moment.**
 
 #### Example of usage
