@@ -11,7 +11,14 @@ rust:
 - nightly
 
 before_script:
-- pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
+- pip install 'travis-cargo<0.2' --user
+- |
+  if [ "$TRAVIS_OS_NAME" == "linux" ]
+  then
+    export PATH=$HOME/.local/bin:$PATH
+  else
+    export PATH=$HOME/Library/Python/$VERSION/bin
+  fi
 
 script:
 - travis-cargo build
@@ -27,3 +34,7 @@ script:
 
 after_success:
 - travis-cargo --only stable doc-upload
+
+env:
+  global:
+    - TRAVIS_CARGO_NIGHTLY_FEATURE=""
