@@ -14,7 +14,7 @@ before_script:
 - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
 
 script:
-- travis-cargo build --verbose
+- travis-cargo build
 - |
   if [ "$TRAVIS_OS_NAME" == "linux" ]
   then
@@ -22,7 +22,7 @@ script:
     echo "adding $p to linker path"
     export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
   fi
-- travis-cargo test --verbose
+- travis-cargo test
 - travis-cargo --only stable doc
 
 after_success:
