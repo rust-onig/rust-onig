@@ -13,7 +13,6 @@ pub type OnigRegex = *const c_void;
 
 #[repr(C)]
 #[derive(Debug)]
-#[allow(raw_pointer_derive)]
 pub struct OnigRegion {
     pub allocated: c_int,
     pub num_regs: c_int,
@@ -24,7 +23,6 @@ pub struct OnigRegion {
 
 #[repr(C)]
 #[derive(Debug)]
-#[allow(raw_pointer_derive)]
 pub struct OnigCaptureTreeNode {
     pub group: c_int,
     pub beg: c_int,
@@ -57,7 +55,6 @@ pub struct OnigMetaCharTable {
 
 #[repr(C)]
 #[derive(Debug)]
-#[allow(raw_pointer_derive)]
 pub struct OnigErrorInfo {
     pub enc: *const OnigEncoding,
     pub par: *const u8,
