@@ -12,6 +12,37 @@ pub type OnigCaseFoldType = c_uint;
 pub type OnigEncoding = c_void;
 pub type OnigRegex = *const c_void;
 
+/// Warning Callback
+///
+/// `void (*func)(char* warning_message)`
+pub type OnigWarnFunc = extern "C" fn(*const c_char);
+
+/// Foreach Callback
+///
+/// This callback will be invoked for each name when calling
+/// [`onig_foreach_name`](fn.onig_foreach_name.html). The
+/// final argument to that function is passed back to this callback.
+pub type OnigForeachCallback = extern "C" fn(*const c_uchar,
+                                             *const c_uchar,
+                                             c_int,
+                                             *const c_int,
+                                             OnigRegex,
+                                             *mut c_void)
+                                             -> c_int;
+
+/// Capture Tree Callback
+///
+/// ```c
+/// int(*func)(int,int,int,int,int,void*)
+/// ```
+///
+/// This callback will be invoked for each node in the capture tree
+/// being traversed. See
+/// [`onig_capture_tree_traverse`](fn.onig_capture_tree_traverse.html)
+/// for more information about parameters and use.
+pub type OnigCaptureTreeCallback = extern "C" fn(c_int, c_int, c_int, c_int, c_int, *mut c_void)
+                                                 -> c_int;
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct OnigRegion {
@@ -30,7 +61,7 @@ pub struct OnigCaptureTreeNode {
     pub end: c_int,
     pub allocated: c_int,
     pub num_childs: c_int,
-    pub childs: *const *const OnigCaptureTreeNode
+    pub childs: *const *const OnigCaptureTreeNode,
 }
 
 #[repr(C)]
@@ -40,7 +71,7 @@ pub struct OnigSyntax {
     pub op2: c_uint,
     pub behavior: c_uint,
     pub options: c_uint,
-    pub meta_char_table: OnigMetaCharTable
+    pub meta_char_table: OnigMetaCharTable,
 }
 
 #[repr(C)]
@@ -63,7 +94,7 @@ pub struct OnigMetaCharTable {
     pub anytime: OnigCodePoint,
     pub zero_or_one_time: OnigCodePoint,
     pub one_or_more_time: OnigCodePoint,
-    pub anychar_anytime: OnigCodePoint
+    pub anychar_anytime: OnigCodePoint,
 }
 
 #[repr(C)]
@@ -137,33 +168,36 @@ extern "C" {
     ///
     ///   normal return: error message string length
     ///
-    ///   arguments
-    ///   1 err_buf:              error message string buffer.
+    /// # Arguments
+    ///
+    ///   1. err_buf:              error message string buffer.
     ///                           (required size: ONIG_MAX_ERROR_MESSAGE_LEN)
-    ///   2 err_code:             error code returned by other API functions.
-    ///   3 err_info (optional):  error info returned by onig_new().
+    ///   2. err_code:             error code returned by other API functions.
+    ///   3. err_info (optional):  error info returned by onig_new().
     pub fn onig_error_code_to_str(err_buff: *mut c_uchar, err_code: c_int, ...) -> c_int;
 
-    //   Set warning function.
-    //
-    // # void onig_set_warn_func(OnigWarnFunc func)
-    //
-    //   WARNING:
-    //     '[', '-', ']' in character class without escape.
-    //     ']' in pattern without escape.
-    //
-    //   arguments
-    //   1 func:     function pointer.    void (*func)(char* warning_message)
+    ///   Set warning function.
+    ///
+    ///  `void onig_set_warn_func(OnigWarnFunc func)`
+    ///
+    ///   WARNING:
+    ///     '[', '-', ']' in character class without escape.
+    ///     ']' in pattern without escape.
+    ///
+    ///   arguments
+    ///   1 func:     function pointer.    void (*func)(char* warning_message)
+    pub fn onig_set_warn_func(func: OnigWarnFunc);
 
-    // # void onig_set_verb_warn_func(OnigWarnFunc func)
-    //
-    //   Set verbose warning function.
-    //
-    //   WARNING:
-    //     redundant nested repeat operator.
-    //
-    //   arguments
-    //   1 func:     function pointer.    void (*func)(char* warning_message)
+    ///   Set verbose warning function.
+    ///
+    ///  `void onig_set_verb_warn_func(OnigWarnFunc func)`
+    ///
+    ///   WARNING:
+    ///     redundant nested repeat operator.
+    ///
+    ///   arguments
+    ///   1 func:     function pointer.    void (*func)(char* warning_message)
+    pub fn onig_set_verb_warn_func(func: OnigWarnFunc);
 
     ///   Create a regex object.
     ///
@@ -282,8 +316,9 @@ extern "C" {
                                   option: OnigOptions,
                                   enc: *const OnigEncoding,
                                   syntax: *const OnigSyntax,
-                                  err_info: *mut OnigErrorInfo) -> c_int;
-    
+                                  err_info: *mut OnigErrorInfo)
+                                  -> c_int;
+
     ///   Create a regex object.
     ///   This function is deluxe version of onig_new().
     ///
@@ -328,7 +363,8 @@ extern "C" {
                            pattern: *const c_uchar,
                            pattern_end: *const c_uchar,
                            ci: *const OnigCompileInfo,
-                           einfo: *mut OnigErrorInfo) -> c_int;
+                           einfo: *mut OnigErrorInfo)
+                           -> c_int;
 
     ///   Free memory used by regex object.
     ///
@@ -479,7 +515,8 @@ extern "C" {
     pub fn onig_name_to_group_numbers(reg: OnigRegex,
                                       name: *const c_uchar,
                                       name_end: *const c_uchar,
-                                      num_list: *mut *const c_int) -> c_int;
+                                      num_list: *mut *const c_int)
+                                      -> c_int;
 
     ///   Return the group number corresponding to the named backref (\k<name>).
     ///   If two or more regions for the groups of the name are effective,
@@ -498,24 +535,33 @@ extern "C" {
     pub fn onig_name_to_backref_number(reg: OnigRegex,
                                        name: *const c_uchar,
                                        name_end: *const c_uchar,
-                                       region: *const OnigRegion) -> c_int;
+                                       region: *const OnigRegion)
+                                       -> c_int;
 
-    // # int onig_foreach_name(regex_t* reg,
-    //                         int (*func)(const UChar*, const UChar*, int,int*,regex_t*,void*),
-    //                         void* arg)
-    //
-    //   Iterate function call for all names.
-    //
-    //   normal return: 0
-    //   error:         func's return value.
-    //
-    //   arguments
-    //   1 reg:     regex object.
-    //   2 func:    callback function.
-    //              func(name, name_end, <number of groups>, <group number's list>,
-    //                   reg, arg);
-    //              if func does not return 0, then iteration is stopped.
-    //   3 arg:     argument for func.
+    ///   Iterate function call for all names.
+    ///
+    ///  `int onig_foreach_name(regex_t* reg,
+    ///                         int (*func)(const UChar*, const UChar*, int,int*,regex_t*,void*),
+    ///                         void* arg)`
+    ///
+    /// # Returns
+    ///
+    ///  * normal return: 0
+    ///  * error:         func's return value.
+    ///
+    /// # Arguments
+    ///
+    ///   1. reg:     regex object.
+    ///   2. func:    callback function.
+    ///
+    ///     ```c
+    ///     func(name, name_end, <number of groups>, <group number's list>,
+    ///          reg, arg);
+    ///     ```
+    ///
+    ///     if func does not return 0, then iteration is stopped.
+    ///   3. arg:     argument for func.
+    pub fn onig_foreach_name(reg: OnigRegex, func: OnigForeachCallback, arg: *mut c_void) -> c_int;
 
     ///   Return the number of names defined in the pattern.
     ///   Multiple definitions of one name is counted as one.
@@ -568,39 +614,50 @@ extern "C" {
     ///   1. `region`: matching result.
     pub fn onig_get_capture_tree(region: *const OnigRegion) -> *const OnigCaptureTreeNode;
 
-    // # int onig_capture_tree_traverse(OnigRegion* region, int at,
-    //                   int(*func)(int,int,int,int,int,void*), void* arg)
-    //
-    //  Traverse and callback in capture history data tree.
-    //
-    //   normal return: 0
-    //   error:         callback func's return value.
-    //
-    //   arguments
-    //   1 region:  match region data.
-    //   2 at:      callback position.
-    //
-    //     ONIG_TRAVERSE_CALLBACK_AT_FIRST: callback first, then traverse childs.
-    //     ONIG_TRAVERSE_CALLBACK_AT_LAST:  traverse childs first, then callback.
-    //     ONIG_TRAVERSE_CALLBACK_AT_BOTH:  callback first, then traverse childs,
-    //                                      and at last callback again.
-    //
-    //   3 func:    callback function.
-    //              if func does not return 0, then traverse is stopped.
-    //
-    //              int func(int group, int beg, int end, int level, int at,
-    //                       void* arg)
-    //
-    //                group: group number
-    //                beg:   capture start position
-    //                end:   capture end position
-    //                level: nest level (from 0)
-    //                at:    callback position
-    //                       ONIG_TRAVERSE_CALLBACK_AT_FIRST
-    //                       ONIG_TRAVERSE_CALLBACK_AT_LAST
-    //                arg:   optional callback argument
-    //
-    //   4 arg;     optional callback argument.
+    ///  Traverse and callback in capture history data tree.
+    ///
+    /// `int onig_capture_tree_traverse(OnigRegion* region, int at,
+    ///                   int(*func)(int,int,int,int,int,void*), void* arg)`
+    ///
+    /// # Returns
+    ///
+    ///   normal return: 0
+    ///   error:         callback func's return value.
+    ///
+    /// # Arguments
+    ///
+    ///   1. region:  match region data.
+    ///   2. at:      callback position.
+    ///
+    ///    * ONIG_TRAVERSE_CALLBACK_AT_FIRST: callback first, then traverse childs.
+    ///    * ONIG_TRAVERSE_CALLBACK_AT_LAST:  traverse childs first, then callback.
+    ///    * ONIG_TRAVERSE_CALLBACK_AT_BOTH:  callback first, then traverse childs,
+    ///                                      and at last callback again.
+    ///
+    ///   3. func:  callback function.
+    ///             if func does not return 0, then traverse is stopped.
+    ///
+    ///      ```c
+    ///      int func(int group, int beg, int end, int level, int at,
+    ///               void* arg)
+    ///      ```
+    ///
+    ///      *  group: group number
+    ///      *  beg:   capture start position
+    ///      *  end:   capture end position
+    ///      *  level: nest level (from 0)
+    ///      *  at:    callback position
+    ///          *     ONIG_TRAVERSE_CALLBACK_AT_FIRST
+    ///          *     ONIG_TRAVERSE_CALLBACK_AT_LAST
+    ///      *  arg:   optional callback argument
+    ///
+    ///   4. arg;     optional callback argument.
+    pub fn onig_capture_tree_traverse(region: *const OnigRegion,
+                                      at: c_int,
+                                      func: OnigCaptureTreeCallback,
+                                      arg: c_void)
+                                      -> c_int;
+
 
     ///   Return noname group capture activity.
     ///
@@ -615,7 +672,7 @@ extern "C" {
     ///
     ///  > if option ONIG_OPTION_DONT_CAPTURE_GROUP == ON
     ///  >   --> inactive
-    ///  > 
+    ///  >
     ///  > if the regex pattern have named group
     ///  >    and syntax ONIG_SYN_CAPTURE_ONLY_NAMED_GROUP == ON
     ///  >    and option ONIG_OPTION_CAPTURE_GROUP == OFF
@@ -634,7 +691,8 @@ extern "C" {
     ///   3 s:     target address of string
     pub fn onigenc_get_prev_char_head(enc: *const OnigEncoding,
                                       start: *const c_uchar,
-                                      s: *const c_uchar) -> *const c_uchar;
+                                      s: *const c_uchar)
+                                      -> *const c_uchar;
 
     ///   Return left-adjusted head address of a character.
     ///
@@ -648,7 +706,8 @@ extern "C" {
     ///   3. s:     target address of string
     pub fn onigenc_get_left_adjust_char_head(enc: *const OnigEncoding,
                                              start: *const c_uchar,
-                                             s: *const c_uchar) -> *const c_uchar;
+                                             s: *const c_uchar)
+                                             -> *const c_uchar;
 
     ///   Return right-adjusted head address of a character.
     ///
@@ -662,14 +721,16 @@ extern "C" {
     ///   3. s:     target address of string
     pub fn onigenc_get_right_adjust_char_head(enc: *const OnigEncoding,
                                               start: *const c_uchar,
-                                              s: *const c_uchar) -> *const c_uchar;
+                                              s: *const c_uchar)
+                                              -> *const c_uchar;
 
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)`
     pub fn onigenc_strlen(enc: *const OnigEncoding,
                           s: *const c_uchar,
-                          end: *const c_uchar) -> c_int;
+                          end: *const c_uchar)
+                          -> c_int;
 
     ///   Return number of characters in the string.
     ///
@@ -680,7 +741,7 @@ extern "C" {
     ///
     ///  `int onigenc_str_bytelen_null(OnigEncoding enc, const UChar* s)`
     pub fn onigenc_str_bytelen_null(enc: *const OnigEncoding, s: *const c_uchar) -> c_int;
-    
+
     ///   Set default syntax.
     ///
     ///  `int onig_set_default_syntax(OnigSyntaxType* syntax)`
@@ -756,9 +817,7 @@ extern "C" {
     ///   ```
     ///
     ///   3 code: meta character or `ONIG_INEFFECTIVE_META_CHAR`.
-    pub fn onig_set_meta_char(syntax: *mut OnigSyntax,
-                              what: c_uint,
-                              code: OnigCodePoint) -> c_int;
+    pub fn onig_set_meta_char(syntax: *mut OnigSyntax, what: c_uint, code: OnigCodePoint) -> c_int;
 
     ///   Get default case fold flag.
     ///
