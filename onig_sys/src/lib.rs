@@ -75,8 +75,37 @@ pub struct OnigErrorInfo {
 }
 
 extern "C" {
+    pub static OnigEncodingASCII: OnigEncoding;
+    pub static OnigEncodingISO_8859_1: OnigEncoding;
+    pub static OnigEncodingISO_8859_2: OnigEncoding;
+    pub static OnigEncodingISO_8859_3: OnigEncoding;
+    pub static OnigEncodingISO_8859_4: OnigEncoding;
+    pub static OnigEncodingISO_8859_5: OnigEncoding;
+    pub static OnigEncodingISO_8859_6: OnigEncoding;
+    pub static OnigEncodingISO_8859_7: OnigEncoding;
+    pub static OnigEncodingISO_8859_8: OnigEncoding;
+    pub static OnigEncodingISO_8859_9: OnigEncoding;
+    pub static OnigEncodingISO_8859_10: OnigEncoding;
+    pub static OnigEncodingISO_8859_11: OnigEncoding;
+    pub static OnigEncodingISO_8859_13: OnigEncoding;
+    pub static OnigEncodingISO_8859_14: OnigEncoding;
+    pub static OnigEncodingISO_8859_15: OnigEncoding;
+    pub static OnigEncodingISO_8859_16: OnigEncoding;
     pub static OnigEncodingUTF8: OnigEncoding;
-    // TODO: add other encodings
+    pub static OnigEncodingUTF16_BE: OnigEncoding;
+    pub static OnigEncodingUTF16_LE: OnigEncoding;
+    pub static OnigEncodingUTF32_BE: OnigEncoding;
+    pub static OnigEncodingUTF32_LE: OnigEncoding;
+    pub static OnigEncodingEUC_JP: OnigEncoding;
+    pub static OnigEncodingEUC_TW: OnigEncoding;
+    pub static OnigEncodingEUC_KR: OnigEncoding;
+    pub static OnigEncodingEUC_CN: OnigEncoding;
+    pub static OnigEncodingSJIS: OnigEncoding;
+    pub static OnigEncodingKOI8: OnigEncoding;
+    pub static OnigEncodingKOI8_R: OnigEncoding;
+    pub static OnigEncodingCP1251: OnigEncoding;
+    pub static OnigEncodingBIG5: OnigEncoding;
+    pub static OnigEncodingGB18030: OnigEncoding;
 
     pub static OnigSyntaxASIS: OnigSyntax;
     pub static OnigSyntaxPosixBasic: OnigSyntax;
