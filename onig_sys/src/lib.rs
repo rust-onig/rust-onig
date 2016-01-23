@@ -1,6 +1,6 @@
 extern crate libc;
 
-use libc::{c_int, c_uint, c_ulong, c_void, c_char};
+use libc::{c_int, c_uint, c_ulong, c_void, c_char, c_uchar};
 
 pub type OnigCodePoint = c_ulong;
 pub type OnigOptions = c_uint;
@@ -70,8 +70,8 @@ pub struct OnigMetaCharTable {
 #[derive(Debug)]
 pub struct OnigErrorInfo {
     pub enc: *const OnigEncoding,
-    pub par: *const u8,
-    pub par_end: *const u8,
+    pub par: *const c_uchar,
+    pub par_end: *const c_uchar,
 }
 
 extern "C" {
@@ -113,7 +113,7 @@ extern "C" {
     ///                           (required size: ONIG_MAX_ERROR_MESSAGE_LEN)
     ///   2 err_code:             error code returned by other API functions.
     ///   3 err_info (optional):  error info returned by onig_new().
-    pub fn onig_error_code_to_str(err_buff: *mut u8, err_code: c_int, ...) -> c_int;
+    pub fn onig_error_code_to_str(err_buff: *mut c_uchar, err_code: c_int, ...) -> c_int;
 
     //   Set warning function.
     //
@@ -230,8 +230,8 @@ extern "C" {
     ///      Use this value as 3rd argument of onig_error_code_to_str().
     ///
     pub fn onig_new(reg: *mut OnigRegex,
-                    pattern: *const u8,
-                    pattern_end: *const u8,
+                    pattern: *const c_uchar,
+                    pattern_end: *const c_uchar,
                     option: OnigOptions,
                     enc: *const OnigEncoding,
                     syntax: *const OnigSyntax,
@@ -248,8 +248,8 @@ extern "C" {
     ///
     ///   normal return: ONIG_NORMAL
     pub fn onig_new_without_alloc(reg: OnigRegex,
-                                  pattern: *const u8,
-                                  pattern_end: *const u8,
+                                  pattern: *const c_uchar,
+                                  pattern_end: *const c_uchar,
                                   option: OnigOptions,
                                   enc: *const OnigEncoding,
                                   syntax: *const OnigSyntax,
@@ -296,8 +296,8 @@ extern "C" {
     ///     pattern_enc: UTF32_BE/LE
     ///     target_enc:  UTF32_LE/BE
     pub fn onig_new_deluxe(reg: *mut OnigRegex,
-                           pattern: *const u8,
-                           pattern_end: *const u8,
+                           pattern: *const c_uchar,
+                           pattern_end: *const c_uchar,
                            ci: *const OnigCompileInfo,
                            einfo: *mut OnigErrorInfo) -> c_int;
 
@@ -344,10 +344,10 @@ extern "C" {
     ///    * ONIG_OPTION_NOTEOL        string end (end) isn't considered as end of line
     ///    * ONIG_OPTION_POSIX_REGION  region argument is regmatch_t[] of POSIX API.
     pub fn onig_search(reg: OnigRegex,
-                       str: *const u8,
-                       end: *const u8,
-                       start: *const u8,
-                       range: *const u8,
+                       str: *const c_uchar,
+                       end: *const c_uchar,
+                       start: *const c_uchar,
+                       range: *const c_uchar,
                        region: *mut OnigRegion,
                        option: OnigOptions)
                        -> c_int;
@@ -375,9 +375,9 @@ extern "C" {
     ///    * ONIG_OPTION_NOTEOL       string end (end) isn't considered as end of line
     ///    * ONIG_OPTION_POSIX_REGION region argument is regmatch_t[] type of POSIX API.
     pub fn onig_match(reg: OnigRegex,
-                      str: *const u8,
-                      end: *const u8,
-                      at: *const u8,
+                      str: *const c_uchar,
+                      end: *const c_uchar,
+                      at: *const c_uchar,
                       region: *mut OnigRegion,
                       option: OnigOptions)
                       -> c_int;
@@ -448,8 +448,8 @@ extern "C" {
     ///   3 name_end:  terminate address of group name.
     ///   4 num_list:  return list of group number.
     pub fn onig_name_to_group_numbers(reg: OnigRegex,
-                                      name: *const u8,
-                                      name_end: *const u8,
+                                      name: *const c_uchar,
+                                      name_end: *const c_uchar,
                                       num_list: *mut *const c_int) -> c_int;
 
     ///   Return the group number corresponding to the named backref (\k<name>).
@@ -467,8 +467,8 @@ extern "C" {
     ///   3 name_end: terminate address of group name.
     ///   4 region:   search/match result region.
     pub fn onig_name_to_backref_number(reg: OnigRegex,
-                                       name: *const u8,
-                                       name_end: *const u8,
+                                       name: *const c_uchar,
+                                       name_end: *const c_uchar,
                                        region: *const OnigRegion) -> c_int;
 
     // # int onig_foreach_name(regex_t* reg,
@@ -604,8 +604,8 @@ extern "C" {
     ///   2 start: string address
     ///   3 s:     target address of string
     pub fn onigenc_get_prev_char_head(enc: *const OnigEncoding,
-                                      start: *const u8,
-                                      s: *const u8) -> *const u8;
+                                      start: *const c_uchar,
+                                      s: *const c_uchar) -> *const c_uchar;
 
     ///   Return left-adjusted head address of a character.
     ///
@@ -618,8 +618,8 @@ extern "C" {
     ///   2. start: string address
     ///   3. s:     target address of string
     pub fn onigenc_get_left_adjust_char_head(enc: *const OnigEncoding,
-                                             start: *const u8,
-                                             s: *const u8) -> *const u8;
+                                             start: *const c_uchar,
+                                             s: *const c_uchar) -> *const c_uchar;
 
     ///   Return right-adjusted head address of a character.
     ///
@@ -632,25 +632,25 @@ extern "C" {
     ///   2. start: string address
     ///   3. s:     target address of string
     pub fn onigenc_get_right_adjust_char_head(enc: *const OnigEncoding,
-                                              start: *const u8,
-                                              s: *const u8) -> *const u8;
+                                              start: *const c_uchar,
+                                              s: *const c_uchar) -> *const c_uchar;
 
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)`
     pub fn onigenc_strlen(enc: *const OnigEncoding,
-                          s: *const u8,
-                          end: *const u8) -> c_int;
+                          s: *const c_uchar,
+                          end: *const c_uchar) -> c_int;
 
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_strlen_null(enc: *const OnigEncoding, s: *const u8) -> c_int;
+    pub fn onigenc_strlen_null(enc: *const OnigEncoding, s: *const c_uchar) -> c_int;
 
     ///   Return number of bytes in the string.
     ///
     ///  `int onigenc_str_bytelen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_str_bytelen_null(enc: *const OnigEncoding, s: *const u8) -> c_int;
+    pub fn onigenc_str_bytelen_null(enc: *const OnigEncoding, s: *const c_uchar) -> c_int;
     
     ///   Set default syntax.
     ///
