@@ -3,14 +3,17 @@ extern crate libc;
 use libc::{c_int, c_uint, c_ulong, c_void, c_char, c_uchar};
 
 pub type OnigCodePoint = c_ulong;
+pub type OnigUChar = c_uchar;
+pub type OnigCtype = c_uint;
+pub type OnigDistance = c_uint;
+pub type OnigCaseFold = c_uint;
 pub type OnigOptions = c_uint;
 pub type OnigSyntaxOp = c_uint;
 pub type OnigSyntaxOp2 = c_uint;
 pub type OnigSyntaxBehavior = c_uint;
-pub type OnigCaseFoldType = c_uint;
 
 pub type OnigEncoding = c_void;
-pub type OnigRegex = *const c_void;
+pub type OnigRegex = *const OnigRegexType;
 
 /// Warning Callback
 ///
@@ -82,7 +85,7 @@ pub struct OnigCompileInfo {
     pub target_enc: *const OnigEncoding,
     pub syntax: *const OnigSyntax,
     pub option: OnigOptions,
-    pub case_fold_flag: OnigCaseFoldType,
+    pub case_fold_flag: OnigCaseFold,
 }
 
 
@@ -103,6 +106,57 @@ pub struct OnigErrorInfo {
     pub enc: *const OnigEncoding,
     pub par: *const c_uchar,
     pub par_end: *const c_uchar,
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct OnigRepeatRange {
+    pub lower: c_int,
+    pub upper: c_int
+}
+
+#[repr(C)]
+pub struct OnigRegexType {
+  // common members of BBuf(bytes-buffer)
+  pub p: *const c_uchar,                // compiled pattern
+  pub used: c_uint,                     // used space for p
+  pub alloc: c_uint,                    // allocated space for p
+
+  pub state: c_int,                     // normal, searching, compiling
+  pub num_mem: c_int,                   // used memory(...) num counted from 1
+  pub num_repeat: c_int,                // OP_REPEAT/OP_REPEAT_NG id-counter
+  pub num_null_check: c_int,            // OP_NULL_CHECK_START/END id counter
+  pub num_comb_exp_check: c_int,        // combination explosion check
+  pub num_call: c_int,                  // number of subexp call
+  pub capture_history: c_uint,          // (?@...) flag (1-31)
+  pub bt_mem_start: c_uint,             // need backtrack flag
+  pub bt_mem_end: c_uint,               // need backtrack flag
+  pub stack_pop_level: c_int,
+  pub repeat_range_alloc: c_int,
+  pub repeat_range: *const OnigRepeatRange,
+
+  pub enc: *const OnigEncoding,
+  pub options: OnigOptions,
+  pub syntax: *const OnigSyntax,
+  pub case_fold_flag: OnigCaseFold,
+  pub name_table: *const c_void,
+
+  // optimization info (string search, char-map and anchors)
+  pub optimize: c_int,                  // optimize flag
+  pub threshold_len: c_int,             // search str-length for apply optimize
+  pub anchor: c_int,                    // BEGIN_BUF, BEGIN_POS, (SEMI_)END_BUF
+  pub anchor_dmin: OnigDistance,        // (SEMI_)END_BUF anchor distance
+  pub anchor_dmax: OnigDistance,        // (SEMI_)END_BUF anchor distance
+  pub sub_anchor: c_int,                // start-anchor for exact or map
+  pub exact: *const c_uchar,
+  pub exact_end: *const c_uchar,
+  pub map: [c_uchar; 256],              // used as BM skip or char-map
+  pub int_map: *const c_int,            // BM skip for exact_len > 255
+  pub int_map_backward: *const c_int,   // BM skip for backward search
+  pub dmin: OnigDistance,               // min-distance of exact or map
+  pub dmax: OnigDistance,               // max-distance of exact or map
+
+  pub chain: *const OnigRegexType
 }
 
 extern "C" {
@@ -578,7 +632,7 @@ extern "C" {
     /// `OnigOptionType   onig_get_options(regex_t* reg)`
     pub fn onig_get_options(reg: OnigRegex) -> OnigOptions;
     /// `OnigCaseFoldType onig_get_case_fold_flag(regex_t* reg)`
-    pub fn onig_get_case_fold_flag(reg: OnigRegex) -> OnigCaseFoldType;
+    pub fn onig_get_case_fold_flag(reg: OnigRegex) -> OnigCaseFold;
     /// `OnigSyntaxType*  onig_get_syntax(regex_t* reg)`
     pub fn onig_get_syntax(reg: OnigRegex) -> *const OnigSyntax;
 
@@ -822,14 +876,14 @@ extern "C" {
     ///   Get default case fold flag.
     ///
     ///   `OnigCaseFoldType onig_get_default_case_fold_flag()`
-    pub fn onig_get_default_case_fold_flag() -> OnigCaseFoldType;
+    pub fn onig_get_default_case_fold_flag() -> OnigCaseFold;
 
     ///   Set default case fold flag.
     ///
     ///   `int onig_set_default_case_fold_flag(OnigCaseFoldType case_fold_flag)`
     ///
     ///   1 case_fold_flag: case fold flag
-    pub fn onig_set_default_case_fold_flag(case_fold_flag: OnigCaseFoldType) -> c_int;
+    pub fn onig_set_default_case_fold_flag(case_fold_flag: OnigCaseFold) -> c_int;
 
     ///   Return the maximum number of stack size.
     ///   (default: 0 == unlimited)
