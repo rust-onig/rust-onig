@@ -16,8 +16,6 @@ pub type OnigSyntaxOp = c_uint;
 pub type OnigSyntaxOp2 = c_uint;
 pub type OnigSyntaxBehavior = c_uint;
 
-pub type OnigEncodingType = c_void; // TODO: define as struct
-
 pub type OnigEncoding = *const OnigEncodingType;
 pub type OnigRegex = *const OnigRegexType;
 
@@ -25,6 +23,14 @@ pub type OnigRegex = *const OnigRegexType;
 ///
 /// `void (*func)(char* warning_message)`
 pub type OnigWarnFunc = extern "C" fn(*const c_char);
+
+/// Apply All Case Fold Callback, see OnigEncodingType->apply_all_case_fold
+pub type OnigApplyAllCaseFoldFunc = extern "C" fn(from: OnigCodePoint,
+                                                  to: *const OnigCodePoint,
+                                                  to_len: c_int,
+                                                  arg: *const c_void)
+                                                  -> c_int;
+
 
 /// Foreach Callback
 ///
@@ -109,6 +115,26 @@ pub struct OnigMetaCharTableType {
     pub zero_or_one_time: OnigCodePoint,
     pub one_or_more_time: OnigCodePoint,
     pub anychar_anytime: OnigCodePoint,
+}
+
+#[repr(C)]
+pub struct OnigEncodingType {
+  pub mbc_enc_len: extern "C" fn(p: *const OnigUChar) -> c_int,
+  pub name: *const c_char,
+  pub max_enc_len: c_int,
+  pub min_enc_len: c_int,
+  pub is_mbc_newline: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> c_int,
+  pub mbc_to_code: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> OnigCodePoint,
+  pub code_to_mbclen: extern "C" fn(code: OnigCodePoint) -> c_int,
+  pub code_to_mbc: extern "C" fn(code: OnigCodePoint, buf: *mut OnigUChar) -> c_int,
+  pub mbc_case_fold: extern "C" fn(flag: OnigCaseFoldType, pp: *const *const OnigUChar, end: *const OnigUChar, to: *const OnigUChar) -> c_int,
+  pub apply_all_case_fold: extern "C" fn(flag: OnigCaseFoldType, f: OnigApplyAllCaseFoldFunc, arg: *const c_void) -> c_int,
+  pub get_case_fold_codes_by_str: extern "C" fn(flag: OnigCaseFoldType, p: *const OnigUChar, end: *const OnigUChar, ...) -> c_int,
+  pub property_name_to_ctype: extern "C" fn(enc: OnigEncoding, p: *const OnigUChar, end: *const OnigUChar) -> c_int,
+  pub is_code_ctype: extern "C" fn(code: OnigCodePoint, ctype: OnigCtype) -> c_int,
+  pub get_ctype_code_range: extern "C" fn(ctype: OnigCtype, sb_out: *const OnigCodePoint, ...) -> c_int,
+  pub left_adjust_char_head: extern "C" fn(start: *const OnigUChar, p: *const OnigUChar) -> *const OnigUChar,
+  pub is_allowed_reverse_match: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> c_int,
 }
 
 #[repr(C)]
@@ -214,7 +240,7 @@ extern "C" {
     pub static OnigSyntaxPerl_NG: OnigSyntaxType;
     pub static OnigSyntaxRuby: OnigSyntaxType;
 
-    pub static OnigDefaultSyntax: *mut OnigSyntaxType;
+    pub static mut OnigDefaultSyntax: *const OnigSyntaxType;
 
     // Oniguruma API  Version 5.9.2  2008/02/19
 
