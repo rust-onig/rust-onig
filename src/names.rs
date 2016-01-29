@@ -11,14 +11,14 @@ use super::Regex;
 
 impl Regex {
     /// Returns the number of named groups into regex.
-    pub fn names_len(&self) -> usize {
+    pub fn capture_names_len(&self) -> usize {
         unsafe { onig_sys::onig_number_of_names(self.raw) as usize }
     }
 
     /// Returns the iterator over named groups as a tuple with the group name
     /// and group indexes.
-    pub fn names<'r>(&'r self) -> Names<'r> {
-        Names {
+    pub fn capture_names<'r>(&'r self) -> CaptureNames<'r> {
+        CaptureNames {
             table: unsafe { (*self.raw).name_table as *const StTable },
             bin_idx: -1,
             entry_ptr: null(),
@@ -56,19 +56,19 @@ struct StTable {
     bins: *const *const StTableEntry
 }
 
-/// Names is an iterator over named groups as a tuple with the group name
+/// CaptureNames is an iterator over named groups as a tuple with the group name
 /// and group indexes.
 ///
 /// `'r` is the lifetime of the Regex object.
 #[derive(Debug)]
-pub struct Names<'r> {
+pub struct CaptureNames<'r> {
     table: *const StTable,
     bin_idx: c_int,
     entry_ptr: *const StTableEntry,
     _phantom: PhantomData<&'r Regex>
 }
 
-impl<'r> Iterator for Names<'r> {
+impl<'r> Iterator for CaptureNames<'r> {
     type Item = (&'r str, &'r [i32]);
 
     fn next(&mut self) -> Option<(&'r str, &'r [i32])> {
@@ -102,18 +102,18 @@ mod tests {
     #[test]
     fn test_regex_names_len() {
         let regex = Regex::new("(he)(l+)(o)").unwrap();
-        assert_eq!(regex.names_len(), 0);
+        assert_eq!(regex.capture_names_len(), 0);
         let regex = Regex::new("(?<foo>he)(?<bar>l+)(?<bar>o)").unwrap();
-        assert_eq!(regex.names_len(), 2);
+        assert_eq!(regex.capture_names_len(), 2);
     }
 
     #[test]
     fn test_regex_names() {
         let regex = Regex::new("(he)(l+)(o)").unwrap();
-        let names = regex.names().collect::<Vec<_>>();
+        let names = regex.capture_names().collect::<Vec<_>>();
         assert_eq!(names, vec![]);
         let regex = Regex::new("(?<foo>he)(?<bar>l+)(?<bar>o)").unwrap();
-        let names = regex.names().collect::<Vec<_>>();
+        let names = regex.capture_names().collect::<Vec<_>>();
         assert_eq!(names,
                    [("foo", &[1] as &[i32]), ("bar", &[2, 3] as &[i32])]);
     }
