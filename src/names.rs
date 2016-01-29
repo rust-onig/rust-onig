@@ -34,8 +34,11 @@ struct NameEntry {
     name_len: c_int,
     back_num: c_int,
     back_alloc: c_int,
-    back_ref1: c_int,
-    back_refs: *const c_int
+    // The real type of `back_ref1` and `back_refs` is `libc::c_int`
+    // and `*const libc::c_int`, but we must make sure that it is `i32`
+    // to properly casting them into `&[i32]`
+    back_ref1: i32,
+    back_refs: *const i32
 }
 
 #[repr(C)]
@@ -69,9 +72,9 @@ pub struct CaptureNames<'r> {
 }
 
 impl<'r> Iterator for CaptureNames<'r> {
-    type Item = (&'r str, &'r [i32]);
+    type Item = (&'r str, &'r [u32]);
 
-    fn next(&mut self) -> Option<(&'r str, &'r [i32])> {
+    fn next(&mut self) -> Option<(&'r str, &'r [u32])> {
         unsafe {
             while self.entry_ptr.is_null() {
                 if self.table.is_null() || self.bin_idx + 1 >= (*self.table).num_bins {
@@ -85,9 +88,12 @@ impl<'r> Iterator for CaptureNames<'r> {
                 from_raw_parts((*entry).name, (*entry).name_len as usize)
             );
             let groups = if (*entry).back_num > 1 {
-                from_raw_parts((*entry).back_refs, (*entry).back_num as usize)
+                let ptr = (*entry).back_refs as *const u32;
+                let len = (*entry).back_num as usize;
+                from_raw_parts(ptr, len)
             } else {
-                from_raw_parts(&(*entry).back_ref1, 1)
+                let ptr = &(*entry).back_ref1 as *const i32 as *const u32;
+                from_raw_parts(ptr, 1)
             };
             self.entry_ptr = (*self.entry_ptr).next;
             Some((name, groups))
