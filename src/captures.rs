@@ -8,7 +8,10 @@ impl Regex {
     pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
         let mut region = Region::new();
         self.search_with_options(text, SEARCH_OPTION_NONE, Some(&mut region))
-            .map(|_| Captures::new(text, region))
+            .map(|_| Captures {
+                text: text,
+                region: region,
+            })
     }
 }
 
@@ -26,13 +29,6 @@ pub struct Captures<'t> {
 }
 
 impl<'t> Captures<'t> {
-    pub fn new(text: &'t str, region: Region) -> Captures<'t> {
-        Captures {
-            text: text,
-            region: region,
-        }
-    }
-
     /// Returns the start and end positions of the Nth capture group. Returns
     /// `None` if i is not a valid capture group or if the capture group did
     /// not match anything. The positions returned are always byte indices with
