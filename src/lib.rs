@@ -44,7 +44,7 @@ pub use utils::version;
 use std::{error, fmt, str};
 use std::sync::Mutex;
 use std::mem::transmute;
-use std::ptr::null;
+use std::ptr::{null, null_mut};
 use libc::c_int;
 
 /// This struture represents an error from the underlying Oniguruma libray.
@@ -58,7 +58,7 @@ pub struct Error {
 /// search and match operations.
 #[derive(Debug)]
 pub struct Regex {
-    raw: onig_sys::OnigRegex,
+    raw: onig_sys::OnigRegexMut,
 }
 
 impl Error {
@@ -159,8 +159,8 @@ impl Regex {
         // Convert the rust types to those required for the call to
         // `onig_new`.
         let pattern_bytes = pattern.as_bytes();
-        let mut reg: onig_sys::OnigRegex = null();
-        let reg_ptr = &mut reg as *mut onig_sys::OnigRegex;
+        let mut reg: onig_sys::OnigRegexMut = null_mut();
+        let reg_ptr = &mut reg as *mut onig_sys::OnigRegexMut;
 
         // We can use this later to get an error message to pass back
         // if regex creation fails.

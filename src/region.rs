@@ -45,7 +45,7 @@ impl Region {
     /// [region_clear]: ./onig_sys/fn.onig_region_clear.html
     pub fn clear(&mut self) {
         unsafe {
-            onig_sys::onig_region_clear(&self.raw);
+            onig_sys::onig_region_clear(&mut self.raw);
         }
     }
 
@@ -63,7 +63,7 @@ impl Region {
     ///
     ///  * `new_capacity` - The new number of groups in the region.
     pub fn reserve(&mut self, new_capacity: usize) {
-        let r = unsafe { onig_sys::onig_region_resize(&self.raw, new_capacity as c_int) };
+        let r = unsafe { onig_sys::onig_region_resize(&mut self.raw, new_capacity as c_int) };
         if r != onig_sys::ONIG_NORMAL {
             panic!("Onig: fail to memory allocation during region resize")
         }

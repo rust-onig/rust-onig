@@ -18,6 +18,7 @@ pub type OnigSyntaxBehavior = c_uint;
 
 pub type OnigEncoding = *const OnigEncodingType;
 pub type OnigRegex = *const OnigRegexType;
+pub type OnigRegexMut = *mut OnigRegexType;
 
 /// Warning Callback
 ///
@@ -390,7 +391,7 @@ extern "C" {
     ///
     ///      Use this value as 3rd argument of onig_error_code_to_str().
     ///
-    pub fn onig_new(reg: *mut OnigRegex,
+    pub fn onig_new(reg: *mut OnigRegexMut,
                     pattern: *const OnigUChar,
                     pattern_end: *const OnigUChar,
                     option: OnigOptionType,
@@ -408,7 +409,7 @@ extern "C" {
     ///             OnigErrorInfo* err_info)`
     ///
     ///   normal return: ONIG_NORMAL
-    pub fn onig_new_without_alloc(reg: OnigRegex,
+    pub fn onig_new_without_alloc(reg: OnigRegexMut,
                                   pattern: *const OnigUChar,
                                   pattern_end: *const OnigUChar,
                                   option: OnigOptionType,
@@ -457,7 +458,7 @@ extern "C" {
     ///
     ///     pattern_enc: UTF32_BE/LE
     ///     target_enc:  UTF32_LE/BE
-    pub fn onig_new_deluxe(reg: *mut OnigRegex,
+    pub fn onig_new_deluxe(reg: *mut OnigRegexMut,
                            pattern: *const OnigUChar,
                            pattern_end: *const OnigUChar,
                            ci: *const OnigCompileInfo,
@@ -471,7 +472,7 @@ extern "C" {
     /// # Arguments
     ///
     ///   1. `reg`: regex object.
-    pub fn onig_free(reg: OnigRegex);
+    pub fn onig_free(reg: OnigRegexMut);
 
     ///   Free memory used by regex object. (Except reg oneself.)
     ///
@@ -479,7 +480,7 @@ extern "C" {
     ///
     ///   arguments
     ///   1 reg: regex object.
-    pub fn onig_free_body(reg: OnigRegex);
+    pub fn onig_free_body(reg: OnigRegexMut);
 
     ///   Search string and return search result and matching region.
     ///
@@ -570,7 +571,7 @@ extern "C" {
     ///
     ///   1. `to`:   target region
     ///   2. `from`: source region
-    pub fn onig_region_copy(to: *mut OnigRegion, from: *mut OnigRegion);
+    pub fn onig_region_copy(to: *mut OnigRegion, from: *const OnigRegion);
 
     ///   Clear contents of region.
     ///
@@ -579,7 +580,7 @@ extern "C" {
     /// # Arguments
     ///
     ///   1. `region`: target region
-    pub fn onig_region_clear(region: *const OnigRegion);
+    pub fn onig_region_clear(region: *mut OnigRegion);
 
     ///   Resize group range area of region.
     ///
@@ -593,7 +594,7 @@ extern "C" {
     ///
     ///   1. `region`: target region
     ///   2. `n`:      new size
-    pub fn onig_region_resize(region: *const OnigRegion, n: c_int) -> c_int;
+    pub fn onig_region_resize(region: *mut OnigRegion, n: c_int) -> c_int;
 
     ///   Return the group number list of the name.
     ///   Named subexp is defined by (?<name>....).
@@ -659,7 +660,7 @@ extern "C" {
     ///
     ///     if func does not return 0, then iteration is stopped.
     ///   3. arg:     argument for func.
-    pub fn onig_foreach_name(reg: OnigRegex, func: OnigForeachNameCallback, arg: *mut c_void) -> c_int;
+    pub fn onig_foreach_name(reg: OnigRegex, func: OnigForeachNameCallback, arg: *const c_void) -> c_int;
 
     ///   Return the number of names defined in the pattern.
     ///   Multiple definitions of one name is counted as one.
@@ -673,10 +674,13 @@ extern "C" {
 
     /// `OnigEncoding     onig_get_encoding(regex_t* reg)`
     pub fn onig_get_encoding(reg: OnigRegex) -> OnigEncoding;
+
     /// `OnigOptionType   onig_get_options(regex_t* reg)`
     pub fn onig_get_options(reg: OnigRegex) -> OnigOptionType;
+
     /// `OnigCaseFoldType onig_get_case_fold_flag(regex_t* reg)`
     pub fn onig_get_case_fold_flag(reg: OnigRegex) -> OnigCaseFoldType;
+
     /// `OnigSyntaxType*  onig_get_syntax(regex_t* reg)`
     pub fn onig_get_syntax(reg: OnigRegex) -> *const OnigSyntaxType;
 
@@ -856,7 +860,7 @@ extern "C" {
     ///
     ///   1. `to`:   destination address.
     ///   2. `from`: source address.
-    pub fn onig_copy_syntax(to: *const OnigSyntaxType, from: *const OnigSyntaxType);
+    pub fn onig_copy_syntax(to: *mut OnigSyntaxType, from: *const OnigSyntaxType);
 
     /// `unsigned int onig_get_syntax_op(OnigSyntaxType* syntax)`
     pub fn onig_get_syntax_op(syntax: *const OnigSyntaxType) -> OnigSyntaxOp;
@@ -889,7 +893,7 @@ extern "C" {
     ///   arguments
     ///   1 to:   destination address.
     ///   2 from: source address.
-    pub fn onig_copy_encoding(to: *mut OnigEncoding, from: OnigEncoding);
+    pub fn onig_copy_encoding(to: *mut OnigEncodingType, from: OnigEncoding);
 
     ///   Set a variable meta character to the code point value.
     ///   Except for an escape character, this meta characters specification
