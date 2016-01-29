@@ -105,6 +105,7 @@ mod tests {
         assert_eq!(regex.capture_names_len(), 0);
         let regex = Regex::new("(?<foo>he)(?<bar>l+)(?<bar>o)").unwrap();
         assert_eq!(regex.capture_names_len(), 2);
+        assert_eq!(regex.capture_histories_len(), 0);
     }
 
     #[test]

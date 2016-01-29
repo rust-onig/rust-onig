@@ -6,13 +6,15 @@ pub type OnigCodePoint = c_ulong;
 pub type OnigUChar = c_uchar;
 pub type OnigCtype = c_uint;
 pub type OnigDistance = c_uint;
-pub type OnigCaseFold = c_uint;
-pub type OnigOptions = c_uint;
+pub type OnigCaseFoldType = c_uint;
+pub type OnigOptionType = c_uint;
 pub type OnigSyntaxOp = c_uint;
 pub type OnigSyntaxOp2 = c_uint;
 pub type OnigSyntaxBehavior = c_uint;
 
-pub type OnigEncoding = c_void;
+pub type OnigEncodingType = c_void; // TODO: define as struct
+
+pub type OnigEncoding = *const OnigEncodingType;
 pub type OnigRegex = *const OnigRegexType;
 
 /// Warning Callback
@@ -25,13 +27,13 @@ pub type OnigWarnFunc = extern "C" fn(*const c_char);
 /// This callback will be invoked for each name when calling
 /// [`onig_foreach_name`](fn.onig_foreach_name.html). The
 /// final argument to that function is passed back to this callback.
-pub type OnigForeachCallback = extern "C" fn(*const OnigUChar,
-                                             *const OnigUChar,
-                                             c_int,
-                                             *const c_int,
-                                             OnigRegex,
-                                             *mut c_void)
-                                             -> c_int;
+pub type OnigForeachNameCallback = extern "C" fn(*const OnigUChar,
+                                                 *const OnigUChar,
+                                                 c_int,
+                                                 *const c_int,
+                                                 OnigRegex,
+                                                 *mut c_void)
+                                                 -> c_int;
 
 /// Capture Tree Callback
 ///
@@ -43,8 +45,13 @@ pub type OnigForeachCallback = extern "C" fn(*const OnigUChar,
 /// being traversed. See
 /// [`onig_capture_tree_traverse`](fn.onig_capture_tree_traverse.html)
 /// for more information about parameters and use.
-pub type OnigCaptureTreeCallback = extern "C" fn(c_int, c_int, c_int, c_int, c_int, *mut c_void)
-                                                 -> c_int;
+pub type OnigCaptureTreeTraverseCallback = extern "C" fn(c_int,
+                                                         c_int,
+                                                         c_int,
+                                                         c_int,
+                                                         c_int,
+                                                         *mut c_void)
+                                                         -> c_int;
 
 #[repr(C)]
 #[derive(Debug)]
@@ -69,29 +76,29 @@ pub struct OnigCaptureTreeNode {
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct OnigSyntax {
+pub struct OnigSyntaxType {
     pub op: c_uint,
     pub op2: c_uint,
     pub behavior: c_uint,
     pub options: c_uint,
-    pub meta_char_table: OnigMetaCharTable,
+    pub meta_char_table: OnigMetaCharTableType,
 }
 
 #[repr(C)]
 #[derive(Debug)]
 pub struct OnigCompileInfo {
     pub num_of_elements: c_int,
-    pub pattern_enc: *const OnigEncoding,
-    pub target_enc: *const OnigEncoding,
-    pub syntax: *const OnigSyntax,
-    pub option: OnigOptions,
-    pub case_fold_flag: OnigCaseFold,
+    pub pattern_enc: OnigEncoding,
+    pub target_enc: OnigEncoding,
+    pub syntax: *const OnigSyntaxType,
+    pub option: OnigOptionType,
+    pub case_fold_flag: OnigCaseFoldType,
 }
 
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct OnigMetaCharTable {
+pub struct OnigMetaCharTableType {
     pub esc: OnigCodePoint,
     pub anychar: OnigCodePoint,
     pub anytime: OnigCodePoint,
@@ -103,7 +110,7 @@ pub struct OnigMetaCharTable {
 #[repr(C)]
 #[derive(Debug)]
 pub struct OnigErrorInfo {
-    pub enc: *const OnigEncoding,
+    pub enc: OnigEncoding,
     pub par: *const OnigUChar,
     pub par_end: *const OnigUChar,
 }
@@ -135,10 +142,10 @@ pub struct OnigRegexType {
   pub repeat_range_alloc: c_int,
   pub repeat_range: *const OnigRepeatRange,
 
-  pub enc: *const OnigEncoding,
-  pub options: OnigOptions,
-  pub syntax: *const OnigSyntax,
-  pub case_fold_flag: OnigCaseFold,
+  pub enc: OnigEncoding,
+  pub options: OnigOptionType,
+  pub syntax: *const OnigSyntaxType,
+  pub case_fold_flag: OnigCaseFoldType,
   pub name_table: *const c_void,
 
   // optimization info (string search, char-map and anchors)
@@ -160,50 +167,50 @@ pub struct OnigRegexType {
 }
 
 extern "C" {
-    pub static OnigEncodingASCII: OnigEncoding;
-    pub static OnigEncodingISO_8859_1: OnigEncoding;
-    pub static OnigEncodingISO_8859_2: OnigEncoding;
-    pub static OnigEncodingISO_8859_3: OnigEncoding;
-    pub static OnigEncodingISO_8859_4: OnigEncoding;
-    pub static OnigEncodingISO_8859_5: OnigEncoding;
-    pub static OnigEncodingISO_8859_6: OnigEncoding;
-    pub static OnigEncodingISO_8859_7: OnigEncoding;
-    pub static OnigEncodingISO_8859_8: OnigEncoding;
-    pub static OnigEncodingISO_8859_9: OnigEncoding;
-    pub static OnigEncodingISO_8859_10: OnigEncoding;
-    pub static OnigEncodingISO_8859_11: OnigEncoding;
-    pub static OnigEncodingISO_8859_13: OnigEncoding;
-    pub static OnigEncodingISO_8859_14: OnigEncoding;
-    pub static OnigEncodingISO_8859_15: OnigEncoding;
-    pub static OnigEncodingISO_8859_16: OnigEncoding;
-    pub static OnigEncodingUTF8: OnigEncoding;
-    pub static OnigEncodingUTF16_BE: OnigEncoding;
-    pub static OnigEncodingUTF16_LE: OnigEncoding;
-    pub static OnigEncodingUTF32_BE: OnigEncoding;
-    pub static OnigEncodingUTF32_LE: OnigEncoding;
-    pub static OnigEncodingEUC_JP: OnigEncoding;
-    pub static OnigEncodingEUC_TW: OnigEncoding;
-    pub static OnigEncodingEUC_KR: OnigEncoding;
-    pub static OnigEncodingEUC_CN: OnigEncoding;
-    pub static OnigEncodingSJIS: OnigEncoding;
-    pub static OnigEncodingKOI8: OnigEncoding;
-    pub static OnigEncodingKOI8_R: OnigEncoding;
-    pub static OnigEncodingCP1251: OnigEncoding;
-    pub static OnigEncodingBIG5: OnigEncoding;
-    pub static OnigEncodingGB18030: OnigEncoding;
+    pub static OnigEncodingASCII: OnigEncodingType;
+    pub static OnigEncodingISO_8859_1: OnigEncodingType;
+    pub static OnigEncodingISO_8859_2: OnigEncodingType;
+    pub static OnigEncodingISO_8859_3: OnigEncodingType;
+    pub static OnigEncodingISO_8859_4: OnigEncodingType;
+    pub static OnigEncodingISO_8859_5: OnigEncodingType;
+    pub static OnigEncodingISO_8859_6: OnigEncodingType;
+    pub static OnigEncodingISO_8859_7: OnigEncodingType;
+    pub static OnigEncodingISO_8859_8: OnigEncodingType;
+    pub static OnigEncodingISO_8859_9: OnigEncodingType;
+    pub static OnigEncodingISO_8859_10: OnigEncodingType;
+    pub static OnigEncodingISO_8859_11: OnigEncodingType;
+    pub static OnigEncodingISO_8859_13: OnigEncodingType;
+    pub static OnigEncodingISO_8859_14: OnigEncodingType;
+    pub static OnigEncodingISO_8859_15: OnigEncodingType;
+    pub static OnigEncodingISO_8859_16: OnigEncodingType;
+    pub static OnigEncodingUTF8: OnigEncodingType;
+    pub static OnigEncodingUTF16_BE: OnigEncodingType;
+    pub static OnigEncodingUTF16_LE: OnigEncodingType;
+    pub static OnigEncodingUTF32_BE: OnigEncodingType;
+    pub static OnigEncodingUTF32_LE: OnigEncodingType;
+    pub static OnigEncodingEUC_JP: OnigEncodingType;
+    pub static OnigEncodingEUC_TW: OnigEncodingType;
+    pub static OnigEncodingEUC_KR: OnigEncodingType;
+    pub static OnigEncodingEUC_CN: OnigEncodingType;
+    pub static OnigEncodingSJIS: OnigEncodingType;
+    pub static OnigEncodingKOI8: OnigEncodingType;
+    pub static OnigEncodingKOI8_R: OnigEncodingType;
+    pub static OnigEncodingCP1251: OnigEncodingType;
+    pub static OnigEncodingBIG5: OnigEncodingType;
+    pub static OnigEncodingGB18030: OnigEncodingType;
 
-    pub static OnigSyntaxASIS: OnigSyntax;
-    pub static OnigSyntaxPosixBasic: OnigSyntax;
-    pub static OnigSyntaxPosixExtended: OnigSyntax;
-    pub static OnigSyntaxEmacs: OnigSyntax;
-    pub static OnigSyntaxGrep: OnigSyntax;
-    pub static OnigSyntaxGnuRegex: OnigSyntax;
-    pub static OnigSyntaxJava: OnigSyntax;
-    pub static OnigSyntaxPerl: OnigSyntax;
-    pub static OnigSyntaxPerl_NG: OnigSyntax;
-    pub static OnigSyntaxRuby: OnigSyntax;
+    pub static OnigSyntaxASIS: OnigSyntaxType;
+    pub static OnigSyntaxPosixBasic: OnigSyntaxType;
+    pub static OnigSyntaxPosixExtended: OnigSyntaxType;
+    pub static OnigSyntaxEmacs: OnigSyntaxType;
+    pub static OnigSyntaxGrep: OnigSyntaxType;
+    pub static OnigSyntaxGnuRegex: OnigSyntaxType;
+    pub static OnigSyntaxJava: OnigSyntaxType;
+    pub static OnigSyntaxPerl: OnigSyntaxType;
+    pub static OnigSyntaxPerl_NG: OnigSyntaxType;
+    pub static OnigSyntaxRuby: OnigSyntaxType;
 
-    pub static OnigDefaultSyntax: *mut OnigSyntax;
+    pub static OnigDefaultSyntax: *mut OnigSyntaxType;
 
     // Oniguruma API  Version 5.9.2  2008/02/19
 
@@ -349,9 +356,9 @@ extern "C" {
     pub fn onig_new(reg: *mut OnigRegex,
                     pattern: *const OnigUChar,
                     pattern_end: *const OnigUChar,
-                    option: OnigOptions,
-                    enc: *const OnigEncoding,
-                    syntax: *const OnigSyntax,
+                    option: OnigOptionType,
+                    enc: OnigEncoding,
+                    syntax: *const OnigSyntaxType,
                     err_info: *mut OnigErrorInfo)
                     -> c_int;
 
@@ -367,9 +374,9 @@ extern "C" {
     pub fn onig_new_without_alloc(reg: OnigRegex,
                                   pattern: *const OnigUChar,
                                   pattern_end: *const OnigUChar,
-                                  option: OnigOptions,
-                                  enc: *const OnigEncoding,
-                                  syntax: *const OnigSyntax,
+                                  option: OnigOptionType,
+                                  enc: OnigEncoding,
+                                  syntax: *const OnigSyntaxType,
                                   err_info: *mut OnigErrorInfo)
                                   -> c_int;
 
@@ -468,7 +475,7 @@ extern "C" {
                        start: *const OnigUChar,
                        range: *const OnigUChar,
                        region: *mut OnigRegion,
-                       option: OnigOptions)
+                       option: OnigOptionType)
                        -> c_int;
 
     ///   Match string and return result and matching region.
@@ -498,7 +505,7 @@ extern "C" {
                       end: *const OnigUChar,
                       at: *const OnigUChar,
                       region: *mut OnigRegion,
-                      option: OnigOptions)
+                      option: OnigOptionType)
                       -> c_int;
 
     ///   Create a region.
@@ -615,7 +622,7 @@ extern "C" {
     ///
     ///     if func does not return 0, then iteration is stopped.
     ///   3. arg:     argument for func.
-    pub fn onig_foreach_name(reg: OnigRegex, func: OnigForeachCallback, arg: *mut c_void) -> c_int;
+    pub fn onig_foreach_name(reg: OnigRegex, func: OnigForeachNameCallback, arg: *mut c_void) -> c_int;
 
     ///   Return the number of names defined in the pattern.
     ///   Multiple definitions of one name is counted as one.
@@ -628,13 +635,13 @@ extern "C" {
     pub fn onig_number_of_names(reg: OnigRegex) -> c_int;
 
     /// `OnigEncoding     onig_get_encoding(regex_t* reg)`
-    pub fn onig_get_encoding(reg: OnigRegex) -> *const OnigEncoding;
+    pub fn onig_get_encoding(reg: OnigRegex) -> OnigEncoding;
     /// `OnigOptionType   onig_get_options(regex_t* reg)`
-    pub fn onig_get_options(reg: OnigRegex) -> OnigOptions;
+    pub fn onig_get_options(reg: OnigRegex) -> OnigOptionType;
     /// `OnigCaseFoldType onig_get_case_fold_flag(regex_t* reg)`
-    pub fn onig_get_case_fold_flag(reg: OnigRegex) -> OnigCaseFold;
+    pub fn onig_get_case_fold_flag(reg: OnigRegex) -> OnigCaseFoldType;
     /// `OnigSyntaxType*  onig_get_syntax(regex_t* reg)`
-    pub fn onig_get_syntax(reg: OnigRegex) -> *const OnigSyntax;
+    pub fn onig_get_syntax(reg: OnigRegex) -> *const OnigSyntaxType;
 
     ///   Return the number of capture group in the pattern.
     ///
@@ -708,7 +715,7 @@ extern "C" {
     ///   4. arg;     optional callback argument.
     pub fn onig_capture_tree_traverse(region: *const OnigRegion,
                                       at: c_int,
-                                      func: OnigCaptureTreeCallback,
+                                      func: OnigCaptureTreeTraverseCallback,
                                       arg: c_void)
                                       -> c_int;
 
@@ -743,7 +750,7 @@ extern "C" {
     ///   1 enc:   character encoding
     ///   2 start: string address
     ///   3 s:     target address of string
-    pub fn onigenc_get_prev_char_head(enc: *const OnigEncoding,
+    pub fn onigenc_get_prev_char_head(enc: OnigEncoding,
                                       start: *const OnigUChar,
                                       s: *const OnigUChar)
                                       -> *const OnigUChar;
@@ -758,7 +765,7 @@ extern "C" {
     ///   1. enc:   character encoding
     ///   2. start: string address
     ///   3. s:     target address of string
-    pub fn onigenc_get_left_adjust_char_head(enc: *const OnigEncoding,
+    pub fn onigenc_get_left_adjust_char_head(enc: OnigEncoding,
                                              start: *const OnigUChar,
                                              s: *const OnigUChar)
                                              -> *const OnigUChar;
@@ -773,7 +780,7 @@ extern "C" {
     ///   1. enc:   character encoding
     ///   2. start: string address
     ///   3. s:     target address of string
-    pub fn onigenc_get_right_adjust_char_head(enc: *const OnigEncoding,
+    pub fn onigenc_get_right_adjust_char_head(enc: OnigEncoding,
                                               start: *const OnigUChar,
                                               s: *const OnigUChar)
                                               -> *const OnigUChar;
@@ -781,7 +788,7 @@ extern "C" {
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)`
-    pub fn onigenc_strlen(enc: *const OnigEncoding,
+    pub fn onigenc_strlen(enc: OnigEncoding,
                           s: *const OnigUChar,
                           end: *const OnigUChar)
                           -> c_int;
@@ -789,12 +796,12 @@ extern "C" {
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_strlen_null(enc: *const OnigEncoding, s: *const OnigUChar) -> c_int;
+    pub fn onigenc_strlen_null(enc: OnigEncoding, s: *const OnigUChar) -> c_int;
 
     ///   Return number of bytes in the string.
     ///
     ///  `int onigenc_str_bytelen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_str_bytelen_null(enc: *const OnigEncoding, s: *const OnigUChar) -> c_int;
+    pub fn onigenc_str_bytelen_null(enc: OnigEncoding, s: *const OnigUChar) -> c_int;
 
     ///   Set default syntax.
     ///
@@ -802,7 +809,7 @@ extern "C" {
     ///
     ///   arguments
     ///   1 syntax: address of pattern syntax definition.
-    pub fn onig_set_default_syntax(syntax: *const OnigSyntax) -> c_int;
+    pub fn onig_set_default_syntax(syntax: *const OnigSyntaxType) -> c_int;
 
     ///   Copy syntax.
     ///
@@ -812,31 +819,31 @@ extern "C" {
     ///
     ///   1. `to`:   destination address.
     ///   2. `from`: source address.
-    pub fn onig_copy_syntax(to: *const OnigSyntax, from: *const OnigSyntax);
+    pub fn onig_copy_syntax(to: *const OnigSyntaxType, from: *const OnigSyntaxType);
 
     /// `unsigned int onig_get_syntax_op(OnigSyntaxType* syntax)`
-    pub fn onig_get_syntax_op(syntax: *const OnigSyntax) -> OnigSyntaxOp;
+    pub fn onig_get_syntax_op(syntax: *const OnigSyntaxType) -> OnigSyntaxOp;
 
     /// `unsigned int onig_get_syntax_op2(OnigSyntaxType* syntax)`
-    pub fn onig_get_syntax_op2(syntax: *const OnigSyntax) -> OnigSyntaxOp2;
+    pub fn onig_get_syntax_op2(syntax: *const OnigSyntaxType) -> OnigSyntaxOp2;
 
     /// `unsigned int onig_get_syntax_behavior(OnigSyntaxType* syntax)`
-    pub fn onig_get_syntax_behavior(syntax: *const OnigSyntax) -> OnigSyntaxBehavior;
+    pub fn onig_get_syntax_behavior(syntax: *const OnigSyntaxType) -> OnigSyntaxBehavior;
 
     /// `OnigOptionType onig_get_syntax_options(OnigSyntaxType* syntax)`
-    pub fn onig_get_syntax_options(syntax: *const OnigSyntax) -> OnigOptions;
+    pub fn onig_get_syntax_options(syntax: *const OnigSyntaxType) -> OnigOptionType;
 
     /// `void onig_set_syntax_op(OnigSyntaxType* syntax, unsigned int op)`
-    pub fn onig_set_syntax_op(syntax: *mut OnigSyntax, op: OnigSyntaxOp);
+    pub fn onig_set_syntax_op(syntax: *mut OnigSyntaxType, op: OnigSyntaxOp);
 
     /// `void onig_set_syntax_op2(OnigSyntaxType* syntax, unsigned int op2)`
-    pub fn onig_set_syntax_op2(syntax: *mut OnigSyntax, op2: OnigSyntaxOp2);
+    pub fn onig_set_syntax_op2(syntax: *mut OnigSyntaxType, op2: OnigSyntaxOp2);
 
     /// `void onig_set_syntax_behavior(OnigSyntaxType* syntax, unsigned int behavior)`
-    pub fn onig_set_syntax_behavior(syntax: *mut OnigSyntax, behavior: OnigSyntaxBehavior);
+    pub fn onig_set_syntax_behavior(syntax: *mut OnigSyntaxType, behavior: OnigSyntaxBehavior);
 
     /// `void onig_set_syntax_options(OnigSyntaxType* syntax, OnigOptionType options)`
-    pub fn onig_set_syntax_options(syntax: *mut OnigSyntax, options: OnigOptions);
+    pub fn onig_set_syntax_options(syntax: *mut OnigSyntaxType, options: OnigOptionType);
 
     ///   Copy encoding.
     ///
@@ -845,7 +852,7 @@ extern "C" {
     ///   arguments
     ///   1 to:   destination address.
     ///   2 from: source address.
-    pub fn onig_copy_encoding(to: *mut OnigEncoding, from: *const OnigEncoding);
+    pub fn onig_copy_encoding(to: *mut OnigEncoding, from: OnigEncoding);
 
     ///   Set a variable meta character to the code point value.
     ///   Except for an escape character, this meta characters specification
@@ -871,19 +878,19 @@ extern "C" {
     ///   ```
     ///
     ///   3 code: meta character or `ONIG_INEFFECTIVE_META_CHAR`.
-    pub fn onig_set_meta_char(syntax: *mut OnigSyntax, what: c_uint, code: OnigCodePoint) -> c_int;
+    pub fn onig_set_meta_char(syntax: *mut OnigSyntaxType, what: c_uint, code: OnigCodePoint) -> c_int;
 
     ///   Get default case fold flag.
     ///
     ///   `OnigCaseFoldType onig_get_default_case_fold_flag()`
-    pub fn onig_get_default_case_fold_flag() -> OnigCaseFold;
+    pub fn onig_get_default_case_fold_flag() -> OnigCaseFoldType;
 
     ///   Set default case fold flag.
     ///
     ///   `int onig_set_default_case_fold_flag(OnigCaseFoldType case_fold_flag)`
     ///
     ///   1 case_fold_flag: case fold flag
-    pub fn onig_set_default_case_fold_flag(case_fold_flag: OnigCaseFold) -> c_int;
+    pub fn onig_set_default_case_fold_flag(case_fold_flag: OnigCaseFoldType) -> c_int;
 
     ///   Return the maximum number of stack size.
     ///   (default: 0 == unlimited)

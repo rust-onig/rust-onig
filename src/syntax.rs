@@ -4,7 +4,7 @@ use super::{SyntaxOperator, SyntaxBehavior, RegexOptions};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Syntax {
-    raw: onig_sys::OnigSyntax,
+    raw: onig_sys::OnigSyntaxType,
 }
 
 impl Syntax {
@@ -120,7 +120,7 @@ impl Syntax {
     }
 
     pub fn set_options(&mut self, options: RegexOptions) {
-        let options = options.bits() as onig_sys::OnigOptions;
+        let options = options.bits() as onig_sys::OnigOptionType;
         unsafe {
             onig_sys::onig_set_syntax_options(&mut self.raw, options);
         }

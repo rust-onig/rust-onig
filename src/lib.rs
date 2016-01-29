@@ -48,7 +48,7 @@ use libc::c_int;
 
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct Error {
-    error: c_int,
+    code: c_int,
     description: String,
 }
 
@@ -61,21 +61,21 @@ pub struct Regex {
 }
 
 impl Error {
-    fn new(error: c_int, info: onig_sys::OnigErrorInfo) -> Error {
+    fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
         let mut buff = &mut [0 as u8; 90];
         let len = unsafe {
-            onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), error, &info)
+            onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info)
         };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
-            error: error,
+            code: code,
             description: description.to_owned(),
         }
     }
 
     /// Return Oniguruma engine error code.
-    pub fn code(&self) -> isize {
-        self.error as isize
+    pub fn code(&self) -> i32 {
+        self.code
     }
 
     /// Return error description provided by Oniguruma engine.
@@ -98,7 +98,7 @@ impl fmt::Display for Error {
 
 impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Error({}, {})", self.error, self.description())
+        write!(f, "Error({}, {})", self.code, self.description())
     }
 }
 
@@ -343,11 +343,7 @@ impl Drop for Regex {
 
 #[cfg(test)]
 mod tests {
-    use super::{Regex, Syntax, Region, SEARCH_OPTION_NONE, REGEX_OPTION_NONE};
-
-    fn create_regex(regex: &str) -> Regex {
-        Regex::new(regex).unwrap()
-    }
+    use super::*;
 
     #[test]
     fn test_regex_create() {
@@ -359,16 +355,16 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected="Error(-223, invalid character property name {foo})")]
     fn test_regex_invalid() {
-        create_regex("\\p{foo}");
+        let e = Regex::new("\\p{foo}").unwrap_err();
+        assert_eq!(e.code(), -223);
+        assert_eq!(e.description(), "invalid character property name {foo}");
     }
 
     #[test]
     fn test_failed_match() {
-        let r = create_regex("foo");
-
-        let res = r.match_with_options("bar", SEARCH_OPTION_NONE, None);
+        let regex = Regex::new("foo").unwrap();
+        let res = regex.match_with_options("bar", SEARCH_OPTION_NONE, None);
         assert!(res.is_none());
     }
 
@@ -423,11 +419,9 @@ mod tests {
     }
 
     #[test]
-    fn test_regex_lens() {
+    fn test_regex_captures_len() {
         let regex = Regex::new("(he)(l+)(o)").unwrap();
         assert_eq!(regex.captures_len(), 3);
-        assert_eq!(regex.capture_histories_len(), 0);
     }
-
 }
 

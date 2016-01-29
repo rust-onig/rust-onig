@@ -1,8 +1,8 @@
-use onig_sys::{OnigOptions, OnigSyntaxBehavior};
+use onig_sys::{OnigOptionType, OnigSyntaxBehavior};
 
 bitflags! {
     /// Regex parsing and compilation options.
-    flags RegexOptions: OnigOptions {
+    flags RegexOptions: OnigOptionType {
         /// Default options.
         const REGEX_OPTION_NONE = 0,
         /// Ambiguity match on.
@@ -26,7 +26,7 @@ bitflags! {
 
 bitflags! {
     /// Regex evaluation options.
-    flags SearchOptions: OnigOptions {
+    flags SearchOptions: OnigOptionType {
         /// Default options.
         const SEARCH_OPTION_NONE = 0,
         /// Only named group captured.
