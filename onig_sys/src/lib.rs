@@ -1,5 +1,9 @@
 extern crate libc;
 
+mod constants;
+
+pub use self::constants::*;
+
 use libc::{c_int, c_uint, c_ulong, c_void, c_char, c_uchar};
 
 pub type OnigCodePoint = c_ulong;

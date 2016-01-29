@@ -64,7 +64,7 @@ impl Region {
     ///  * `new_capacity` - The new number of groups in the region.
     pub fn reserve(&mut self, new_capacity: usize) {
         let r = unsafe { onig_sys::onig_region_resize(&self.raw, new_capacity as c_int) };
-        if r != 0 {
+        if r != onig_sys::ONIG_NORMAL {
             panic!("Onig: fail to memory allocation during region resize")
         }
     }
@@ -87,7 +87,7 @@ impl Region {
             (*self.raw.beg.offset(pos as isize),
              *self.raw.end.offset(pos as isize))
         };
-        if beg >= 0 {
+        if beg != onig_sys::ONIG_REGION_NOTPOS {
             Some((beg as usize, end as usize))
         } else {
             None

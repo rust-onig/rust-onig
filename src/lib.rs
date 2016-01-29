@@ -62,7 +62,7 @@ pub struct Regex {
 
 impl Error {
     fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
-        let mut buff = &mut [0 as u8; 90];
+        let mut buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
         let len = unsafe {
             onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info)
         };
@@ -183,7 +183,7 @@ impl Regex {
                                &mut error)
         };
 
-        if err == 0 {
+        if err == onig_sys::ONIG_NORMAL {
             Ok(Regex { raw: reg })
         } else {
             Err(Error::new(err, error))
@@ -239,7 +239,7 @@ impl Regex {
 
         if r >= 0 {
             Some(r as usize)
-        } else if r == -1 {
+        } else if r == onig_sys::ONIG_MISMATCH {
             None
         } else {
             panic!("Onig: Internal error during regex match");
@@ -295,7 +295,7 @@ impl Regex {
 
         if r >= 0 {
             Some(r as usize)
-        } else if r == -1 {
+        } else if r == onig_sys::ONIG_MISMATCH {
             None
         } else {
             panic!("Onig: Internal error during regex search");

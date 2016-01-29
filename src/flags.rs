@@ -1,175 +1,250 @@
-use onig_sys::{OnigOptionType, OnigSyntaxBehavior};
+use onig_sys;
 
 bitflags! {
     /// Regex parsing and compilation options.
-    flags RegexOptions: OnigOptionType {
+    flags RegexOptions: onig_sys::OnigOptionType {
         /// Default options.
-        const REGEX_OPTION_NONE = 0,
+        const REGEX_OPTION_NONE
+            = onig_sys::ONIG_OPTION_NONE,
         /// Ambiguity match on.
-        const REGEX_OPTION_IGNORECASE = 1,
+        const REGEX_OPTION_IGNORECASE
+            = onig_sys::ONIG_OPTION_IGNORECASE,
         /// Extended pattern form.
-        const REGEX_OPTION_EXTEND = 2,
+        const REGEX_OPTION_EXTEND
+            = onig_sys::ONIG_OPTION_EXTEND,
         /// `'.'` match with newline.
-        const REGEX_OPTION_MULTILINE = 4,
+        const REGEX_OPTION_MULTILINE
+            = onig_sys::ONIG_OPTION_MULTILINE,
         /// `'^'` -> `'\A'`, `'$'` -> `'\Z'`.
-        const REGEX_OPTION_SINGLELINE = 8,
+        const REGEX_OPTION_SINGLELINE
+            = onig_sys::ONIG_OPTION_SINGLELINE,
         /// Find longest match.
-        const REGEX_OPTION_FIND_LONGEST = 16,
+        const REGEX_OPTION_FIND_LONGEST
+            = onig_sys::ONIG_OPTION_FIND_LONGEST,
         /// Ignore empty match.
-        const REGEX_OPTION_FIND_NOT_EMPTY = 32,
+        const REGEX_OPTION_FIND_NOT_EMPTY
+            = onig_sys::ONIG_OPTION_FIND_NOT_EMPTY,
         /// Clear `OPTION_SINGLELINE` which is enabled on
         /// `SYNTAX_POSIX_BASIC`, `SYNTAX_POSIX_EXTENDED`,
         /// `SYNTAX_PERL`, `SYNTAX_PERL_NG`, `SYNTAX_JAVA`.
-        const REGEX_OPTION_NEGATE_SINGLELINE = 64
+        const REGEX_OPTION_NEGATE_SINGLELINE
+            = onig_sys::ONIG_OPTION_NEGATE_SINGLELINE
     }
 }
 
 bitflags! {
     /// Regex evaluation options.
-    flags SearchOptions: OnigOptionType {
+    flags SearchOptions: onig_sys::OnigOptionType {
         /// Default options.
-        const SEARCH_OPTION_NONE = 0,
+        const SEARCH_OPTION_NONE
+            = onig_sys::ONIG_OPTION_NONE,
         /// Only named group captured.
-        const SEARCH_OPTION_DONT_CAPTURE_GROUP = 128,
+        const SEARCH_OPTION_DONT_CAPTURE_GROUP
+            = onig_sys::ONIG_OPTION_DONT_CAPTURE_GROUP,
         /// Named and no-named group captured.
-        const SEARCH_OPTION_CAPTURE_GROUP = 256,
+        const SEARCH_OPTION_CAPTURE_GROUP
+            = onig_sys::ONIG_OPTION_CAPTURE_GROUP,
         /// String head isn't considered as begin of line.
-        const SEARCH_OPTION_NOTBOL = 512,
+        const SEARCH_OPTION_NOTBOL
+            = onig_sys::ONIG_OPTION_NOTBOL,
         /// String end isn't considered as end of line.
-        const SEARCH_OPTION_NOTEOL = 1024
+        const SEARCH_OPTION_NOTEOL
+            = onig_sys::ONIG_OPTION_NOTEOL
     }
 }
 
 bitflags! {
     flags SyntaxOperator: u64 {
         /// `.`
-        const SYNTAX_OPERATOR_DOT_ANYCHAR                 = 1u64 << 1,
+        const SYNTAX_OPERATOR_DOT_ANYCHAR
+            = (onig_sys::ONIG_SYN_OP_DOT_ANYCHAR as u64),
         /// `*`
-        const SYNTAX_OPERATOR_ASTERISK_ZERO_INF           = 1u64 << 2,
+        const SYNTAX_OPERATOR_ASTERISK_ZERO_INF
+            = (onig_sys::ONIG_SYN_OP_ASTERISK_ZERO_INF as u64),
         /// `+`
-        const SYNTAX_OPERATOR_PLUS_ONE_INF                = 1u64 << 4,
+        const SYNTAX_OPERATOR_PLUS_ONE_INF
+            = (onig_sys::ONIG_SYN_OP_PLUS_ONE_INF as u64),
         /// `?`
-        const SYNTAX_OPERATOR_QMARK_ZERO_ONE              = 1u64 << 6,
+        const SYNTAX_OPERATOR_QMARK_ZERO_ONE
+            = (onig_sys::ONIG_SYN_OP_QMARK_ZERO_ONE as u64),
         /// `{lower,upper}`
-        const SYNTAX_OPERATOR_BRACE_INTERVAL              = 1u64 << 8,
+        const SYNTAX_OPERATOR_BRACE_INTERVAL
+            = (onig_sys::ONIG_SYN_OP_BRACE_INTERVAL as u64),
         /// `\{lower,upper\}`
-        const SYNTAX_OPERATOR_ESC_BRACE_INTERVAL          = 1u64 << 9,
+        const SYNTAX_OPERATOR_ESC_BRACE_INTERVAL
+            = (onig_sys::ONIG_SYN_OP_ESC_BRACE_INTERVAL as u64),
         /// `|`
-        const SYNTAX_OPERATOR_VBAR_ALT                    = 1u64 << 10,
+        const SYNTAX_OPERATOR_VBAR_ALT
+            = (onig_sys::ONIG_SYN_OP_VBAR_ALT as u64),
         /// `\|`
-        const SYNTAX_OPERATOR_ESC_VBAR_ALT                = 1u64 << 11,
+        const SYNTAX_OPERATOR_ESC_VBAR_ALT
+            = (onig_sys::ONIG_SYN_OP_ESC_VBAR_ALT as u64),
         /// `(...)`
-        const SYNTAX_OPERATOR_LPAREN_SUBEXP               = 1u64 << 12,
+        const SYNTAX_OPERATOR_LPAREN_SUBEXP
+            = (onig_sys::ONIG_SYN_OP_LPAREN_SUBEXP as u64),
         /// `\(...\)`
-        const SYNTAX_OPERATOR_ESC_LPAREN_SUBEXP           = 1u64 << 13,
+        const SYNTAX_OPERATOR_ESC_LPAREN_SUBEXP
+            = (onig_sys::ONIG_SYN_OP_ESC_LPAREN_SUBEXP as u64),
         /// `\A, \Z, \z`
-        const SYNTAX_OPERATOR_ESC_AZ_BUF_ANCHOR           = 1u64 << 14,
+        const SYNTAX_OPERATOR_ESC_AZ_BUF_ANCHOR
+            = (onig_sys::ONIG_SYN_OP_ESC_AZ_BUF_ANCHOR as u64),
         /// `\G`
-        const SYNTAX_OPERATOR_ESC_CAPITAL_G_BEGIN_ANCHOR  = 1u64 << 15,
+        const SYNTAX_OPERATOR_ESC_CAPITAL_G_BEGIN_ANCHOR
+            = (onig_sys::ONIG_SYN_OP_ESC_CAPITAL_G_BEGIN_ANCHOR as u64),
         /// `\num`
-        const SYNTAX_OPERATOR_DECIMAL_BACKREF             = 1u64 << 16,
+        const SYNTAX_OPERATOR_DECIMAL_BACKREF
+            = (onig_sys::ONIG_SYN_OP_DECIMAL_BACKREF as u64),
         /// `[...]`
-        const SYNTAX_OPERATOR_BRACKET_CC                  = 1u64 << 17,
+        const SYNTAX_OPERATOR_BRACKET_CC
+            = (onig_sys::ONIG_SYN_OP_BRACKET_CC as u64),
         /// `\w, \W`
-        const SYNTAX_OPERATOR_ESC_W_WORD                  = 1u64 << 18,
+        const SYNTAX_OPERATOR_ESC_W_WORD
+            = (onig_sys::ONIG_SYN_OP_ESC_W_WORD as u64),
         /// `\<. \>`
-        const SYNTAX_OPERATOR_ESC_LTGT_WORD_BEGIN_END     = 1u64 << 19,
+        const SYNTAX_OPERATOR_ESC_LTGT_WORD_BEGIN_END
+            = (onig_sys::ONIG_SYN_OP_ESC_LTGT_WORD_BEGIN_END as u64),
         /// `\b, \B`
-        const SYNTAX_OPERATOR_ESC_B_WORD_BOUND            = 1u64 << 20,
+        const SYNTAX_OPERATOR_ESC_B_WORD_BOUND
+            = (onig_sys::ONIG_SYN_OP_ESC_B_WORD_BOUND as u64),
         /// `\s, \S`
-        const SYNTAX_OPERATOR_ESC_S_WHITE_SPACE           = 1u64 << 21,
+        const SYNTAX_OPERATOR_ESC_S_WHITE_SPACE
+            = (onig_sys::ONIG_SYN_OP_ESC_S_WHITE_SPACE as u64),
         /// `\d, \D`
-        const SYNTAX_OPERATOR_ESC_D_DIGIT                 = 1u64 << 22,
+        const SYNTAX_OPERATOR_ESC_D_DIGIT
+            = (onig_sys::ONIG_SYN_OP_ESC_D_DIGIT as u64),
         /// `^, $`
-        const SYNTAX_OPERATOR_LINE_ANCHOR                 = 1u64 << 23,
+        const SYNTAX_OPERATOR_LINE_ANCHOR
+            = (onig_sys::ONIG_SYN_OP_LINE_ANCHOR as u64),
         /// `[:xxxx:]`
-        const SYNTAX_OPERATOR_POSIX_BRACKET               = 1u64 << 24,
+        const SYNTAX_OPERATOR_POSIX_BRACKET
+            = (onig_sys::ONIG_SYN_OP_POSIX_BRACKET as u64),
         /// `??,*?,+?,{n,m}?`
-        const SYNTAX_OPERATOR_QMARK_NON_GREEDY            = 1u64 << 25,
+        const SYNTAX_OPERATOR_QMARK_NON_GREEDY
+            = (onig_sys::ONIG_SYN_OP_QMARK_NON_GREEDY as u64),
         /// `\n,\r,\t,\a ...`
-        const SYNTAX_OPERATOR_ESC_CONTROL_CHARS           = 1u64 << 26,
+        const SYNTAX_OPERATOR_ESC_CONTROL_CHARS
+            = (onig_sys::ONIG_SYN_OP_ESC_CONTROL_CHARS as u64),
         /// `\cx`
-        const SYNTAX_OPERATOR_ESC_C_CONTROL               = 1u64 << 27,
+        const SYNTAX_OPERATOR_ESC_C_CONTROL
+            = (onig_sys::ONIG_SYN_OP_ESC_C_CONTROL as u64),
         /// `\OOO`
-        const SYNTAX_OPERATOR_ESC_OCTAL3                  = 1u64 << 28,
+        const SYNTAX_OPERATOR_ESC_OCTAL3
+            = (onig_sys::ONIG_SYN_OP_ESC_OCTAL3 as u64),
         /// `\xHH`
-        const SYNTAX_OPERATOR_ESC_X_HEX2                  = 1u64 << 29,
+        const SYNTAX_OPERATOR_ESC_X_HEX2
+            = (onig_sys::ONIG_SYN_OP_ESC_X_HEX2 as u64),
         /// `\x{7HHHHHHH}`
-        const SYNTAX_OPERATOR_ESC_X_BRACE_HEX8            = 1u64 << 30,
+        const SYNTAX_OPERATOR_ESC_X_BRACE_HEX8
+            = (onig_sys::ONIG_SYN_OP_ESC_X_BRACE_HEX8 as u64),
         /// `\Q...\E`
-        const SYNTAX_OPERATOR_ESC_CAPITAL_Q_QUOTE         = 1u64 << (32 + 0),
+        const SYNTAX_OPERATOR_ESC_CAPITAL_Q_QUOTE
+            = (onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_Q_QUOTE as u64) << 32,
         /// `(?...)`
-        const SYNTAX_OPERATOR_QMARK_GROUP_EFFECT          = 1u64 << (32 + 1),
+        const SYNTAX_OPERATOR_QMARK_GROUP_EFFECT
+            = (onig_sys::ONIG_SYN_OP2_QMARK_GROUP_EFFECT as u64) << 32,
         /// `(?imsx),(?-imsx)`
-        const SYNTAX_OPERATOR_OPTION_PERL                 = 1u64 << (32 + 2),
+        const SYNTAX_OPERATOR_OPTION_PERL
+            = (onig_sys::ONIG_SYN_OP2_OPTION_PERL as u64) << 32,
         /// `(?imx), (?-imx)`
-        const SYNTAX_OPERATOR_OPTION_RUBY                 = 1u64 << (32 + 3),
+        const SYNTAX_OPERATOR_OPTION_RUBY
+            = (onig_sys::ONIG_SYN_OP2_OPTION_RUBY as u64) << 32,
         /// `?+,*+,++`
-        const SYNTAX_OPERATOR_PLUS_POSSESSIVE_REPEAT      = 1u64 << (32 + 4),
+        const SYNTAX_OPERATOR_PLUS_POSSESSIVE_REPEAT
+            = (onig_sys::ONIG_SYN_OP2_PLUS_POSSESSIVE_REPEAT as u64) << 32,
         /// `{n,m}+`
-        const SYNTAX_OPERATOR_PLUS_POSSESSIVE_INTERVAL    = 1u64 << (32 + 5),
+        const SYNTAX_OPERATOR_PLUS_POSSESSIVE_INTERVAL
+            = (onig_sys::ONIG_SYN_OP2_PLUS_POSSESSIVE_INTERVAL as u64) << 32,
         /// `[...&&..[..]..]`
-        const SYNTAX_OPERATOR_CCLASS_SET_OP               = 1u64 << (32 + 6),
+        const SYNTAX_OPERATOR_CCLASS_SET_OP
+            = (onig_sys::ONIG_SYN_OP2_CCLASS_SET_OP as u64) << 32,
         /// `(?<name>...)`
-        const SYNTAX_OPERATOR_QMARK_LT_NAMED_GROUP        = 1u64 << (32 + 7),
+        const SYNTAX_OPERATOR_QMARK_LT_NAMED_GROUP
+            = (onig_sys::ONIG_SYN_OP2_QMARK_LT_NAMED_GROUP as u64) << 32,
         /// `\k<name>`
-        const SYNTAX_OPERATOR_ESC_K_NAMED_BACKREF         = 1u64 << (32 + 8),
+        const SYNTAX_OPERATOR_ESC_K_NAMED_BACKREF
+            = (onig_sys::ONIG_SYN_OP2_ESC_K_NAMED_BACKREF as u64) << 32,
         /// `\g<name>, \g<n>`
-        const SYNTAX_OPERATOR_ESC_G_SUBEXP_CALL           = 1u64 << (32 + 9),
+        const SYNTAX_OPERATOR_ESC_G_SUBEXP_CALL
+            = (onig_sys::ONIG_SYN_OP2_ESC_G_SUBEXP_CALL as u64) << 32,
         /// `(?@..),(?@<x>..)`
-        const SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY      = 1u64 << (32 + 10),
+        const SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY
+            = (onig_sys::ONIG_SYN_OP2_ATMARK_CAPTURE_HISTORY as u64) << 32,
         /// `\C-x`
-        const SYNTAX_OPERATOR_ESC_CAPITAL_C_BAR_CONTROL   = 1u64 << (32 + 11),
+        const SYNTAX_OPERATOR_ESC_CAPITAL_C_BAR_CONTROL
+            = (onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_C_BAR_CONTROL as u64) << 32,
         /// `\M-x`
-        const SYNTAX_OPERATOR_ESC_CAPITAL_M_BAR_META      = 1u64 << (32 + 12),
+        const SYNTAX_OPERATOR_ESC_CAPITAL_M_BAR_META
+            = (onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_M_BAR_META as u64) << 32,
         /// `\v as VTAB`
-        const SYNTAX_OPERATOR_ESC_V_VTAB                  = 1u64 << (32 + 13),
+        const SYNTAX_OPERATOR_ESC_V_VTAB
+            = (onig_sys::ONIG_SYN_OP2_ESC_V_VTAB as u64) << 32,
         /// `\uHHHH`
-        const SYNTAX_OPERATOR_ESC_U_HEX4                  = 1u64 << (32 + 14),
+        const SYNTAX_OPERATOR_ESC_U_HEX4
+            = (onig_sys::ONIG_SYN_OP2_ESC_U_HEX4 as u64) << 32,
         /// `\`, \'`
-        const SYNTAX_OPERATOR_ESC_GNU_BUF_ANCHOR          = 1u64 << (32 + 15),
+        const SYNTAX_OPERATOR_ESC_GNU_BUF_ANCHOR
+            = (onig_sys::ONIG_SYN_OP2_ESC_GNU_BUF_ANCHOR as u64) << 32,
         /// `\p{...}, \P{...}`
-        const SYNTAX_OPERATOR_ESC_P_BRACE_CHAR_PROPERTY   = 1u64 << (32 + 16),
+        const SYNTAX_OPERATOR_ESC_P_BRACE_CHAR_PROPERTY
+            = (onig_sys::ONIG_SYN_OP2_ESC_P_BRACE_CHAR_PROPERTY as u64) << 32,
         /// `\p{^..}, \P{^..}`
-        const SYNTAX_OPERATOR_ESC_P_BRACE_CIRCUMFLEX_NOT  = 1u64 << (32 + 17),
+        const SYNTAX_OPERATOR_ESC_P_BRACE_CIRCUMFLEX_NOT
+            = (onig_sys::ONIG_SYN_OP2_ESC_P_BRACE_CIRCUMFLEX_NOT as u64) << 32,
         /// `\h, \H`
-        const SYNTAX_OPERATOR_ESC_H_XDIGIT                = 1u64 << (32 + 19),
+        const SYNTAX_OPERATOR_ESC_H_XDIGIT
+            = (onig_sys::ONIG_SYN_OP2_ESC_H_XDIGIT as u64) << 32,
         /// `\`
-        const SYNTAX_OPERATOR_INEFFECTIVE_ESCAPE          = 1u64 << (32 + 20)
+        const SYNTAX_OPERATOR_INEFFECTIVE_ESCAPE
+            = (onig_sys::ONIG_SYN_OP2_INEFFECTIVE_ESCAPE as u64) << 32
     }
 }
 
 bitflags! {
-    flags SyntaxBehavior: OnigSyntaxBehavior {
+    flags SyntaxBehavior: onig_sys::OnigSyntaxBehavior {
         /// `?, *, +, {n,m}`
-        const SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS        = 1u32 << 0,
+        const SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS
+            = onig_sys::ONIG_SYN_CONTEXT_INDEP_REPEAT_OPS,
         /// `error or ignore`
-        const SYNTAX_BEHAVIOR_CONTEXT_INVALID_REPEAT_OPS      = 1u32 << 1,
+        const SYNTAX_BEHAVIOR_CONTEXT_INVALID_REPEAT_OPS
+            = onig_sys::ONIG_SYN_CONTEXT_INVALID_REPEAT_OPS,
         /// `...)...`
-        const SYNTAX_BEHAVIOR_ALLOW_UNMATCHED_CLOSE_SUBEXP    = 1u32 << 2,
+        const SYNTAX_BEHAVIOR_ALLOW_UNMATCHED_CLOSE_SUBEXP
+            = onig_sys::ONIG_SYN_ALLOW_UNMATCHED_CLOSE_SUBEXP,
         /// `{???`
-        const SYNTAX_BEHAVIOR_ALLOW_INVALID_INTERVAL          = 1u32 << 3,
+        const SYNTAX_BEHAVIOR_ALLOW_INVALID_INTERVAL
+            = onig_sys::ONIG_SYN_ALLOW_INVALID_INTERVAL,
         /// `{,n} => {0,n}`
-        const SYNTAX_BEHAVIOR_ALLOW_INTERVAL_LOW_ABBREV       = 1u32 << 4,
+        const SYNTAX_BEHAVIOR_ALLOW_INTERVAL_LOW_ABBREV
+            = onig_sys::ONIG_SYN_ALLOW_INTERVAL_LOW_ABBREV,
         /// `/(\1)/,/\1()/ ..`
-        const SYNTAX_BEHAVIOR_STRICT_CHECK_BACKREF            = 1u32 << 5,
+        const SYNTAX_BEHAVIOR_STRICT_CHECK_BACKREF
+            = onig_sys::ONIG_SYN_STRICT_CHECK_BACKREF,
         /// `(?<=a|bc)`
-        const SYNTAX_BEHAVIOR_DIFFERENT_LEN_ALT_LOOK_BEHIND   = 1u32 << 6,
+        const SYNTAX_BEHAVIOR_DIFFERENT_LEN_ALT_LOOK_BEHIND
+            = onig_sys::ONIG_SYN_DIFFERENT_LEN_ALT_LOOK_BEHIND,
         /// See Oniguruma documenation
-        const SYNTAX_BEHAVIOR_CAPTURE_ONLY_NAMED_GROUP        = 1u32 << 7,
+        const SYNTAX_BEHAVIOR_CAPTURE_ONLY_NAMED_GROUP
+            = onig_sys::ONIG_SYN_CAPTURE_ONLY_NAMED_GROUP,
         /// `(?<x>)(?<x>)`
-        const SYNTAX_BEHAVIOR_ALLOW_MULTIPLEX_DEFINITION_NAME = 1u32 << 8,
+        const SYNTAX_BEHAVIOR_ALLOW_MULTIPLEX_DEFINITION_NAME
+            = onig_sys::ONIG_SYN_ALLOW_MULTIPLEX_DEFINITION_NAME,
         /// `a{n}?=(?:a{n})?`
-        const SYNTAX_BEHAVIOR_FIXED_INTERVAL_IS_GREEDY_ONLY   = 1u32 << 9,
+        const SYNTAX_BEHAVIOR_FIXED_INTERVAL_IS_GREEDY_ONLY
+            = onig_sys::ONIG_SYN_FIXED_INTERVAL_IS_GREEDY_ONLY,
         /// `[^...]`
-        const SYNTAX_BEHAVIOR_NOT_NEWLINE_IN_NEGATIVE_CC      = 1u32 << 20,
+        const SYNTAX_BEHAVIOR_NOT_NEWLINE_IN_NEGATIVE_CC
+            = onig_sys::ONIG_SYN_NOT_NEWLINE_IN_NEGATIVE_CC,
         /// `[..\w..] etc..`
-        const SYNTAX_BEHAVIOR_BACKSLASH_ESCAPE_IN_CC          = 1u32 << 21,
+        const SYNTAX_BEHAVIOR_BACKSLASH_ESCAPE_IN_CC
+            = onig_sys::ONIG_SYN_BACKSLASH_ESCAPE_IN_CC,
         /// `[0-9-a]=[0-9\-a]`
-        const SYNTAX_BEHAVIOR_ALLOW_DOUBLE_RANGE_OP_IN_CC     = 1u32 << 23,
+        const SYNTAX_BEHAVIOR_ALLOW_DOUBLE_RANGE_OP_IN_CC
+            = onig_sys::ONIG_SYN_ALLOW_DOUBLE_RANGE_OP_IN_CC,
         /// `[,-,]`
-        const SYNTAX_BEHAVIOR_WARN_CC_OP_NOT_ESCAPED          = 1u32 << 24,
+        const SYNTAX_BEHAVIOR_WARN_CC_OP_NOT_ESCAPED
+            = onig_sys::ONIG_SYN_WARN_CC_OP_NOT_ESCAPED,
         /// `(?:a*)+`
-        const SYNTAX_BEHAVIOR_WARN_REDUNDANT_NESTED_REPEAT    = 1u32 << 25
+        const SYNTAX_BEHAVIOR_WARN_REDUNDANT_NESTED_REPEAT
+            = onig_sys::ONIG_SYN_WARN_REDUNDANT_NESTED_REPEAT
     }
 }
