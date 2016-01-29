@@ -122,7 +122,7 @@ mod tests {
         let regex = Regex::new("(?<foo>he)(?<bar>l+)(?<bar>o)").unwrap();
         let names = regex.capture_names().collect::<Vec<_>>();
         assert_eq!(names,
-                   [("foo", &[1] as &[i32]), ("bar", &[2, 3] as &[i32])]);
+                   [("foo", &[1u32] as &[u32]), ("bar", &[2u32, 3] as &[u32])]);
     }
 }
 
