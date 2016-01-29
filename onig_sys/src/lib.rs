@@ -118,6 +118,13 @@ pub struct OnigMetaCharTableType {
 }
 
 #[repr(C)]
+pub struct OnigCaseFoldCodeItem {
+    pub byte_len: c_int, // argument(original) character(s) byte length
+    pub code_len: c_int, // number of code
+    pub code: [OnigCodePoint; ONIGENC_MAX_COMP_CASE_FOLD_CODE_LEN as usize]
+}
+
+#[repr(C)]
 pub struct OnigEncodingType {
   pub mbc_enc_len: extern "C" fn(p: *const OnigUChar) -> c_int,
   pub name: *const c_char,
@@ -187,7 +194,7 @@ pub struct OnigRegexType {
   pub sub_anchor: c_int,                // start-anchor for exact or map
   pub exact: *const OnigUChar,
   pub exact_end: *const OnigUChar,
-  pub map: [OnigUChar; 256],              // used as BM skip or char-map
+  pub map: [OnigUChar; ONIG_CHAR_TABLE_SIZE as usize], // used as BM skip or char-map
   pub int_map: *const c_int,            // BM skip for exact_len > 255
   pub int_map_backward: *const c_int,   // BM skip for backward search
   pub dmin: OnigDistance,               // min-distance of exact or map
