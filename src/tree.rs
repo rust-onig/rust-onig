@@ -74,7 +74,7 @@ mod tests {
                                         REGEX_OPTION_NONE,
                                         &syntax).unwrap();
 
-        let r = regex.search_with_options("- cd aaabbb -",
+        let r = regex.search_with_options("- cd aaabbb -", 0, 13,
                                           SEARCH_OPTION_NONE,
                                           Some(&mut region));
 
