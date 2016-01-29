@@ -22,7 +22,7 @@ impl CaptureTreeNode {
         self.raw.num_childs as usize
     }
 
-    pub fn childs<'t>(&'t self) -> CaptureTreeNodeIter<'t> {
+    pub fn children<'t>(&'t self) -> CaptureTreeNodeIter<'t> {
         CaptureTreeNodeIter {
             idx: 0,
             node: self,
