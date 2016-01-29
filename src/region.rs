@@ -114,7 +114,6 @@ impl Drop for Region {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]

@@ -25,8 +25,8 @@ pub type OnigWarnFunc = extern "C" fn(*const c_char);
 /// This callback will be invoked for each name when calling
 /// [`onig_foreach_name`](fn.onig_foreach_name.html). The
 /// final argument to that function is passed back to this callback.
-pub type OnigForeachCallback = extern "C" fn(*const c_uchar,
-                                             *const c_uchar,
+pub type OnigForeachCallback = extern "C" fn(*const OnigUChar,
+                                             *const OnigUChar,
                                              c_int,
                                              *const c_int,
                                              OnigRegex,
@@ -104,8 +104,8 @@ pub struct OnigMetaCharTable {
 #[derive(Debug)]
 pub struct OnigErrorInfo {
     pub enc: *const OnigEncoding,
-    pub par: *const c_uchar,
-    pub par_end: *const c_uchar,
+    pub par: *const OnigUChar,
+    pub par_end: *const OnigUChar,
 }
 
 #[repr(C)]
@@ -118,7 +118,7 @@ pub struct OnigRepeatRange {
 #[repr(C)]
 pub struct OnigRegexType {
   // common members of BBuf(bytes-buffer)
-  pub p: *const c_uchar,                // compiled pattern
+  pub p: *const OnigUChar,                // compiled pattern
   pub used: c_uint,                     // used space for p
   pub alloc: c_uint,                    // allocated space for p
 
@@ -148,9 +148,9 @@ pub struct OnigRegexType {
   pub anchor_dmin: OnigDistance,        // (SEMI_)END_BUF anchor distance
   pub anchor_dmax: OnigDistance,        // (SEMI_)END_BUF anchor distance
   pub sub_anchor: c_int,                // start-anchor for exact or map
-  pub exact: *const c_uchar,
-  pub exact_end: *const c_uchar,
-  pub map: [c_uchar; 256],              // used as BM skip or char-map
+  pub exact: *const OnigUChar,
+  pub exact_end: *const OnigUChar,
+  pub map: [OnigUChar; 256],              // used as BM skip or char-map
   pub int_map: *const c_int,            // BM skip for exact_len > 255
   pub int_map_backward: *const c_int,   // BM skip for backward search
   pub dmin: OnigDistance,               // min-distance of exact or map
@@ -228,7 +228,7 @@ extern "C" {
     ///                           (required size: ONIG_MAX_ERROR_MESSAGE_LEN)
     ///   2. err_code:             error code returned by other API functions.
     ///   3. err_info (optional):  error info returned by onig_new().
-    pub fn onig_error_code_to_str(err_buff: *mut c_uchar, err_code: c_int, ...) -> c_int;
+    pub fn onig_error_code_to_str(err_buff: *mut OnigUChar, err_code: c_int, ...) -> c_int;
 
     ///   Set warning function.
     ///
@@ -347,8 +347,8 @@ extern "C" {
     ///      Use this value as 3rd argument of onig_error_code_to_str().
     ///
     pub fn onig_new(reg: *mut OnigRegex,
-                    pattern: *const c_uchar,
-                    pattern_end: *const c_uchar,
+                    pattern: *const OnigUChar,
+                    pattern_end: *const OnigUChar,
                     option: OnigOptions,
                     enc: *const OnigEncoding,
                     syntax: *const OnigSyntax,
@@ -365,8 +365,8 @@ extern "C" {
     ///
     ///   normal return: ONIG_NORMAL
     pub fn onig_new_without_alloc(reg: OnigRegex,
-                                  pattern: *const c_uchar,
-                                  pattern_end: *const c_uchar,
+                                  pattern: *const OnigUChar,
+                                  pattern_end: *const OnigUChar,
                                   option: OnigOptions,
                                   enc: *const OnigEncoding,
                                   syntax: *const OnigSyntax,
@@ -414,8 +414,8 @@ extern "C" {
     ///     pattern_enc: UTF32_BE/LE
     ///     target_enc:  UTF32_LE/BE
     pub fn onig_new_deluxe(reg: *mut OnigRegex,
-                           pattern: *const c_uchar,
-                           pattern_end: *const c_uchar,
+                           pattern: *const OnigUChar,
+                           pattern_end: *const OnigUChar,
                            ci: *const OnigCompileInfo,
                            einfo: *mut OnigErrorInfo)
                            -> c_int;
@@ -463,10 +463,10 @@ extern "C" {
     ///    * ONIG_OPTION_NOTEOL        string end (end) isn't considered as end of line
     ///    * ONIG_OPTION_POSIX_REGION  region argument is regmatch_t[] of POSIX API.
     pub fn onig_search(reg: OnigRegex,
-                       str: *const c_uchar,
-                       end: *const c_uchar,
-                       start: *const c_uchar,
-                       range: *const c_uchar,
+                       str: *const OnigUChar,
+                       end: *const OnigUChar,
+                       start: *const OnigUChar,
+                       range: *const OnigUChar,
                        region: *mut OnigRegion,
                        option: OnigOptions)
                        -> c_int;
@@ -494,9 +494,9 @@ extern "C" {
     ///    * ONIG_OPTION_NOTEOL       string end (end) isn't considered as end of line
     ///    * ONIG_OPTION_POSIX_REGION region argument is regmatch_t[] type of POSIX API.
     pub fn onig_match(reg: OnigRegex,
-                      str: *const c_uchar,
-                      end: *const c_uchar,
-                      at: *const c_uchar,
+                      str: *const OnigUChar,
+                      end: *const OnigUChar,
+                      at: *const OnigUChar,
                       region: *mut OnigRegion,
                       option: OnigOptions)
                       -> c_int;
@@ -567,8 +567,8 @@ extern "C" {
     ///   3 name_end:  terminate address of group name.
     ///   4 num_list:  return list of group number.
     pub fn onig_name_to_group_numbers(reg: OnigRegex,
-                                      name: *const c_uchar,
-                                      name_end: *const c_uchar,
+                                      name: *const OnigUChar,
+                                      name_end: *const OnigUChar,
                                       num_list: *mut *const c_int)
                                       -> c_int;
 
@@ -587,8 +587,8 @@ extern "C" {
     ///   3 name_end: terminate address of group name.
     ///   4 region:   search/match result region.
     pub fn onig_name_to_backref_number(reg: OnigRegex,
-                                       name: *const c_uchar,
-                                       name_end: *const c_uchar,
+                                       name: *const OnigUChar,
+                                       name_end: *const OnigUChar,
                                        region: *const OnigRegion)
                                        -> c_int;
 
@@ -744,9 +744,9 @@ extern "C" {
     ///   2 start: string address
     ///   3 s:     target address of string
     pub fn onigenc_get_prev_char_head(enc: *const OnigEncoding,
-                                      start: *const c_uchar,
-                                      s: *const c_uchar)
-                                      -> *const c_uchar;
+                                      start: *const OnigUChar,
+                                      s: *const OnigUChar)
+                                      -> *const OnigUChar;
 
     ///   Return left-adjusted head address of a character.
     ///
@@ -759,9 +759,9 @@ extern "C" {
     ///   2. start: string address
     ///   3. s:     target address of string
     pub fn onigenc_get_left_adjust_char_head(enc: *const OnigEncoding,
-                                             start: *const c_uchar,
-                                             s: *const c_uchar)
-                                             -> *const c_uchar;
+                                             start: *const OnigUChar,
+                                             s: *const OnigUChar)
+                                             -> *const OnigUChar;
 
     ///   Return right-adjusted head address of a character.
     ///
@@ -774,27 +774,27 @@ extern "C" {
     ///   2. start: string address
     ///   3. s:     target address of string
     pub fn onigenc_get_right_adjust_char_head(enc: *const OnigEncoding,
-                                              start: *const c_uchar,
-                                              s: *const c_uchar)
-                                              -> *const c_uchar;
+                                              start: *const OnigUChar,
+                                              s: *const OnigUChar)
+                                              -> *const OnigUChar;
 
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)`
     pub fn onigenc_strlen(enc: *const OnigEncoding,
-                          s: *const c_uchar,
-                          end: *const c_uchar)
+                          s: *const OnigUChar,
+                          end: *const OnigUChar)
                           -> c_int;
 
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_strlen_null(enc: *const OnigEncoding, s: *const c_uchar) -> c_int;
+    pub fn onigenc_strlen_null(enc: *const OnigEncoding, s: *const OnigUChar) -> c_int;
 
     ///   Return number of bytes in the string.
     ///
     ///  `int onigenc_str_bytelen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_str_bytelen_null(enc: *const OnigEncoding, s: *const c_uchar) -> c_int;
+    pub fn onigenc_str_bytelen_null(enc: *const OnigEncoding, s: *const OnigUChar) -> c_int;
 
     ///   Set default syntax.
     ///

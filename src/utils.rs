@@ -8,7 +8,6 @@ pub fn version() -> String {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]

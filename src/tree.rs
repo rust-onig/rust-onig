@@ -59,3 +59,40 @@ impl<'t> Iterator for CaptureTreeNodeIter<'t> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::super::*;
+
+    #[test]
+    fn test_regex_search_with_region_tree() {
+        let mut region = Region::new();
+        let mut syntax = Syntax::ruby().clone();
+        syntax.enable_operators(SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
+
+        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))",
+                                        REGEX_OPTION_NONE,
+                                        &syntax).unwrap();
+
+        let r = regex.search_with_options("- cd aaabbb -",
+                                          SEARCH_OPTION_NONE,
+                                          Some(&mut region));
+
+        assert_eq!(r, Some(2));
+        assert_eq!(region.len(), 5);
+
+        let tree = region.tree().unwrap();
+
+        assert_eq!(tree.len(), 1);
+        assert_eq!(tree.group(), 0);
+        assert_eq!(tree.pos(), (2, 4));
+
+        assert_eq!(tree[0].len(), 1);
+        assert_eq!(tree[0].group(), 3);
+        assert_eq!(tree[0].pos(), (2, 4));
+
+        assert_eq!(tree[0][0].len(), 0);
+        assert_eq!(tree[0][0].group(), 4);
+        assert_eq!(tree[0][0].pos(), (3, 4));
+    }
+}

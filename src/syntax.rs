@@ -91,7 +91,9 @@ impl Syntax {
     }
 
     pub fn behavior(&self) -> SyntaxBehavior {
-        SyntaxBehavior::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_behavior(&self.raw) })
+        SyntaxBehavior::from_bits_truncate(unsafe {
+            onig_sys::onig_get_syntax_behavior(&self.raw)
+        })
     }
 
     pub fn set_behavior(&mut self, behavior: SyntaxBehavior) {
@@ -112,7 +114,9 @@ impl Syntax {
     }
 
     pub fn options(&self) -> RegexOptions {
-        RegexOptions::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_options(&self.raw) })
+        RegexOptions::from_bits_truncate(unsafe {
+            onig_sys::onig_get_syntax_options(&self.raw)
+        })
     }
 
     pub fn set_options(&mut self, options: RegexOptions) {
