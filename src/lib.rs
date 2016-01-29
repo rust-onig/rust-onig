@@ -34,6 +34,7 @@ mod utils;
 
 // re-export the onig types publically
 pub use flags::*;
+pub use names::CaptureNames;
 pub use region::Region;
 pub use captures::{Captures, SubCaptures, SubCapturesPos};
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
