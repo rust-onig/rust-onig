@@ -7,7 +7,8 @@ impl Regex {
     /// If no match is found, then `None` is returned.
     pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
         let mut region = Region::new();
-        self.search_with_options(text, SEARCH_OPTION_NONE, Some(&mut region))
+        self.search_with_options(text, 0, text.len(),
+                                 SEARCH_OPTION_NONE, Some(&mut region))
             .map(|_| Captures {
                 text: text,
                 region: region,

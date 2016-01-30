@@ -202,6 +202,7 @@ impl Regex {
     /// # Arguments
     ///
     /// * `str` - The string slice to match against.
+    /// * `at` - The byte index in the passed slice to start matching
     /// * `options` - The regex match options.
     /// * `region` - The region for return group match range info
     ///
@@ -216,21 +217,23 @@ impl Regex {
     /// use onig::{Regex, SEARCH_OPTION_NONE};
     ///
     /// let r = Regex::new(".*").unwrap();
-    /// let res = r.match_with_options("hello", SEARCH_OPTION_NONE, None);
+    /// let res = r.match_with_options("hello", 0, SEARCH_OPTION_NONE, None);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
     /// ```
     pub fn match_with_options(&self,
                               str: &str,
+                              at: usize,
                               options: SearchOptions,
                               region: Option<&mut Region>)
                               -> Option<usize> {
         let (beg, end) = (str.as_ptr(), str[str.len()..].as_ptr());
+        let start = str[at..].as_ptr();
         let r = unsafe {
             onig_sys::onig_match(self.raw,
                                  beg,
                                  end,
-                                 beg,
+                                 start,
                                  match region {
                                      Some(region) => transmute(region),
                                      None => 0 as *mut onig_sys::OnigRegion,
@@ -251,11 +254,14 @@ impl Regex {
     ///
     /// Search for matches the regex in a string. This method will return the
     /// index of the first match of the regex within the string, if
-    /// there is one.
+    /// there is one. If `from` is less than `to`, then search is performed
+    /// in forward order, otherwice – in backward order.
     ///
     /// # Arguments
     ///
     ///  * `str` - The string to search in.
+    ///  * `from` - The byte index in the passed slice to start search
+    ///  * `to` - The byte index in the passed slice to finish search
     ///  * `options` - The options for the search.
     ///  * `region` - The region for return group match range info
     ///
@@ -271,22 +277,25 @@ impl Regex {
     /// use onig::{Regex, SEARCH_OPTION_NONE};
     ///
     /// let r = Regex::new("l{1,2}").unwrap();
-    /// let res = r.search_with_options("hello", SEARCH_OPTION_NONE, None);
+    /// let res = r.search_with_options("hello", 0, 5, SEARCH_OPTION_NONE, None);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
     /// ```
     pub fn search_with_options(&self,
                                str: &str,
+                               from: usize,
+                               to: usize,
                                options: SearchOptions,
                                region: Option<&mut Region>)
                                -> Option<usize> {
         let (beg, end) = (str.as_ptr(), str[str.len()..].as_ptr());
+        let (start, range) = (str[from..].as_ptr(), str[to..].as_ptr());
         let r = unsafe {
             onig_sys::onig_search(self.raw,
                                   beg,
                                   end,
-                                  beg,
-                                  end,
+                                  start,
+                                  range,
                                   match region {
                                       Some(region) => transmute(region),
                                       None => 0 as *mut onig_sys::OnigRegion,
@@ -305,7 +314,7 @@ impl Regex {
 
     /// Returns true if and only if the regex matches the string given.
     pub fn is_match(&self, text: &str) -> bool {
-        self.match_with_options(text, SEARCH_OPTION_NONE, None)
+        self.match_with_options(text, 0, SEARCH_OPTION_NONE, None)
             .map(|r| r == text.len())
             .unwrap_or(false)
     }
@@ -318,7 +327,8 @@ impl Regex {
     /// `is_match`.
     pub fn find(&self, text: &str) -> Option<(usize, usize)> {
         let mut region = Region::new();
-        self.search_with_options(text, SEARCH_OPTION_NONE, Some(&mut region))
+        self.search_with_options(text, 0, text.len(),
+                                 SEARCH_OPTION_NONE, Some(&mut region))
             .map(|_| region.pos(0))
             .unwrap_or(None)
     }
@@ -365,7 +375,7 @@ mod tests {
     #[test]
     fn test_failed_match() {
         let regex = Regex::new("foo").unwrap();
-        let res = regex.match_with_options("bar", SEARCH_OPTION_NONE, None);
+        let res = regex.match_with_options("bar", 0, SEARCH_OPTION_NONE, None);
         assert!(res.is_none());
     }
 
@@ -374,7 +384,7 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("e(l+)").unwrap();
 
-        let r = regex.search_with_options("hello",
+        let r = regex.search_with_options("hello", 0, 5,
                                           SEARCH_OPTION_NONE,
                                           Some(&mut region));
 
@@ -392,7 +402,7 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("he(l+)").unwrap();
 
-        let r = regex.match_with_options("hello",
+        let r = regex.match_with_options("hello", 0,
                                          SEARCH_OPTION_NONE,
                                          Some(&mut region));
 
