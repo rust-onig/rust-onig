@@ -27,6 +27,7 @@ extern crate onig_sys;
 mod find;
 mod flags;
 mod region;
+mod replace;
 mod names;
 mod syntax;
 mod tree;
@@ -38,8 +39,9 @@ pub use names::CaptureNames;
 pub use region::Region;
 pub use find::{
     Captures, SubCaptures, SubCapturesPos,
-    FindMatches, FindCaptures
+    FindMatches, FindCaptures, RegexSplits, RegexSplitsN
 };
+pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
 pub use utils::version;

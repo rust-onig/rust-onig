@@ -36,7 +36,7 @@ struct NameEntry {
     back_alloc: c_int,
     // The real type of `back_ref1` and `back_refs` is `libc::c_int`
     // and `*const libc::c_int`, but we must make sure that it is `i32`
-    // to properly casting them into `&[i32]`
+    // to properly transmute them into `&[u32]`
     back_ref1: i32,
     back_refs: *const i32
 }
