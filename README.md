@@ -14,7 +14,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-	onig = "0.3"
+onig = "0.4"
 ```
 
 Add the following extern to your crate root:
