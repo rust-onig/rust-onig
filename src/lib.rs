@@ -24,7 +24,6 @@ extern crate lazy_static;
 extern crate libc;
 extern crate onig_sys;
 
-mod captures;
 mod find;
 mod flags;
 mod region;
@@ -37,8 +36,10 @@ mod utils;
 pub use flags::*;
 pub use names::CaptureNames;
 pub use region::Region;
-pub use find::{FindMatches};
-pub use captures::{Captures, SubCaptures, SubCapturesPos};
+pub use find::{
+    Captures, SubCaptures, SubCapturesPos,
+    FindMatches, FindCaptures
+};
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
 pub use utils::version;
