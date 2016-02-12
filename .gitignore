@@ -1,5 +1,4 @@
 Cargo.lock
 target/
-onig-5.9.6/
 *.rs.bk
 .vagrant/
