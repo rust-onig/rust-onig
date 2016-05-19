@@ -28,7 +28,13 @@ bitflags! {
         /// `SYNTAX_POSIX_BASIC`, `SYNTAX_POSIX_EXTENDED`,
         /// `SYNTAX_PERL`, `SYNTAX_PERL_NG`, `SYNTAX_JAVA`.
         const REGEX_OPTION_NEGATE_SINGLELINE
-            = onig_sys::ONIG_OPTION_NEGATE_SINGLELINE
+            = onig_sys::ONIG_OPTION_NEGATE_SINGLELINE,
+        /// Only named group captured.
+        const REGEX_OPTION_DONT_CAPTURE_GROUP
+            = onig_sys::ONIG_OPTION_DONT_CAPTURE_GROUP,
+        /// Named and no-named group captured.
+        const REGEX_OPTION_CAPTURE_GROUP
+            = onig_sys::ONIG_OPTION_CAPTURE_GROUP,
     }
 }
 
@@ -38,12 +44,6 @@ bitflags! {
         /// Default options.
         const SEARCH_OPTION_NONE
             = onig_sys::ONIG_OPTION_NONE,
-        /// Only named group captured.
-        const SEARCH_OPTION_DONT_CAPTURE_GROUP
-            = onig_sys::ONIG_OPTION_DONT_CAPTURE_GROUP,
-        /// Named and no-named group captured.
-        const SEARCH_OPTION_CAPTURE_GROUP
-            = onig_sys::ONIG_OPTION_CAPTURE_GROUP,
         /// String head isn't considered as begin of line.
         const SEARCH_OPTION_NOTBOL
             = onig_sys::ONIG_OPTION_NOTBOL,
