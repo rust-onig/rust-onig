@@ -400,6 +400,11 @@ mod tests {
         let pos2 = region.pos(1).unwrap();
         assert_eq!(pos1, (1, 4));
         assert_eq!(pos2, (2, 4));
+
+        // test cloning here since we already have a filled region
+        let cloned_region = region.clone();
+        let pos1_clone = cloned_region.pos(0).unwrap();
+        assert_eq!(pos1_clone, pos1);
     }
 
     #[test]
