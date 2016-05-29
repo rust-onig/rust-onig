@@ -17,6 +17,8 @@
 //! }
 //! ```
 
+#![feature(pattern)]
+
 #[macro_use]
 extern crate bitflags;
 #[macro_use]
@@ -32,6 +34,7 @@ mod names;
 mod syntax;
 mod tree;
 mod utils;
+mod pattern;
 
 // re-export the onig types publically
 pub use flags::*;
