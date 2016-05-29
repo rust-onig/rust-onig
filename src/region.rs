@@ -112,6 +112,16 @@ impl Drop for Region {
     }
 }
 
+impl Clone for Region {
+    fn clone(&self) -> Self {
+        let mut new_region = Region::new();
+        unsafe {
+            onig_sys::onig_region_copy(&mut new_region.raw, &self.raw);
+        }
+        new_region
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -125,6 +135,13 @@ mod tests {
     fn test_region_clear() {
         let mut region = Region::new();
         region.clear();
+    }
+
+    #[test]
+    fn test_region_copy() {
+        let region = Region::new();
+        let new_region = region.clone();
+        assert_eq!(new_region.len(), region.len());
     }
 
     #[test]
