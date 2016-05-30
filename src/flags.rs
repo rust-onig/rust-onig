@@ -2,7 +2,7 @@ use onig_sys;
 
 bitflags! {
     /// Regex parsing and compilation options.
-    flags RegexOptions: onig_sys::OnigOptionType {
+    pub flags RegexOptions: onig_sys::OnigOptionType {
         /// Default options.
         const REGEX_OPTION_NONE
             = onig_sys::ONIG_OPTION_NONE,
@@ -40,7 +40,7 @@ bitflags! {
 
 bitflags! {
     /// Regex evaluation options.
-    flags SearchOptions: onig_sys::OnigOptionType {
+    pub flags SearchOptions: onig_sys::OnigOptionType {
         /// Default options.
         const SEARCH_OPTION_NONE
             = onig_sys::ONIG_OPTION_NONE,
@@ -54,7 +54,7 @@ bitflags! {
 }
 
 bitflags! {
-    flags SyntaxOperator: u64 {
+    pub flags SyntaxOperator: u64 {
         /// `.`
         const SYNTAX_OPERATOR_DOT_ANYCHAR
             = (onig_sys::ONIG_SYN_OP_DOT_ANYCHAR as u64),
@@ -200,7 +200,7 @@ bitflags! {
 }
 
 bitflags! {
-    flags SyntaxBehavior: onig_sys::OnigSyntaxBehavior {
+    pub flags SyntaxBehavior: onig_sys::OnigSyntaxBehavior {
         /// `?, *, +, {n,m}`
         const SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS
             = onig_sys::ONIG_SYN_CONTEXT_INDEP_REPEAT_OPS,
