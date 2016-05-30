@@ -1,8 +1,10 @@
 extern crate libc;
 
 mod constants;
+mod onigenc;
 
 pub use self::constants::*;
+pub use self::onigenc::*;
 
 use libc::{c_int, c_uint, c_ulong, c_void, c_char, c_uchar};
 
@@ -427,6 +429,22 @@ extern "C" {
                     err_info: *mut OnigErrorInfo)
                     -> c_int;
 
+    /// Onig Reg Init
+    ///
+    /// ```c
+    /// int  onig_reg_init(regex_t* reg,
+    ///                    OnigOptionType option,
+    ///                    OnigCaseFoldType case_fold_flag,
+    ///                    OnigEncoding enc,
+    ///                    OnigSyntaxType* syntax);
+    /// ```
+    pub fn onig_reg_init(reg: OnigRegexMut,
+                         option: OnigOptionType,
+                         case_fold_flag: OnigCaseFoldType,
+                         enc: OnigEncoding,
+                         syntax: *const OnigSyntaxType)
+                         -> c_int;
+
     ///   Create a regex object.
     ///   reg object area is not allocated in this function.
     ///
@@ -850,64 +868,6 @@ extern "C" {
     ///  >
     ///  > else --> active
     pub fn onig_noname_group_capture_is_active(reg: OnigRegex) -> c_int;
-
-    ///   Return previous character head address.
-    ///
-    ///  `UChar* onigenc_get_prev_char_head(OnigEncoding enc, const UChar* start, const UChar* s)`
-    ///
-    ///   arguments
-    ///   1 enc:   character encoding
-    ///   2 start: string address
-    ///   3 s:     target address of string
-    pub fn onigenc_get_prev_char_head(enc: OnigEncoding,
-                                      start: *const OnigUChar,
-                                      s: *const OnigUChar)
-                                      -> *const OnigUChar;
-
-    ///   Return left-adjusted head address of a character.
-    ///
-    ///  `UChar* onigenc_get_left_adjust_char_head(OnigEncoding enc,
-    ///                                            const UChar* start, const UChar* s)`
-    ///
-    /// # Arguments
-    ///
-    ///   1. enc:   character encoding
-    ///   2. start: string address
-    ///   3. s:     target address of string
-    pub fn onigenc_get_left_adjust_char_head(enc: OnigEncoding,
-                                             start: *const OnigUChar,
-                                             s: *const OnigUChar)
-                                             -> *const OnigUChar;
-
-    ///   Return right-adjusted head address of a character.
-    ///
-    ///  `UChar* onigenc_get_right_adjust_char_head(OnigEncoding enc,
-    ///                                             const UChar* start, const UChar* s)`
-    ///
-    /// # Arguments
-    ///
-    ///   1. enc:   character encoding
-    ///   2. start: string address
-    ///   3. s:     target address of string
-    pub fn onigenc_get_right_adjust_char_head(enc: OnigEncoding,
-                                              start: *const OnigUChar,
-                                              s: *const OnigUChar)
-                                              -> *const OnigUChar;
-
-    ///   Return number of characters in the string.
-    ///
-    ///  `int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)`
-    pub fn onigenc_strlen(enc: OnigEncoding, s: *const OnigUChar, end: *const OnigUChar) -> c_int;
-
-    ///   Return number of characters in the string.
-    ///
-    ///  `int onigenc_strlen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_strlen_null(enc: OnigEncoding, s: *const OnigUChar) -> c_int;
-
-    ///   Return number of bytes in the string.
-    ///
-    ///  `int onigenc_str_bytelen_null(OnigEncoding enc, const UChar* s)`
-    pub fn onigenc_str_bytelen_null(enc: OnigEncoding, s: *const OnigUChar) -> c_int;
 
     ///   Set default syntax.
     ///
