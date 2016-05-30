@@ -15,6 +15,13 @@ extern "C" {
     /// ```
     pub fn onigenc_init() -> c_int;
 
+    /// Onig Initialise Encoding
+    ///
+    /// ```c
+    /// int onig_initialize_encoding(OnigEncoding enc);
+    /// ```
+    pub fn onig_initialize_encoding(enc: OnigEncoding) -> c_int;
+
     /// Onigenc Step Back
     ///
     /// ```c

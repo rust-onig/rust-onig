@@ -6,9 +6,9 @@ mod onigenc;
 pub use self::constants::*;
 pub use self::onigenc::*;
 
-use libc::{c_int, c_uint, c_ulong, c_void, c_char, c_uchar};
+use libc::{c_int, c_uint, c_void, c_char, c_uchar};
 
-pub type OnigCodePoint = c_ulong;
+pub type OnigCodePoint = c_uint;
 pub type OnigUChar = c_uchar;
 pub type OnigCtype = c_uint;
 pub type OnigDistance = c_uint;
@@ -172,6 +172,8 @@ pub struct OnigEncodingType {
     pub is_allowed_reverse_match: extern "C" fn(p: *const OnigUChar,
                                                 end: *const OnigUChar)
                                                 -> c_int,
+    pub init: extern "C" fn() -> c_int,
+    pub is_initialised: extern "C" fn() -> c_int,
 }
 
 #[repr(C)]
@@ -196,7 +198,6 @@ pub struct OnigRegexType {
     pub used: c_uint, // used space for p
     pub alloc: c_uint, // allocated space for p
 
-    pub state: c_int, // normal, searching, compiling
     pub num_mem: c_int, // used memory(...) num counted from 1
     pub num_repeat: c_int, // OP_REPEAT/OP_REPEAT_NG id-counter
     pub num_null_check: c_int, // OP_NULL_CHECK_START/END id counter
@@ -280,6 +281,11 @@ extern "C" {
     pub static mut OnigDefaultSyntax: *const OnigSyntaxType;
 
     // Oniguruma API  Version 5.9.2  2008/02/19
+
+    /// Initialise Library
+    ///
+    /// This is the replacement for `onig_init`.
+    pub fn onig_initialize(encodings: *const OnigEncoding, n: c_int) -> c_int;
 
     ///   Initialize library.
     ///
@@ -526,44 +532,6 @@ extern "C" {
     ///   arguments
     ///   1 reg: regex object.
     pub fn onig_free_body(reg: OnigRegexMut);
-
-    /// Recompile
-    ///
-    /// ```c
-    /// int onig_recompile (regex_t*,
-    ///                     const OnigUChar* pattern,
-    ///                     const OnigUChar* pattern_end,
-    ///                     OnigOptionType option,
-    ///                     OnigEncoding enc,
-    ///                     OnigSyntaxType* syntax,
-    ///                     OnigErrorInfo* einfo)
-    /// ```
-    pub fn onig_recompile(reg: OnigRegexMut,
-                          pattern: *const OnigUChar,
-                          pattern_end: *const OnigUChar,
-                          option: OnigOptionType,
-                          enc: OnigEncoding,
-                          syntax: *const OnigSyntaxType,
-                          err_info: *mut OnigErrorInfo)
-                          -> c_int;
-
-    /// Recompile Deluxe
-    ///
-    /// This is the delux version of `onig_recompile`.
-    ///
-    /// ```c
-    /// int onig_recompile_deluxe(regex_t* reg,
-    ///                           const OnigUChar* pattern,
-    ///                           const OnigUChar* pattern_end,
-    ///                           OnigCompileInfo* ci,
-    ///                           OnigErrorInfo* einfo);
-    /// ```
-    pub fn onig_recompile_deluxe(reg: OnigRegexMut,
-                                 pattern: *const OnigUChar,
-                                 pattern_end: *const OnigUChar,
-                                 ci: *const OnigCompileInfo,
-                                 einfo: *mut OnigErrorInfo)
-                                 -> c_int;
 
     ///   Search string and return search result and matching region.
     ///
@@ -974,6 +942,16 @@ extern "C" {
     ///   (size = 0: unlimited)
     ///   normal return: ONIG_NORMAL
     pub fn onig_set_match_stack_limit_size(size: c_uint) -> c_int;
+
+    /// Define User Unicode Property
+    ///
+    /// ```c
+    /// int onig_unicode_define_user_property(const char* name,
+    ///                                       OnigCodePoint* ranges);
+    /// ```
+    pub fn onig_unicode_define_user_property(name: *const c_char,
+                                             ranges: *const OnigCodePoint)
+                                             -> c_int;
 
     ///   The use of this library is finished.
     ///

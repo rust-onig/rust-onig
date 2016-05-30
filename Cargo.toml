@@ -19,5 +19,5 @@ bitflags = "0.7"
 lazy_static = "0.2"
 
 [dependencies.onig_sys]
-version = "0.7.1"
+version = "0.8.0"
 path = "onig_sys"
