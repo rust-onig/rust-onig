@@ -49,7 +49,7 @@ pub use find::{
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
-pub use utils::version;
+pub use utils::{version, copyright};
 
 use std::{error, fmt, str};
 use std::sync::Mutex;

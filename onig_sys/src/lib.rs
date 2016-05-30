@@ -1030,4 +1030,11 @@ extern "C" {
     ///   `const char* onig_version(void)`
     pub fn onig_version() -> *const c_char;
 
+    /// Return Copyright String
+    ///
+    /// ```c
+    /// const char* onig_copyright(void);
+    /// ```
+    pub fn onig_copyright() -> *const c_char;
+    
 }
