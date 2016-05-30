@@ -44,5 +44,9 @@ matrix:
     - rust: nightly
   include:
     - rust: nightly
+      os: linux
+      env: ONIG_FEATURES=std-pattern
+    - rust: nightly
+      os: osx
       env: ONIG_FEATURES=std-pattern
     
