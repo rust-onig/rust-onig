@@ -273,6 +273,7 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
             return None;
         }
         let (s, e) = self.region.pos(0).unwrap();
+        self.last_end = e;
 
         // Don't accept empty matches immediately following a match.
         // i.e., no infinite loops please.
@@ -284,9 +285,9 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
                 return self.next();
             }
         } else {
-            self.last_end = e;
             self.skip_next_empty = true;
         }
+
         Some((s, e))
     }
 }
@@ -471,6 +472,13 @@ mod tests {
         let re = Regex::new(r"\d*").unwrap();
         let ms = re.find_iter("a1bbb2").collect::<Vec<_>>();
         assert_eq!(ms, vec![(0, 0), (1, 2), (3, 3), (4, 4), (5, 6)]);
+    }
+
+    #[test]
+    fn test_zero_length_matches_jumps_past_match_location() {
+        let re = Regex::new(r"\b").unwrap();
+        let matches = re.find_iter("test string").collect::<Vec<_>>();
+        assert_eq!(matches, [(0, 0), (4, 4), (5, 5), (11, 11)]);
     }
 
     #[test]

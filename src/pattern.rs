@@ -1,24 +1,24 @@
 use std::str::pattern::{Pattern, Searcher, SearchStep};
-use super::{Regex};
+use super::{Regex, FindMatches};
 
 /// Regex Searcher Type
 ///
 /// Represents the state of an ongoing search over a given string
 /// slice.
-pub struct RegexSearcher<'a> {
-    reg: Regex,
+pub struct RegexSearcher<'r, 'a> {
+    iter: FindMatches<'r, 'a>,
     pos: usize,
     hay: &'a str,
     cached_match: Option<(usize, usize)>
 }
 
-impl<'a> Pattern<'a> for Regex {
+impl<'r, 'a> Pattern<'a> for &'r Regex {
 
     /// Searcher Type
     ///
     /// The searcher is the type responsible for returning an iterator
     /// of matches in a given string
-    type Searcher = RegexSearcher<'a>;
+    type Searcher = RegexSearcher<'r, 'a>;
 
     /// Into Searcher
     ///
@@ -28,15 +28,15 @@ impl<'a> Pattern<'a> for Regex {
     }
 }
 
-impl<'a> RegexSearcher<'a> {
+impl<'r, 'a> RegexSearcher<'r, 'a> {
 
     /// New
     ///
     /// Create a regex searcher which uses the given regex to search a
     /// given pattern.
-    pub fn new(reg: Regex, haystack: &'a str) -> Self {
-        RegexSearcher::<'a> {
-            reg: reg,
+    pub fn new(reg: &'r Regex, haystack: &'a str) -> Self {
+        RegexSearcher::<'r, 'a> {
+            iter: reg.find_iter(haystack),
             pos: 0,
             hay: haystack,
             cached_match: None
@@ -44,7 +44,7 @@ impl<'a> RegexSearcher<'a> {
     }
 }
 
-unsafe impl<'a> Searcher<'a> for RegexSearcher<'a> {
+unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
 
     /// Haystack Accessor
     ///
@@ -72,11 +72,7 @@ unsafe impl<'a> Searcher<'a> for RegexSearcher<'a> {
         }
 
         // Search based on the current position
-        let next = self.reg.find(&self.hay[self.pos..])
-            .map(|p| {
-                let (start, end) = p;
-                (start + self.pos, end + self.pos)
-            });
+        let next = self.iter.next();
         
         match next {
             // we found a new match at the beginning of our slice, so
@@ -112,12 +108,12 @@ mod test {
     pub fn pattern_matches_in_str_returns_all_matches() {
         {
             let pattern = Regex::new("abc").unwrap();
-            let v: Vec<&str> = "abcXXXabcYYYabc".matches(pattern).collect();
+            let v: Vec<&str> = "abcXXXabcYYYabc".matches(&pattern).collect();
             assert_eq!(v, ["abc", "abc", "abc"]);
         }
         {
             let pattern = Regex::new("a+").unwrap();
-            let v: Vec<&str> = ".a..aaa.a".matches(pattern).collect();
+            let v: Vec<&str> = ".a..aaa.a".matches(&pattern).collect();
             assert_eq!(v, ["a", "aaa", "a"]);
         }
     }
@@ -126,7 +122,7 @@ mod test {
     pub fn pattern_matches_with_index_returns_all_matches() {
         let pattern = Regex::new("[0-9]+").unwrap();
         let v: Vec<(usize, &str)> =
-            "hello 1234 12.34 3".match_indices(pattern).collect();
+            "hello 1234 12.34 3".match_indices(&pattern).collect();
         assert_eq!(v, [(6, "1234"), (11, "12"), (14, "34"), (17, "3")]);
     }
 
@@ -134,17 +130,17 @@ mod test {
     pub fn pattern_trim_matches_removes_matches() {
         {
             let pattern = Regex::new("a+").unwrap();
-            let trimmed = "aaaaworld".trim_left_matches(pattern);
+            let trimmed = "aaaaworld".trim_left_matches(&pattern);
             assert_eq!(trimmed, "world");
         }
         {
             let pattern = Regex::new("[ab]").unwrap();
-            let trimmed = "aabbbababtbaest".trim_left_matches(pattern);
+            let trimmed = "aabbbababtbaest".trim_left_matches(&pattern);
             assert_eq!(trimmed, "tbaest");
         }
         {
             let pattern = Regex::new(r#"[ \t]"#).unwrap();
-            let trimmed = "   \t".trim_left_matches(pattern);
+            let trimmed = "   \t".trim_left_matches(&pattern);
             assert_eq!(trimmed, "");
         }
     }
@@ -152,19 +148,35 @@ mod test {
     #[test]
     pub fn pattern_as_searcher_returns_expected_rejections() {
         {
-            let mut searcher = Regex::new("[ab]").unwrap().into_searcher("a.b");
+            let reg = Regex::new("[ab]").unwrap();
+            let mut searcher = reg.into_searcher("a.b");
             assert_eq!(searcher.next(), SearchStep::Match(0, 1));
             assert_eq!(searcher.next(), SearchStep::Reject(1, 2));
             assert_eq!(searcher.next(), SearchStep::Match(2, 3));
             assert_eq!(searcher.next(), SearchStep::Done);
         }
         {
-            let mut searcher = Regex::new("test").unwrap().into_searcher("this test string");
+            let reg = Regex::new("test").unwrap();
+            let mut searcher = reg.into_searcher("this test string");
             assert_eq!(searcher.next(), SearchStep::Reject(0, 5));
             assert_eq!(searcher.next(), SearchStep::Match(5, 9));
             assert_eq!(searcher.next(), SearchStep::Reject(9, 16));
             assert_eq!(searcher.next(), SearchStep::Done);
         }
+    }
+
+    #[test]
+    pub fn pattern_match_with_empty_matches() {
+        let reg = Regex::new(r"\b").unwrap();
+        let matches: Vec<(usize, &str)> = "hello world".match_indices(&reg).collect();
+        assert_eq!(matches, [(0, ""), (5, ""), (6, ""), (11, "")]);
+    }
+
+    #[test]
+    pub fn pattern_split_with_empty_matches() {
+        let reg = Regex::new(r"e?").unwrap();
+        let split: Vec<&str> = "test".split(&reg).collect();
+        assert_eq!(split, ["", "t", "s", "t", ""]);
     }
 
     #[test]
