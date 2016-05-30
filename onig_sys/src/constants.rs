@@ -1,8 +1,6 @@
 use libc::{c_int, c_uint};
-use super::{
-    OnigCtype, OnigOptionType, OnigDistance, OnigCaseFoldType,
-    OnigSyntaxOp, OnigSyntaxOp2, OnigSyntaxBehavior
-};
+use super::{OnigCtype, OnigOptionType, OnigDistance, OnigCaseFoldType, OnigSyntaxOp,
+            OnigSyntaxOp2, OnigSyntaxBehavior};
 
 macro_rules! define_consts {
     ($typ:ty, $( $name:ident = $value:expr );* ) => {

@@ -122,27 +122,54 @@ pub struct OnigMetaCharTableType {
 pub struct OnigCaseFoldCodeItem {
     pub byte_len: c_int, // argument(original) character(s) byte length
     pub code_len: c_int, // number of code
-    pub code: [OnigCodePoint; ONIGENC_MAX_COMP_CASE_FOLD_CODE_LEN as usize]
+    pub code: [OnigCodePoint; ONIGENC_MAX_COMP_CASE_FOLD_CODE_LEN as usize],
 }
 
 #[repr(C)]
 pub struct OnigEncodingType {
-  pub mbc_enc_len: extern "C" fn(p: *const OnigUChar) -> c_int,
-  pub name: *const c_char,
-  pub max_enc_len: c_int,
-  pub min_enc_len: c_int,
-  pub is_mbc_newline: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> c_int,
-  pub mbc_to_code: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> OnigCodePoint,
-  pub code_to_mbclen: extern "C" fn(code: OnigCodePoint) -> c_int,
-  pub code_to_mbc: extern "C" fn(code: OnigCodePoint, buf: *mut OnigUChar) -> c_int,
-  pub mbc_case_fold: extern "C" fn(flag: OnigCaseFoldType, pp: *const *const OnigUChar, end: *const OnigUChar, to: *const OnigUChar) -> c_int,
-  pub apply_all_case_fold: extern "C" fn(flag: OnigCaseFoldType, f: OnigApplyAllCaseFoldFunc, arg: *const c_void) -> c_int,
-  pub get_case_fold_codes_by_str: extern "C" fn(flag: OnigCaseFoldType, p: *const OnigUChar, end: *const OnigUChar, ...) -> c_int,
-  pub property_name_to_ctype: extern "C" fn(enc: OnigEncoding, p: *const OnigUChar, end: *const OnigUChar) -> c_int,
-  pub is_code_ctype: extern "C" fn(code: OnigCodePoint, ctype: OnigCtype) -> c_int,
-  pub get_ctype_code_range: extern "C" fn(ctype: OnigCtype, sb_out: *const OnigCodePoint, ...) -> c_int,
-  pub left_adjust_char_head: extern "C" fn(start: *const OnigUChar, p: *const OnigUChar) -> *const OnigUChar,
-  pub is_allowed_reverse_match: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> c_int,
+    pub mbc_enc_len: extern "C" fn(p: *const OnigUChar) -> c_int,
+    pub name: *const c_char,
+    pub max_enc_len: c_int,
+    pub min_enc_len: c_int,
+    pub is_mbc_newline: extern "C" fn(p: *const OnigUChar,
+                                      end: *const OnigUChar)
+                                      -> c_int,
+    pub mbc_to_code: extern "C" fn(p: *const OnigUChar,
+                                   end: *const OnigUChar)
+                                   -> OnigCodePoint,
+    pub code_to_mbclen: extern "C" fn(code: OnigCodePoint) -> c_int,
+    pub code_to_mbc: extern "C" fn(code: OnigCodePoint,
+                                   buf: *mut OnigUChar)
+                                   -> c_int,
+    pub mbc_case_fold: extern "C" fn(flag: OnigCaseFoldType,
+                                     pp: *const *const OnigUChar,
+                                     end: *const OnigUChar,
+                                     to: *const OnigUChar)
+                                     -> c_int,
+    pub apply_all_case_fold: extern "C" fn(flag: OnigCaseFoldType,
+                                           f: OnigApplyAllCaseFoldFunc,
+                                           arg: *const c_void)
+                                           -> c_int,
+    pub get_case_fold_codes_by_str: extern "C" fn(flag: OnigCaseFoldType,
+                                                  p: *const OnigUChar,
+                                                  end: *const OnigUChar /* ... */)
+                                                  -> c_int,
+    pub property_name_to_ctype: extern "C" fn(enc: OnigEncoding,
+                                              p: *const OnigUChar,
+                                              end: *const OnigUChar)
+                                              -> c_int,
+    pub is_code_ctype: extern "C" fn(code: OnigCodePoint,
+                                     ctype: OnigCtype)
+                                     -> c_int,
+    pub get_ctype_code_range: extern "C" fn(ctype: OnigCtype,
+                                            sb_out: *const OnigCodePoint /* ... */)
+                                            -> c_int,
+    pub left_adjust_char_head: extern "C" fn(start: *const OnigUChar,
+                                             p: *const OnigUChar)
+                                             -> *const OnigUChar,
+    pub is_allowed_reverse_match: extern "C" fn(p: *const OnigUChar,
+                                                end: *const OnigUChar)
+                                                -> c_int,
 }
 
 #[repr(C)]
@@ -157,51 +184,51 @@ pub struct OnigErrorInfo {
 #[derive(Debug, Clone, Copy)]
 pub struct OnigRepeatRange {
     pub lower: c_int,
-    pub upper: c_int
+    pub upper: c_int,
 }
 
 #[repr(C)]
 pub struct OnigRegexType {
-  // common members of BBuf(bytes-buffer)
-  pub p: *const OnigUChar,                // compiled pattern
-  pub used: c_uint,                     // used space for p
-  pub alloc: c_uint,                    // allocated space for p
+    // common members of BBuf(bytes-buffer)
+    pub p: *const OnigUChar, // compiled pattern
+    pub used: c_uint, // used space for p
+    pub alloc: c_uint, // allocated space for p
 
-  pub state: c_int,                     // normal, searching, compiling
-  pub num_mem: c_int,                   // used memory(...) num counted from 1
-  pub num_repeat: c_int,                // OP_REPEAT/OP_REPEAT_NG id-counter
-  pub num_null_check: c_int,            // OP_NULL_CHECK_START/END id counter
-  pub num_comb_exp_check: c_int,        // combination explosion check
-  pub num_call: c_int,                  // number of subexp call
-  pub capture_history: c_uint,          // (?@...) flag (1-31)
-  pub bt_mem_start: c_uint,             // need backtrack flag
-  pub bt_mem_end: c_uint,               // need backtrack flag
-  pub stack_pop_level: c_int,
-  pub repeat_range_alloc: c_int,
-  pub repeat_range: *const OnigRepeatRange,
+    pub state: c_int, // normal, searching, compiling
+    pub num_mem: c_int, // used memory(...) num counted from 1
+    pub num_repeat: c_int, // OP_REPEAT/OP_REPEAT_NG id-counter
+    pub num_null_check: c_int, // OP_NULL_CHECK_START/END id counter
+    pub num_comb_exp_check: c_int, // combination explosion check
+    pub num_call: c_int, // number of subexp call
+    pub capture_history: c_uint, // (?@...) flag (1-31)
+    pub bt_mem_start: c_uint, // need backtrack flag
+    pub bt_mem_end: c_uint, // need backtrack flag
+    pub stack_pop_level: c_int,
+    pub repeat_range_alloc: c_int,
+    pub repeat_range: *const OnigRepeatRange,
 
-  pub enc: OnigEncoding,
-  pub options: OnigOptionType,
-  pub syntax: *const OnigSyntaxType,
-  pub case_fold_flag: OnigCaseFoldType,
-  pub name_table: *const c_void,
+    pub enc: OnigEncoding,
+    pub options: OnigOptionType,
+    pub syntax: *const OnigSyntaxType,
+    pub case_fold_flag: OnigCaseFoldType,
+    pub name_table: *const c_void,
 
-  // optimization info (string search, char-map and anchors)
-  pub optimize: c_int,                  // optimize flag
-  pub threshold_len: c_int,             // search str-length for apply optimize
-  pub anchor: c_int,                    // BEGIN_BUF, BEGIN_POS, (SEMI_)END_BUF
-  pub anchor_dmin: OnigDistance,        // (SEMI_)END_BUF anchor distance
-  pub anchor_dmax: OnigDistance,        // (SEMI_)END_BUF anchor distance
-  pub sub_anchor: c_int,                // start-anchor for exact or map
-  pub exact: *const OnigUChar,
-  pub exact_end: *const OnigUChar,
-  pub map: [OnigUChar; ONIG_CHAR_TABLE_SIZE as usize], // used as BM skip or char-map
-  pub int_map: *const c_int,            // BM skip for exact_len > 255
-  pub int_map_backward: *const c_int,   // BM skip for backward search
-  pub dmin: OnigDistance,               // min-distance of exact or map
-  pub dmax: OnigDistance,               // max-distance of exact or map
+    // optimization info (string search, char-map and anchors)
+    pub optimize: c_int, // optimize flag
+    pub threshold_len: c_int, // search str-length for apply optimize
+    pub anchor: c_int, // BEGIN_BUF, BEGIN_POS, (SEMI_)END_BUF
+    pub anchor_dmin: OnigDistance, // (SEMI_)END_BUF anchor distance
+    pub anchor_dmax: OnigDistance, // (SEMI_)END_BUF anchor distance
+    pub sub_anchor: c_int, // start-anchor for exact or map
+    pub exact: *const OnigUChar,
+    pub exact_end: *const OnigUChar,
+    pub map: [OnigUChar; ONIG_CHAR_TABLE_SIZE as usize], // used as BM skip or char-map
+    pub int_map: *const c_int, // BM skip for exact_len > 255
+    pub int_map_backward: *const c_int, // BM skip for backward search
+    pub dmin: OnigDistance, // min-distance of exact or map
+    pub dmax: OnigDistance, // max-distance of exact or map
 
-  pub chain: *const OnigRegexType
+    pub chain: *const OnigRegexType,
 }
 
 extern "C" {
@@ -482,6 +509,44 @@ extern "C" {
     ///   1 reg: regex object.
     pub fn onig_free_body(reg: OnigRegexMut);
 
+    /// Recompile
+    ///
+    /// ```c
+    /// int onig_recompile (regex_t*,
+    ///                     const OnigUChar* pattern,
+    ///                     const OnigUChar* pattern_end,
+    ///                     OnigOptionType option,
+    ///                     OnigEncoding enc,
+    ///                     OnigSyntaxType* syntax,
+    ///                     OnigErrorInfo* einfo)
+    /// ```
+    pub fn onig_recompile(reg: OnigRegexMut,
+                          pattern: *const OnigUChar,
+                          pattern_end: *const OnigUChar,
+                          option: OnigOptionType,
+                          enc: OnigEncoding,
+                          syntax: *const OnigSyntaxType,
+                          err_info: *mut OnigErrorInfo)
+                          -> c_int;
+
+    /// Recompile Deluxe
+    ///
+    /// This is the delux version of `onig_recompile`.
+    ///
+    /// ```c
+    /// int onig_recompile_deluxe(regex_t* reg,
+    ///                           const OnigUChar* pattern,
+    ///                           const OnigUChar* pattern_end,
+    ///                           OnigCompileInfo* ci,
+    ///                           OnigErrorInfo* einfo);
+    /// ```
+    pub fn onig_recompile_deluxe(reg: OnigRegexMut,
+                                 pattern: *const OnigUChar,
+                                 pattern_end: *const OnigUChar,
+                                 ci: *const OnigCompileInfo,
+                                 einfo: *mut OnigErrorInfo)
+                                 -> c_int;
+
     ///   Search string and return search result and matching region.
     ///
     ///   `int onig_search(regex_t* reg, const UChar* str, const UChar* end, const UChar* start,
@@ -660,7 +725,10 @@ extern "C" {
     ///
     ///     if func does not return 0, then iteration is stopped.
     ///   3. arg:     argument for func.
-    pub fn onig_foreach_name(reg: OnigRegex, func: OnigForeachNameCallback, arg: *const c_void) -> c_int;
+    pub fn onig_foreach_name(reg: OnigRegex,
+                             func: OnigForeachNameCallback,
+                             arg: *const c_void)
+                             -> c_int;
 
     ///   Return the number of names defined in the pattern.
     ///   Multiple definitions of one name is counted as one.
@@ -829,10 +897,7 @@ extern "C" {
     ///   Return number of characters in the string.
     ///
     ///  `int onigenc_strlen(OnigEncoding enc, const UChar* s, const UChar* end)`
-    pub fn onigenc_strlen(enc: OnigEncoding,
-                          s: *const OnigUChar,
-                          end: *const OnigUChar)
-                          -> c_int;
+    pub fn onigenc_strlen(enc: OnigEncoding, s: *const OnigUChar, end: *const OnigUChar) -> c_int;
 
     ///   Return number of characters in the string.
     ///
@@ -919,7 +984,10 @@ extern "C" {
     ///   ```
     ///
     ///   3 code: meta character or `ONIG_INEFFECTIVE_META_CHAR`.
-    pub fn onig_set_meta_char(syntax: *mut OnigSyntaxType, what: c_uint, code: OnigCodePoint) -> c_int;
+    pub fn onig_set_meta_char(syntax: *mut OnigSyntaxType,
+                              what: c_uint,
+                              code: OnigCodePoint)
+                              -> c_int;
 
     ///   Get default case fold flag.
     ///
