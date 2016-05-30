@@ -17,7 +17,7 @@
 //! }
 //! ```
 
-#![feature(pattern)]
+#![cfg_attr(feature = "std-pattern", feature(pattern))]
 
 #[macro_use]
 extern crate bitflags;
@@ -34,6 +34,8 @@ mod names;
 mod syntax;
 mod tree;
 mod utils;
+
+#[cfg(feature="std-pattern")]
 mod pattern;
 
 // re-export the onig types publically

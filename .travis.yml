@@ -9,8 +9,11 @@ rust:
 - beta
 - nightly
 
+env:
+  - ONIG_FEATURES=
+
 script:
-- cargo build --verbose
+- cargo build --features="$ONIG_FEATURES" --verbose
 - |
   if [ "$TRAVIS_OS_NAME" == "linux" ]
   then
@@ -18,8 +21,8 @@ script:
     echo "adding $p to linker path"
     export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
   fi
-- cargo test --verbose
-- cargo doc --verbose
+- cargo test --features="$ONIG_FEATURES" --verbose
+- cargo doc --features="$ONIG_FEATURES" --verbose
 
 # Build the docs if we have had a successful master build
 after_success:
@@ -39,3 +42,7 @@ after_success:
 matrix:
   allow_failures:
     - rust: nightly
+  include:
+    - rust: nightly
+      env: ONIG_FEATURES=std-pattern
+    
