@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Regex` struct in crate `onig`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Regex">
+
+    <title>onig::Regex - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>onig</a></p><script>window.sidebarCurrent = {name: 'Regex', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>onig</a>::<wbr><a class='struct' href=''>Regex</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-1812' class='srclink' href='../src/onig/src/lib.rs.html#70-72' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Regex {
+    // some fields omitted
+}</pre><div class='docblock'><p>This struct is a wrapper around an Oniguruma regular expression
+pointer. This represents a compiled regex which can be used in
+search and match operations.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-12' class='srclink' href='../src/onig/src/find.rs.html#4-138' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.captures' class='method'><code>fn <a href='#method.captures' class='fnname'>captures</a>&lt;'t&gt;(&amp;self, text: &amp;'t <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../onig/struct.Captures.html' title='onig::Captures'>Captures</a>&lt;'t&gt;&gt;</code></h4>
+<div class='docblock'><p>Returns the capture groups corresponding to the leftmost-first match
+in text. Capture group <code>0</code> always corresponds to the entire match.
+If no match is found, then <code>None</code> is returned.</p>
+</div><h4 id='method.find_iter' class='method'><code>fn <a href='#method.find_iter' class='fnname'>find_iter</a>&lt;'r, 't&gt;(&amp;'r self, text: &amp;'t <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../onig/struct.FindMatches.html' title='onig::FindMatches'>FindMatches</a>&lt;'r, 't&gt;</code></h4>
+<div class='docblock'><p>Returns an iterator for each successive non-overlapping match in <code>text</code>,
+returning the start and end byte indices with respect to <code>text</code>.</p>
+
+<h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
+<p>Find the start and end location of every word with exactly 13
+characters:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>text</span> <span class='op'>=</span> <span class='string'>&quot;Retroactively relinquishing remunerations is reprehensible.&quot;</span>;
+<span class='kw'>for</span> <span class='ident'>pos</span> <span class='kw'>in</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;\b\w{13}\b&quot;</span>).<span class='ident'>unwrap</span>().<span class='ident'>find_iter</span>(<span class='ident'>text</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>pos</span>);
+}
+<span class='comment'>// Output:</span>
+<span class='comment'>// (0, 13)</span>
+<span class='comment'>// (14, 27)</span>
+<span class='comment'>// (28, 41)</span>
+<span class='comment'>// (45, 58)</span></pre>
+</div><h4 id='method.captures_iter' class='method'><code>fn <a href='#method.captures_iter' class='fnname'>captures_iter</a>&lt;'r, 't&gt;(&amp;'r self, text: &amp;'t <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../onig/struct.FindCaptures.html' title='onig::FindCaptures'>FindCaptures</a>&lt;'r, 't&gt;</code></h4>
+<div class='docblock'><p>Returns an iterator over all the non-overlapping capture groups matched
+in <code>text</code>. This is operationally the same as <code>find_iter</code> (except it
+yields information about submatches).</p>
+
+<h1 id='example-1' class='section-header'><a href='#example-1'>Example</a></h1>
+<p>We can use this to find all movie titles and their release years in
+some text, where the movie is formatted like &quot;&#39;Title&#39; (xxxx)&quot;:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>re</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;&#39;([^&#39;]+)&#39;\s+\((\d{4})\)&quot;</span>)
+               .<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>text</span> <span class='op'>=</span> <span class='string'>&quot;&#39;Citizen Kane&#39; (1941), &#39;The Wizard of Oz&#39; (1939), &#39;M&#39; (1931).&quot;</span>;
+<span class='kw'>for</span> <span class='ident'>caps</span> <span class='kw'>in</span> <span class='ident'>re</span>.<span class='ident'>captures_iter</span>(<span class='ident'>text</span>) {
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Movie: {:?}, Released: {:?}&quot;</span>, <span class='ident'>caps</span>.<span class='ident'>at</span>(<span class='number'>1</span>), <span class='ident'>caps</span>.<span class='ident'>at</span>(<span class='number'>2</span>));
+}
+<span class='comment'>// Output:</span>
+<span class='comment'>// Movie: Citizen Kane, Released: 1941</span>
+<span class='comment'>// Movie: The Wizard of Oz, Released: 1939</span>
+<span class='comment'>// Movie: M, Released: 1931</span></pre>
+</div><h4 id='method.split' class='method'><code>fn <a href='#method.split' class='fnname'>split</a>&lt;'r, 't&gt;(&amp;'r self, text: &amp;'t <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../onig/struct.RegexSplits.html' title='onig::RegexSplits'>RegexSplits</a>&lt;'r, 't&gt;</code></h4>
+<div class='docblock'><p>Returns an iterator of substrings of <code>text</code> delimited by a match
+of the regular expression.
+Namely, each element of the iterator corresponds to text that <em>isn&#39;t</em>
+matched by the regular expression.</p>
+
+<p>This method will <em>not</em> copy the text given.</p>
+
+<h1 id='example-2' class='section-header'><a href='#example-2'>Example</a></h1>
+<p>To split a string delimited by arbitrary amounts of spaces or tabs:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>re</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;[ \t]+&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>fields</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>re</span>.<span class='ident'>split</span>(<span class='string'>&quot;a b \t  c\td    e&quot;</span>).<span class='ident'>collect</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fields</span>, <span class='macro'>vec</span><span class='macro'>!</span>(<span class='string'>&quot;a&quot;</span>, <span class='string'>&quot;b&quot;</span>, <span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;d&quot;</span>, <span class='string'>&quot;e&quot;</span>));</pre>
+</div><h4 id='method.splitn' class='method'><code>fn <a href='#method.splitn' class='fnname'>splitn</a>&lt;'r, 't&gt;(&amp;'r self, text: &amp;'t <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, limit: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../onig/struct.RegexSplitsN.html' title='onig::RegexSplitsN'>RegexSplitsN</a>&lt;'r, 't&gt;</code></h4>
+<div class='docblock'><p>Returns an iterator of at most <code>limit</code> substrings of <code>text</code> delimited
+by a match of the regular expression. (A <code>limit</code> of <code>0</code> will return no
+substrings.)
+Namely, each element of the iterator corresponds to text that <em>isn&#39;t</em>
+matched by the regular expression.
+The remainder of the string that is not split will be the last element
+in the iterator.</p>
+
+<p>This method will <em>not</em> copy the text given.</p>
+
+<h1 id='example-3' class='section-header'><a href='#example-3'>Example</a></h1>
+<p>Get the first two words in some text:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>re</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;\W+&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>fields</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>re</span>.<span class='ident'>splitn</span>(<span class='string'>&quot;Hey! How are you?&quot;</span>, <span class='number'>3</span>).<span class='ident'>collect</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>fields</span>, <span class='macro'>vec</span><span class='macro'>!</span>(<span class='string'>&quot;Hey&quot;</span>, <span class='string'>&quot;How&quot;</span>, <span class='string'>&quot;are you?&quot;</span>));</pre>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1562' class='srclink' href='../src/onig/src/replace.rs.html#23-95' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.replace' class='method'><code>fn <a href='#method.replace' class='fnname'>replace</a>&lt;R: <a class='trait' href='../onig/trait.Replacer.html' title='onig::Replacer'>Replacer</a>&gt;(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, rep: R) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Replaces the leftmost-first match with the replacement provided.
+The replacement can be a regular string or a function that takes
+the matches <code>Captures</code> and returns the replaced string.</p>
+
+<p>If no match is found, then a copy of the string is returned unchanged.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<p>Note that this function is polymorphic with respect to the replacement.
+In typical usage, this can just be a normal string:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>re</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>&quot;[^01]+&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>re</span>.<span class='ident'>replace</span>(<span class='string'>&quot;1078910&quot;</span>, <span class='string'>&quot;&quot;</span>), <span class='string'>&quot;1010&quot;</span>);</pre>
+
+<p>But anything satisfying the <code>Replacer</code> trait will work. For example,
+a closure of type <code>|&amp;Captures| -&gt; String</code> provides direct access to the
+captures corresponding to a match. This allows one to access
+submatches easily:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>re</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;([^,\s]+),\s+(\S+)&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>re</span>.<span class='ident'>replace</span>(<span class='string'>&quot;Springsteen, Bruce&quot;</span>, <span class='op'>|</span><span class='ident'>caps</span>: <span class='kw-2'>&amp;</span><span class='ident'>Captures</span><span class='op'>|</span> {
+    <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{} {}&quot;</span>, <span class='ident'>caps</span>.<span class='ident'>at</span>(<span class='number'>2</span>).<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>), <span class='ident'>caps</span>.<span class='ident'>at</span>(<span class='number'>1</span>).<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>))
+});
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>result</span>, <span class='string'>&quot;Bruce Springsteen&quot;</span>);</pre>
+</div><h4 id='method.replace_all' class='method'><code>fn <a href='#method.replace_all' class='fnname'>replace_all</a>&lt;R: <a class='trait' href='../onig/trait.Replacer.html' title='onig::Replacer'>Replacer</a>&gt;(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, rep: R) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Replaces all non-overlapping matches in <code>text</code> with the
+replacement provided. This is the same as calling <code>replacen</code> with
+<code>limit</code> set to <code>0</code>.</p>
+
+<p>See the documentation for <code>replace</code> for details on how to access
+submatches in the replacement string.</p>
+</div><h4 id='method.replacen' class='method'><code>fn <a href='#method.replacen' class='fnname'>replacen</a>&lt;R: <a class='trait' href='../onig/trait.Replacer.html' title='onig::Replacer'>Replacer</a>&gt;(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, limit: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, rep: R) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Replaces at most <code>limit</code> non-overlapping matches in <code>text</code> with the
+replacement provided. If <code>limit</code> is 0, then all non-overlapping matches
+are replaced.</p>
+
+<p>See the documentation for <code>replace</code> for details on how to access
+submatches in the replacement string.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1595' class='srclink' href='../src/onig/src/names.rs.html#12-28' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.capture_names_len' class='method'><code>fn <a href='#method.capture_names_len' class='fnname'>capture_names_len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+<div class='docblock'><p>Returns the number of named groups into regex.</p>
+</div><h4 id='method.capture_names' class='method'><code>fn <a href='#method.capture_names' class='fnname'>capture_names</a>&lt;'r&gt;(&amp;'r self) -&gt; <a class='struct' href='../onig/struct.CaptureNames.html' title='onig::CaptureNames'>CaptureNames</a>&lt;'r&gt;</code></h4>
+<div class='docblock'><p>Returns the iterator over named groups as a tuple with the group name
+and group indexes.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1860' class='srclink' href='../src/onig/src/lib.rs.html#120-355' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(pattern: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a>, <a class='struct' href='../onig/struct.Error.html' title='onig::Error'>Error</a>&gt;</code></h4>
+<div class='docblock'><p>Simple regular expression constructor. Compiles a new regular
+expression with the default options using the ruby syntax.
+Once compiled, it can be used repeatedly to search in a string. If an
+invalid expression is given, then an error is returned.</p>
+
+<h1 id='arguments' class='section-header'><a href='#arguments'>Arguments</a></h1>
+<ul>
+<li><code>pattern</code> - The regex pattern to compile</li>
+</ul>
+
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>onig</span>::<span class='ident'>Regex</span>;
+<span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r#&quot;hello (\w+)&quot;#</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>is_ok</span>());</pre>
+</div><h4 id='method.with_options' class='method'><code>fn <a href='#method.with_options' class='fnname'>with_options</a>(pattern: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, option: <a class='struct' href='../onig/struct.RegexOptions.html' title='onig::RegexOptions'>RegexOptions</a>, syntax: &amp;<a class='struct' href='../onig/struct.Syntax.html' title='onig::Syntax'>Syntax</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a>, <a class='struct' href='../onig/struct.Error.html' title='onig::Error'>Error</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new Regex</p>
+
+<p>Attempts to compile a pattern into a new <code>Regex</code> instance.
+Once compiled, it can be used repeatedly to search in a string. If an
+invalid expression is given, then an error is returned.
+See <a href="./onig_sys/fn.onig_new.html"><code>onig_sys::onig_new</code></a> for more information.</p>
+
+<h1 id='arguments-1' class='section-header'><a href='#arguments-1'>Arguments</a></h1>
+<ul>
+<li><code>pattern</code> - The regex pattern to compile.</li>
+<li><code>options</code> - The regex compilation options.</li>
+<li><code>syntax</code>  - The syntax which the regex is written in.</li>
+</ul>
+
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>onig</span>::{<span class='ident'>Regex</span>, <span class='ident'>Syntax</span>, <span class='ident'>REGEX_OPTION_NONE</span>};
+<span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>with_options</span>(<span class='string'>&quot;hello.*world&quot;</span>,
+                            <span class='ident'>REGEX_OPTION_NONE</span>,
+                            <span class='ident'>Syntax</span>::<span class='ident'>default</span>());
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>r</span>.<span class='ident'>is_ok</span>());</pre>
+</div><h4 id='method.match_with_options' class='method'><code>fn <a href='#method.match_with_options' class='fnname'>match_with_options</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, at: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, options: <a class='struct' href='../onig/struct.SearchOptions.html' title='onig::SearchOptions'>SearchOptions</a>, region: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut <a class='struct' href='../onig/struct.Region.html' title='onig::Region'>Region</a>&gt;) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></h4>
+<div class='docblock'><p>Match string</p>
+
+<p>Match the regex against a string. This method will start at
+the beginning of the string and try and match the regex. If
+the regex matches then the return value is the number of
+characers which matched. If the regex doesn&#39;t match the return
+is <code>None</code>.</p>
+
+<h1 id='arguments-2' class='section-header'><a href='#arguments-2'>Arguments</a></h1>
+<ul>
+<li><code>str</code> - The string slice to match against.</li>
+<li><code>at</code> - The byte index in the passed slice to start matching</li>
+<li><code>options</code> - The regex match options.</li>
+<li><code>region</code> - The region for return group match range info</li>
+</ul>
+
+<h1 id='returns' class='section-header'><a href='#returns'>Returns</a></h1>
+<p><code>Some(len)</code> if the regex matched, with <code>len</code> being the number
+of bytes matched. <code>None</code> if the regex doesn&#39;t match.</p>
+
+<h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>onig</span>::{<span class='ident'>Regex</span>, <span class='ident'>SEARCH_OPTION_NONE</span>};
+
+<span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>&quot;.*&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>r</span>.<span class='ident'>match_with_options</span>(<span class='string'>&quot;hello&quot;</span>, <span class='number'>0</span>, <span class='ident'>SEARCH_OPTION_NONE</span>, <span class='prelude-val'>None</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>is_some</span>()); <span class='comment'>// it matches</span>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='number'>5</span>); <span class='comment'>// 5 characters matched</span></pre>
+</div><h4 id='method.search_with_options' class='method'><code>fn <a href='#method.search_with_options' class='fnname'>search_with_options</a>(&amp;self, str: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, from: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, to: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, options: <a class='struct' href='../onig/struct.SearchOptions.html' title='onig::SearchOptions'>SearchOptions</a>, region: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;mut <a class='struct' href='../onig/struct.Region.html' title='onig::Region'>Region</a>&gt;) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></h4>
+<div class='docblock'><p>Search pattern in string</p>
+
+<p>Search for matches the regex in a string. This method will return the
+index of the first match of the regex within the string, if
+there is one. If <code>from</code> is less than <code>to</code>, then search is performed
+in forward order, otherwice – in backward order.</p>
+
+<h1 id='arguments-3' class='section-header'><a href='#arguments-3'>Arguments</a></h1>
+<ul>
+<li><code>str</code> - The string to search in.</li>
+<li><code>from</code> - The byte index in the passed slice to start search</li>
+<li><code>to</code> - The byte index in the passed slice to finish search</li>
+<li><code>options</code> - The options for the search.</li>
+<li><code>region</code> - The region for return group match range info</li>
+</ul>
+
+<h1 id='returns-1' class='section-header'><a href='#returns-1'>Returns</a></h1>
+<p><code>Some(pos)</code> if the regex matches, where <code>pos</code> is the
+byte-position of the start of the match. <code>None</code> if the regex
+doesn&#39;t match anywhere in <code>str</code>.</p>
+
+<h1 id='examples-4' class='section-header'><a href='#examples-4'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>onig</span>::{<span class='ident'>Regex</span>, <span class='ident'>SEARCH_OPTION_NONE</span>};
+
+<span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>&quot;l{1,2}&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>r</span>.<span class='ident'>search_with_options</span>(<span class='string'>&quot;hello&quot;</span>, <span class='number'>0</span>, <span class='number'>5</span>, <span class='ident'>SEARCH_OPTION_NONE</span>, <span class='prelude-val'>None</span>);
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>is_some</span>()); <span class='comment'>// it matches</span>
+<span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>res</span>.<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='number'>2</span>); <span class='comment'>// match starts at character 3</span></pre>
+</div><h4 id='method.is_match' class='method'><code>fn <a href='#method.is_match' class='fnname'>is_match</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Returns true if and only if the regex matches the string given.</p>
+</div><h4 id='method.find' class='method'><code>fn <a href='#method.find' class='fnname'>find</a>(&amp;self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></h4>
+<div class='docblock'><p>Returns the start and end byte range of the leftmost-first match in
+<code>text</code>. If no match exists, then <code>None</code> is returned.</p>
+
+<p>Note that this should only be used if you want to discover the position
+of the match. Testing the existence of a match is faster if you use
+<code>is_match</code>.</p>
+</div><h4 id='method.captures_len' class='method'><code>fn <a href='#method.captures_len' class='fnname'>captures_len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+<h4 id='method.capture_histories_len' class='method'><code>fn <a href='#method.capture_histories_len' class='fnname'>capture_histories_len</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1915' class='srclink' href='../src/onig/src/lib.rs.html#357-363' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../onig/struct.Regex.html' title='onig::Regex'>Regex</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1814' class='srclink' href='../src/onig/src/lib.rs.html#69' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "onig";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

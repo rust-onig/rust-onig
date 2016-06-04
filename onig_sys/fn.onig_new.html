@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `onig_new` fn in crate `onig_sys`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, onig_new">
+
+    <title>onig_sys::onig_new - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>onig_sys</a></p><script>window.sidebarCurrent = {name: 'onig_new', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content fn">
+<h1 class='fqn'><span class='in-band'><a href='index.html'>onig_sys</a>::<wbr><a class='fn' href=''>onig_new</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-556' class='srclink' href='../src/onig_sys/onig_sys/src/lib.rs.html#429-436' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub unsafe extern fn onig_new(reg: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../onig_sys/type.OnigRegexMut.html' title='onig_sys::OnigRegexMut'>OnigRegexMut</a>, pattern: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, pattern_end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, option: <a class='type' href='../onig_sys/type.OnigOptionType.html' title='onig_sys::OnigOptionType'>OnigOptionType</a>, enc: <a class='type' href='../onig_sys/type.OnigEncoding.html' title='onig_sys::OnigEncoding'>OnigEncoding</a>, syntax: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='struct' href='../onig_sys/struct.OnigSyntaxType.html' title='onig_sys::OnigSyntaxType'>OnigSyntaxType</a>, err_info: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../onig_sys/struct.OnigErrorInfo.html' title='onig_sys::OnigErrorInfo'>OnigErrorInfo</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a></pre><div class='docblock'><p>Create a regex object.</p>
+
+<p><code>int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end, OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax, OnigErrorInfo* err_info)</code></p>
+
+<p>normal return: ONIG_NORMAL</p>
+
+<h1 id='arguments' class='section-header'><a href='#arguments'>Arguments</a></h1>
+<ol>
+<li><code>reg</code>:         return regex object&#39;s address.</li>
+<li><code>pattern</code>:     regex pattern string.</li>
+<li><code>pattern_end</code>: terminate address of pattern. (pattern + pattern length)</li>
+<li><p><code>option</code>:      compile time options.</p>
+
+<ul>
+<li> ONIG_OPTION_NONE               no option</li>
+<li> ONIG_OPTION_SINGLELINE         &#39;<sup>&#39;</sup> -&gt; &#39;\A&#39;, &#39;$&#39; -&gt; &#39;\Z&#39;</li>
+<li> ONIG_OPTION_MULTILINE          &#39;.&#39; match with newline</li>
+<li> ONIG_OPTION_IGNORECASE         ambiguity match on</li>
+<li> ONIG_OPTION_EXTEND             extended pattern form</li>
+<li> ONIG_OPTION_FIND_LONGEST       find longest match</li>
+<li> ONIG_OPTION_FIND_NOT_EMPTY     ignore empty match</li>
+<li><p>ONIG_OPTION_NEGATE_SINGLELINE
+    clear ONIG_OPTION_SINGLELINE which is enabled on
+    ONIG_SYNTAX_POSIX_BASIC, ONIG_SYNTAX_POSIX_EXTENDED,
+    ONIG_SYNTAX_PERL, ONIG_SYNTAX_PERL_NG, ONIG_SYNTAX_JAVA</p></li>
+<li><p>ONIG_OPTION_DONT_CAPTURE_GROUP only named group captured.</p></li>
+<li><p>ONIG_OPTION_CAPTURE_GROUP      named and no-named group captured.</p></li>
+</ul></li>
+<li><p><code>enc</code>:        character encoding.</p>
+
+<ul>
+<li>ONIG_ENCODING_ASCII         ASCII</li>
+<li>ONIG_ENCODING_ISO_8859_1    ISO 8859-1</li>
+<li>ONIG_ENCODING_ISO_8859_2    ISO 8859-2</li>
+<li>ONIG_ENCODING_ISO_8859_3    ISO 8859-3</li>
+<li>ONIG_ENCODING_ISO_8859_4    ISO 8859-4</li>
+<li>ONIG_ENCODING_ISO_8859_5    ISO 8859-5</li>
+<li>ONIG_ENCODING_ISO_8859_6    ISO 8859-6</li>
+<li>ONIG_ENCODING_ISO_8859_7    ISO 8859-7</li>
+<li>ONIG_ENCODING_ISO_8859_8    ISO 8859-8</li>
+<li>ONIG_ENCODING_ISO_8859_9    ISO 8859-9</li>
+<li>ONIG_ENCODING_ISO_8859_10   ISO 8859-10</li>
+<li>ONIG_ENCODING_ISO_8859_11   ISO 8859-11</li>
+<li>ONIG_ENCODING_ISO_8859_13   ISO 8859-13</li>
+<li>ONIG_ENCODING_ISO_8859_14   ISO 8859-14</li>
+<li>ONIG_ENCODING_ISO_8859_15   ISO 8859-15</li>
+<li>ONIG_ENCODING_ISO_8859_16   ISO 8859-16</li>
+<li>ONIG_ENCODING_UTF8          UTF-8</li>
+<li>ONIG_ENCODING_UTF16_BE      UTF-16BE</li>
+<li>ONIG_ENCODING_UTF16_LE      UTF-16LE</li>
+<li>ONIG_ENCODING_UTF32_BE      UTF-32BE</li>
+<li>ONIG_ENCODING_UTF32_LE      UTF-32LE</li>
+<li>ONIG_ENCODING_EUC_JP        EUC-JP</li>
+<li>ONIG_ENCODING_EUC_TW        EUC-TW</li>
+<li>ONIG_ENCODING_EUC_KR        EUC-KR</li>
+<li>ONIG_ENCODING_EUC_CN        EUC-CN</li>
+<li>ONIG_ENCODING_SJIS          Shift_JIS</li>
+<li>ONIG_ENCODING_KOI8_R        KOI8-R</li>
+<li>ONIG_ENCODING_CP1251        CP1251</li>
+<li>ONIG_ENCODING_BIG5          Big5</li>
+<li><p>ONIG_ENCODING_GB18030       GB18030</p>
+
+<p>or any OnigEncoding data address defined by user.</p></li>
+</ul></li>
+<li><p><code>syntax</code>:     address of pattern syntax definition.</p>
+
+<ul>
+<li>ONIG_SYNTAX_ASIS              plain text</li>
+<li>ONIG_SYNTAX_POSIX_BASIC       POSIX Basic RE</li>
+<li>ONIG_SYNTAX_POSIX_EXTENDED    POSIX Extended RE</li>
+<li>ONIG_SYNTAX_EMACS             Emacs</li>
+<li>ONIG_SYNTAX_GREP              grep</li>
+<li>ONIG_SYNTAX_GNU_REGEX         GNU regex</li>
+<li>ONIG_SYNTAX_JAVA              Java (Sun java.util.regex)</li>
+<li>ONIG_SYNTAX_PERL              Perl</li>
+<li>ONIG_SYNTAX_PERL_NG           Perl + named group</li>
+<li>ONIG_SYNTAX_RUBY              Ruby</li>
+<li><p>ONIG_SYNTAX_DEFAULT           default (== Ruby)
+                           onig_set_default_syntax()</p>
+
+<p>or any OnigSyntaxType data address defined by user.</p></li>
+</ul></li>
+<li><p><code>err_info</code>: address for return optional error info.</p>
+
+<p>Use this value as 3rd argument of onig_error_code_to_str().</p></li>
+</ol>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "onig_sys";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

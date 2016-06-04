@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `onig_sys` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, onig_sys">
+
+    <title>onig_sys - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'onig_sys', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>onig_sys</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/onig_sys/onig_sys/src/lib.rs.html#1-978' title='goto source code'>[src]</a></span></h1>
+<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigCaptureTreeNode.html'
+                                  title='onig_sys::OnigCaptureTreeNode'>OnigCaptureTreeNode</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigCaseFoldCodeItem.html'
+                                  title='onig_sys::OnigCaseFoldCodeItem'>OnigCaseFoldCodeItem</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigCompileInfo.html'
+                                  title='onig_sys::OnigCompileInfo'>OnigCompileInfo</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigEncodingType.html'
+                                  title='onig_sys::OnigEncodingType'>OnigEncodingType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigErrorInfo.html'
+                                  title='onig_sys::OnigErrorInfo'>OnigErrorInfo</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigMetaCharTableType.html'
+                                  title='onig_sys::OnigMetaCharTableType'>OnigMetaCharTableType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigRegexType.html'
+                                  title='onig_sys::OnigRegexType'>OnigRegexType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigRegion.html'
+                                  title='onig_sys::OnigRegion'>OnigRegion</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigRepeatRange.html'
+                                  title='onig_sys::OnigRepeatRange'>OnigRepeatRange</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OnigSyntaxType.html'
+                                  title='onig_sys::OnigSyntaxType'>OnigSyntaxType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.INTERNAL_ONIGENC_CASE_FOLD_MULTI_CHAR.html'
+                                  title='onig_sys::INTERNAL_ONIGENC_CASE_FOLD_MULTI_CHAR'>INTERNAL_ONIGENC_CASE_FOLD_MULTI_CHAR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CASE_FOLD_MIN.html'
+                                  title='onig_sys::ONIGENC_CASE_FOLD_MIN'>ONIGENC_CASE_FOLD_MIN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CASE_FOLD_TURKISH_AZERI.html'
+                                  title='onig_sys::ONIGENC_CASE_FOLD_TURKISH_AZERI'>ONIGENC_CASE_FOLD_TURKISH_AZERI</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CODE_TO_MBC_MAXLEN.html'
+                                  title='onig_sys::ONIGENC_CODE_TO_MBC_MAXLEN'>ONIGENC_CODE_TO_MBC_MAXLEN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_ALNUM.html'
+                                  title='onig_sys::ONIGENC_CTYPE_ALNUM'>ONIGENC_CTYPE_ALNUM</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_ALPHA.html'
+                                  title='onig_sys::ONIGENC_CTYPE_ALPHA'>ONIGENC_CTYPE_ALPHA</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_ASCII.html'
+                                  title='onig_sys::ONIGENC_CTYPE_ASCII'>ONIGENC_CTYPE_ASCII</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_BLANK.html'
+                                  title='onig_sys::ONIGENC_CTYPE_BLANK'>ONIGENC_CTYPE_BLANK</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_CNTRL.html'
+                                  title='onig_sys::ONIGENC_CTYPE_CNTRL'>ONIGENC_CTYPE_CNTRL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_DIGIT.html'
+                                  title='onig_sys::ONIGENC_CTYPE_DIGIT'>ONIGENC_CTYPE_DIGIT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_GRAPH.html'
+                                  title='onig_sys::ONIGENC_CTYPE_GRAPH'>ONIGENC_CTYPE_GRAPH</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_LOWER.html'
+                                  title='onig_sys::ONIGENC_CTYPE_LOWER'>ONIGENC_CTYPE_LOWER</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_NEWLINE.html'
+                                  title='onig_sys::ONIGENC_CTYPE_NEWLINE'>ONIGENC_CTYPE_NEWLINE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_PRINT.html'
+                                  title='onig_sys::ONIGENC_CTYPE_PRINT'>ONIGENC_CTYPE_PRINT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_PUNCT.html'
+                                  title='onig_sys::ONIGENC_CTYPE_PUNCT'>ONIGENC_CTYPE_PUNCT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_SPACE.html'
+                                  title='onig_sys::ONIGENC_CTYPE_SPACE'>ONIGENC_CTYPE_SPACE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_UPPER.html'
+                                  title='onig_sys::ONIGENC_CTYPE_UPPER'>ONIGENC_CTYPE_UPPER</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_WORD.html'
+                                  title='onig_sys::ONIGENC_CTYPE_WORD'>ONIGENC_CTYPE_WORD</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_CTYPE_XDIGIT.html'
+                                  title='onig_sys::ONIGENC_CTYPE_XDIGIT'>ONIGENC_CTYPE_XDIGIT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_GET_CASE_FOLD_CODES_MAX_NUM.html'
+                                  title='onig_sys::ONIGENC_GET_CASE_FOLD_CODES_MAX_NUM'>ONIGENC_GET_CASE_FOLD_CODES_MAX_NUM</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_MAX_COMP_CASE_FOLD_CODE_LEN.html'
+                                  title='onig_sys::ONIGENC_MAX_COMP_CASE_FOLD_CODE_LEN'>ONIGENC_MAX_COMP_CASE_FOLD_CODE_LEN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_MAX_STD_CTYPE.html'
+                                  title='onig_sys::ONIGENC_MAX_STD_CTYPE'>ONIGENC_MAX_STD_CTYPE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGENC_MBC_CASE_FOLD_MAXLEN.html'
+                                  title='onig_sys::ONIGENC_MBC_CASE_FOLD_MAXLEN'>ONIGENC_MBC_CASE_FOLD_MAXLEN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_CHAR_CLASS_VALUE_AT_END_OF_RANGE.html'
+                                  title='onig_sys::ONIGERR_CHAR_CLASS_VALUE_AT_END_OF_RANGE'>ONIGERR_CHAR_CLASS_VALUE_AT_END_OF_RANGE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_CHAR_CLASS_VALUE_AT_START_OF_RANGE.html'
+                                  title='onig_sys::ONIGERR_CHAR_CLASS_VALUE_AT_START_OF_RANGE'>ONIGERR_CHAR_CLASS_VALUE_AT_START_OF_RANGE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_CONTROL_CODE_SYNTAX.html'
+                                  title='onig_sys::ONIGERR_CONTROL_CODE_SYNTAX'>ONIGERR_CONTROL_CODE_SYNTAX</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_DEFAULT_ENCODING_IS_NOT_SETTED.html'
+                                  title='onig_sys::ONIGERR_DEFAULT_ENCODING_IS_NOT_SETTED'>ONIGERR_DEFAULT_ENCODING_IS_NOT_SETTED</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_EMPTY_CHAR_CLASS.html'
+                                  title='onig_sys::ONIGERR_EMPTY_CHAR_CLASS'>ONIGERR_EMPTY_CHAR_CLASS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_EMPTY_GROUP_NAME.html'
+                                  title='onig_sys::ONIGERR_EMPTY_GROUP_NAME'>ONIGERR_EMPTY_GROUP_NAME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_EMPTY_RANGE_IN_CHAR_CLASS.html'
+                                  title='onig_sys::ONIGERR_EMPTY_RANGE_IN_CHAR_CLASS'>ONIGERR_EMPTY_RANGE_IN_CHAR_CLASS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_AT_CONTROL.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_AT_CONTROL'>ONIGERR_END_PATTERN_AT_CONTROL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_AT_ESCAPE.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_AT_ESCAPE'>ONIGERR_END_PATTERN_AT_ESCAPE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_AT_LEFT_BRACE.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_AT_LEFT_BRACE'>ONIGERR_END_PATTERN_AT_LEFT_BRACE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_AT_LEFT_BRACKET.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_AT_LEFT_BRACKET'>ONIGERR_END_PATTERN_AT_LEFT_BRACKET</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_AT_META.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_AT_META'>ONIGERR_END_PATTERN_AT_META</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_IN_GROUP.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_IN_GROUP'>ONIGERR_END_PATTERN_IN_GROUP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_END_PATTERN_WITH_UNMATCHED_PARENTHESIS.html'
+                                  title='onig_sys::ONIGERR_END_PATTERN_WITH_UNMATCHED_PARENTHESIS'>ONIGERR_END_PATTERN_WITH_UNMATCHED_PARENTHESIS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_GROUP_NUMBER_OVER_FOR_CAPTURE_HISTORY.html'
+                                  title='onig_sys::ONIGERR_GROUP_NUMBER_OVER_FOR_CAPTURE_HISTORY'>ONIGERR_GROUP_NUMBER_OVER_FOR_CAPTURE_HISTORY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_ARGUMENT.html'
+                                  title='onig_sys::ONIGERR_INVALID_ARGUMENT'>ONIGERR_INVALID_ARGUMENT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_BACKREF.html'
+                                  title='onig_sys::ONIGERR_INVALID_BACKREF'>ONIGERR_INVALID_BACKREF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_CHAR_IN_GROUP_NAME.html'
+                                  title='onig_sys::ONIGERR_INVALID_CHAR_IN_GROUP_NAME'>ONIGERR_INVALID_CHAR_IN_GROUP_NAME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_CHAR_PROPERTY_NAME.html'
+                                  title='onig_sys::ONIGERR_INVALID_CHAR_PROPERTY_NAME'>ONIGERR_INVALID_CHAR_PROPERTY_NAME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_CODE_POINT_VALUE.html'
+                                  title='onig_sys::ONIGERR_INVALID_CODE_POINT_VALUE'>ONIGERR_INVALID_CODE_POINT_VALUE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_COMBINATION_OF_OPTIONS.html'
+                                  title='onig_sys::ONIGERR_INVALID_COMBINATION_OF_OPTIONS'>ONIGERR_INVALID_COMBINATION_OF_OPTIONS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_GROUP_NAME.html'
+                                  title='onig_sys::ONIGERR_INVALID_GROUP_NAME'>ONIGERR_INVALID_GROUP_NAME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_LOOK_BEHIND_PATTERN.html'
+                                  title='onig_sys::ONIGERR_INVALID_LOOK_BEHIND_PATTERN'>ONIGERR_INVALID_LOOK_BEHIND_PATTERN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_POSIX_BRACKET_TYPE.html'
+                                  title='onig_sys::ONIGERR_INVALID_POSIX_BRACKET_TYPE'>ONIGERR_INVALID_POSIX_BRACKET_TYPE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_REPEAT_RANGE_PATTERN.html'
+                                  title='onig_sys::ONIGERR_INVALID_REPEAT_RANGE_PATTERN'>ONIGERR_INVALID_REPEAT_RANGE_PATTERN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_INVALID_WIDE_CHAR_VALUE.html'
+                                  title='onig_sys::ONIGERR_INVALID_WIDE_CHAR_VALUE'>ONIGERR_INVALID_WIDE_CHAR_VALUE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_MATCH_STACK_LIMIT_OVER.html'
+                                  title='onig_sys::ONIGERR_MATCH_STACK_LIMIT_OVER'>ONIGERR_MATCH_STACK_LIMIT_OVER</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_MEMORY.html'
+                                  title='onig_sys::ONIGERR_MEMORY'>ONIGERR_MEMORY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_META_CODE_SYNTAX.html'
+                                  title='onig_sys::ONIGERR_META_CODE_SYNTAX'>ONIGERR_META_CODE_SYNTAX</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_MISMATCH_CODE_LENGTH_IN_CLASS_RANGE.html'
+                                  title='onig_sys::ONIGERR_MISMATCH_CODE_LENGTH_IN_CLASS_RANGE'>ONIGERR_MISMATCH_CODE_LENGTH_IN_CLASS_RANGE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_MULTIPLEX_DEFINED_NAME.html'
+                                  title='onig_sys::ONIGERR_MULTIPLEX_DEFINED_NAME'>ONIGERR_MULTIPLEX_DEFINED_NAME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_MULTIPLEX_DEFINITION_NAME_CALL.html'
+                                  title='onig_sys::ONIGERR_MULTIPLEX_DEFINITION_NAME_CALL'>ONIGERR_MULTIPLEX_DEFINITION_NAME_CALL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_NESTED_REPEAT_OPERATOR.html'
+                                  title='onig_sys::ONIGERR_NESTED_REPEAT_OPERATOR'>ONIGERR_NESTED_REPEAT_OPERATOR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_NEVER_ENDING_RECURSION.html'
+                                  title='onig_sys::ONIGERR_NEVER_ENDING_RECURSION'>ONIGERR_NEVER_ENDING_RECURSION</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_NOT_SUPPORTED_ENCODING_COMBINATION.html'
+                                  title='onig_sys::ONIGERR_NOT_SUPPORTED_ENCODING_COMBINATION'>ONIGERR_NOT_SUPPORTED_ENCODING_COMBINATION</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_NUMBERED_BACKREF_OR_CALL_NOT_ALLOWED.html'
+                                  title='onig_sys::ONIGERR_NUMBERED_BACKREF_OR_CALL_NOT_ALLOWED'>ONIGERR_NUMBERED_BACKREF_OR_CALL_NOT_ALLOWED</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_OVER_THREAD_PASS_LIMIT_COUNT.html'
+                                  title='onig_sys::ONIGERR_OVER_THREAD_PASS_LIMIT_COUNT'>ONIGERR_OVER_THREAD_PASS_LIMIT_COUNT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_PARSER_BUG.html'
+                                  title='onig_sys::ONIGERR_PARSER_BUG'>ONIGERR_PARSER_BUG</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_PREMATURE_END_OF_CHAR_CLASS.html'
+                                  title='onig_sys::ONIGERR_PREMATURE_END_OF_CHAR_CLASS'>ONIGERR_PREMATURE_END_OF_CHAR_CLASS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_SPECIFIED_ENCODING_CANT_CONVERT_TO_WIDE_CHAR.html'
+                                  title='onig_sys::ONIGERR_SPECIFIED_ENCODING_CANT_CONVERT_TO_WIDE_CHAR'>ONIGERR_SPECIFIED_ENCODING_CANT_CONVERT_TO_WIDE_CHAR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_STACK_BUG.html'
+                                  title='onig_sys::ONIGERR_STACK_BUG'>ONIGERR_STACK_BUG</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TARGET_OF_REPEAT_OPERATOR_INVALID.html'
+                                  title='onig_sys::ONIGERR_TARGET_OF_REPEAT_OPERATOR_INVALID'>ONIGERR_TARGET_OF_REPEAT_OPERATOR_INVALID</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TARGET_OF_REPEAT_OPERATOR_NOT_SPECIFIED.html'
+                                  title='onig_sys::ONIGERR_TARGET_OF_REPEAT_OPERATOR_NOT_SPECIFIED'>ONIGERR_TARGET_OF_REPEAT_OPERATOR_NOT_SPECIFIED</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_BIG_BACKREF_NUMBER.html'
+                                  title='onig_sys::ONIGERR_TOO_BIG_BACKREF_NUMBER'>ONIGERR_TOO_BIG_BACKREF_NUMBER</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_BIG_NUMBER.html'
+                                  title='onig_sys::ONIGERR_TOO_BIG_NUMBER'>ONIGERR_TOO_BIG_NUMBER</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_BIG_NUMBER_FOR_REPEAT_RANGE.html'
+                                  title='onig_sys::ONIGERR_TOO_BIG_NUMBER_FOR_REPEAT_RANGE'>ONIGERR_TOO_BIG_NUMBER_FOR_REPEAT_RANGE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_BIG_WIDE_CHAR_VALUE.html'
+                                  title='onig_sys::ONIGERR_TOO_BIG_WIDE_CHAR_VALUE'>ONIGERR_TOO_BIG_WIDE_CHAR_VALUE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_LONG_WIDE_CHAR_VALUE.html'
+                                  title='onig_sys::ONIGERR_TOO_LONG_WIDE_CHAR_VALUE'>ONIGERR_TOO_LONG_WIDE_CHAR_VALUE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_MANY_MULTI_BYTE_RANGES.html'
+                                  title='onig_sys::ONIGERR_TOO_MANY_MULTI_BYTE_RANGES'>ONIGERR_TOO_MANY_MULTI_BYTE_RANGES</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TOO_SHORT_MULTI_BYTE_STRING.html'
+                                  title='onig_sys::ONIGERR_TOO_SHORT_MULTI_BYTE_STRING'>ONIGERR_TOO_SHORT_MULTI_BYTE_STRING</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_TYPE_BUG.html'
+                                  title='onig_sys::ONIGERR_TYPE_BUG'>ONIGERR_TYPE_BUG</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNDEFINED_BYTECODE.html'
+                                  title='onig_sys::ONIGERR_UNDEFINED_BYTECODE'>ONIGERR_UNDEFINED_BYTECODE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNDEFINED_GROUP_OPTION.html'
+                                  title='onig_sys::ONIGERR_UNDEFINED_GROUP_OPTION'>ONIGERR_UNDEFINED_GROUP_OPTION</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNDEFINED_GROUP_REFERENCE.html'
+                                  title='onig_sys::ONIGERR_UNDEFINED_GROUP_REFERENCE'>ONIGERR_UNDEFINED_GROUP_REFERENCE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNDEFINED_NAME_REFERENCE.html'
+                                  title='onig_sys::ONIGERR_UNDEFINED_NAME_REFERENCE'>ONIGERR_UNDEFINED_NAME_REFERENCE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNEXPECTED_BYTECODE.html'
+                                  title='onig_sys::ONIGERR_UNEXPECTED_BYTECODE'>ONIGERR_UNEXPECTED_BYTECODE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNMATCHED_CLOSE_PARENTHESIS.html'
+                                  title='onig_sys::ONIGERR_UNMATCHED_CLOSE_PARENTHESIS'>ONIGERR_UNMATCHED_CLOSE_PARENTHESIS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UNMATCHED_RANGE_SPECIFIER_IN_CHAR_CLASS.html'
+                                  title='onig_sys::ONIGERR_UNMATCHED_RANGE_SPECIFIER_IN_CHAR_CLASS'>ONIGERR_UNMATCHED_RANGE_SPECIFIER_IN_CHAR_CLASS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIGERR_UPPER_SMALLER_THAN_LOWER_IN_REPEAT_RANGE.html'
+                                  title='onig_sys::ONIGERR_UPPER_SMALLER_THAN_LOWER_IN_REPEAT_RANGE'>ONIGERR_UPPER_SMALLER_THAN_LOWER_IN_REPEAT_RANGE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_CHAR_TABLE_SIZE.html'
+                                  title='onig_sys::ONIG_CHAR_TABLE_SIZE'>ONIG_CHAR_TABLE_SIZE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_INEFFECTIVE_META_CHAR.html'
+                                  title='onig_sys::ONIG_INEFFECTIVE_META_CHAR'>ONIG_INEFFECTIVE_META_CHAR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_INFINITE_DISTANCE.html'
+                                  title='onig_sys::ONIG_INFINITE_DISTANCE'>ONIG_INFINITE_DISTANCE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_MAX_BACKREF_NUM.html'
+                                  title='onig_sys::ONIG_MAX_BACKREF_NUM'>ONIG_MAX_BACKREF_NUM</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_MAX_CAPTURE_HISTORY_GROUP.html'
+                                  title='onig_sys::ONIG_MAX_CAPTURE_HISTORY_GROUP'>ONIG_MAX_CAPTURE_HISTORY_GROUP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_MAX_ERROR_MESSAGE_LEN.html'
+                                  title='onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN'>ONIG_MAX_ERROR_MESSAGE_LEN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_MAX_MULTI_BYTE_RANGES_NUM.html'
+                                  title='onig_sys::ONIG_MAX_MULTI_BYTE_RANGES_NUM'>ONIG_MAX_MULTI_BYTE_RANGES_NUM</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_MAX_REPEAT_NUM.html'
+                                  title='onig_sys::ONIG_MAX_REPEAT_NUM'>ONIG_MAX_REPEAT_NUM</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_META_CHAR_ANYCHAR.html'
+                                  title='onig_sys::ONIG_META_CHAR_ANYCHAR'>ONIG_META_CHAR_ANYCHAR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_META_CHAR_ANYCHAR_ANYTIME.html'
+                                  title='onig_sys::ONIG_META_CHAR_ANYCHAR_ANYTIME'>ONIG_META_CHAR_ANYCHAR_ANYTIME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_META_CHAR_ANYTIME.html'
+                                  title='onig_sys::ONIG_META_CHAR_ANYTIME'>ONIG_META_CHAR_ANYTIME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_META_CHAR_ESCAPE.html'
+                                  title='onig_sys::ONIG_META_CHAR_ESCAPE'>ONIG_META_CHAR_ESCAPE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_META_CHAR_ONE_OR_MORE_TIME.html'
+                                  title='onig_sys::ONIG_META_CHAR_ONE_OR_MORE_TIME'>ONIG_META_CHAR_ONE_OR_MORE_TIME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_META_CHAR_ZERO_OR_ONE_TIME.html'
+                                  title='onig_sys::ONIG_META_CHAR_ZERO_OR_ONE_TIME'>ONIG_META_CHAR_ZERO_OR_ONE_TIME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_MISMATCH.html'
+                                  title='onig_sys::ONIG_MISMATCH'>ONIG_MISMATCH</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_NORMAL.html'
+                                  title='onig_sys::ONIG_NORMAL'>ONIG_NORMAL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_NO_SUPPORT_CONFIG.html'
+                                  title='onig_sys::ONIG_NO_SUPPORT_CONFIG'>ONIG_NO_SUPPORT_CONFIG</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_NREGION.html'
+                                  title='onig_sys::ONIG_NREGION'>ONIG_NREGION</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_CAPTURE_GROUP.html'
+                                  title='onig_sys::ONIG_OPTION_CAPTURE_GROUP'>ONIG_OPTION_CAPTURE_GROUP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_DEFAULT.html'
+                                  title='onig_sys::ONIG_OPTION_DEFAULT'>ONIG_OPTION_DEFAULT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_DONT_CAPTURE_GROUP.html'
+                                  title='onig_sys::ONIG_OPTION_DONT_CAPTURE_GROUP'>ONIG_OPTION_DONT_CAPTURE_GROUP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_EXTEND.html'
+                                  title='onig_sys::ONIG_OPTION_EXTEND'>ONIG_OPTION_EXTEND</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_FIND_LONGEST.html'
+                                  title='onig_sys::ONIG_OPTION_FIND_LONGEST'>ONIG_OPTION_FIND_LONGEST</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_FIND_NOT_EMPTY.html'
+                                  title='onig_sys::ONIG_OPTION_FIND_NOT_EMPTY'>ONIG_OPTION_FIND_NOT_EMPTY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_IGNORECASE.html'
+                                  title='onig_sys::ONIG_OPTION_IGNORECASE'>ONIG_OPTION_IGNORECASE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_MAXBIT.html'
+                                  title='onig_sys::ONIG_OPTION_MAXBIT'>ONIG_OPTION_MAXBIT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_MULTILINE.html'
+                                  title='onig_sys::ONIG_OPTION_MULTILINE'>ONIG_OPTION_MULTILINE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_NEGATE_SINGLELINE.html'
+                                  title='onig_sys::ONIG_OPTION_NEGATE_SINGLELINE'>ONIG_OPTION_NEGATE_SINGLELINE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_NONE.html'
+                                  title='onig_sys::ONIG_OPTION_NONE'>ONIG_OPTION_NONE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_NOTBOL.html'
+                                  title='onig_sys::ONIG_OPTION_NOTBOL'>ONIG_OPTION_NOTBOL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_NOTEOL.html'
+                                  title='onig_sys::ONIG_OPTION_NOTEOL'>ONIG_OPTION_NOTEOL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_POSIX_REGION.html'
+                                  title='onig_sys::ONIG_OPTION_POSIX_REGION'>ONIG_OPTION_POSIX_REGION</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_OPTION_SINGLELINE.html'
+                                  title='onig_sys::ONIG_OPTION_SINGLELINE'>ONIG_OPTION_SINGLELINE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_REGION_NOTPOS.html'
+                                  title='onig_sys::ONIG_REGION_NOTPOS'>ONIG_REGION_NOTPOS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_STATE_COMPILING.html'
+                                  title='onig_sys::ONIG_STATE_COMPILING'>ONIG_STATE_COMPILING</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_STATE_MODIFY.html'
+                                  title='onig_sys::ONIG_STATE_MODIFY'>ONIG_STATE_MODIFY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_STATE_NORMAL.html'
+                                  title='onig_sys::ONIG_STATE_NORMAL'>ONIG_STATE_NORMAL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_STATE_SEARCHING.html'
+                                  title='onig_sys::ONIG_STATE_SEARCHING'>ONIG_STATE_SEARCHING</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_ALLOW_DOUBLE_RANGE_OP_IN_CC.html'
+                                  title='onig_sys::ONIG_SYN_ALLOW_DOUBLE_RANGE_OP_IN_CC'>ONIG_SYN_ALLOW_DOUBLE_RANGE_OP_IN_CC</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_ALLOW_EMPTY_RANGE_IN_CC.html'
+                                  title='onig_sys::ONIG_SYN_ALLOW_EMPTY_RANGE_IN_CC'>ONIG_SYN_ALLOW_EMPTY_RANGE_IN_CC</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_ALLOW_INTERVAL_LOW_ABBREV.html'
+                                  title='onig_sys::ONIG_SYN_ALLOW_INTERVAL_LOW_ABBREV'>ONIG_SYN_ALLOW_INTERVAL_LOW_ABBREV</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_ALLOW_INVALID_INTERVAL.html'
+                                  title='onig_sys::ONIG_SYN_ALLOW_INVALID_INTERVAL'>ONIG_SYN_ALLOW_INVALID_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_ALLOW_MULTIPLEX_DEFINITION_NAME.html'
+                                  title='onig_sys::ONIG_SYN_ALLOW_MULTIPLEX_DEFINITION_NAME'>ONIG_SYN_ALLOW_MULTIPLEX_DEFINITION_NAME</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_ALLOW_UNMATCHED_CLOSE_SUBEXP.html'
+                                  title='onig_sys::ONIG_SYN_ALLOW_UNMATCHED_CLOSE_SUBEXP'>ONIG_SYN_ALLOW_UNMATCHED_CLOSE_SUBEXP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_BACKSLASH_ESCAPE_IN_CC.html'
+                                  title='onig_sys::ONIG_SYN_BACKSLASH_ESCAPE_IN_CC'>ONIG_SYN_BACKSLASH_ESCAPE_IN_CC</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_CAPTURE_ONLY_NAMED_GROUP.html'
+                                  title='onig_sys::ONIG_SYN_CAPTURE_ONLY_NAMED_GROUP'>ONIG_SYN_CAPTURE_ONLY_NAMED_GROUP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_CONTEXT_INDEP_ANCHORS.html'
+                                  title='onig_sys::ONIG_SYN_CONTEXT_INDEP_ANCHORS'>ONIG_SYN_CONTEXT_INDEP_ANCHORS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_CONTEXT_INDEP_REPEAT_OPS.html'
+                                  title='onig_sys::ONIG_SYN_CONTEXT_INDEP_REPEAT_OPS'>ONIG_SYN_CONTEXT_INDEP_REPEAT_OPS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_CONTEXT_INVALID_REPEAT_OPS.html'
+                                  title='onig_sys::ONIG_SYN_CONTEXT_INVALID_REPEAT_OPS'>ONIG_SYN_CONTEXT_INVALID_REPEAT_OPS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_DIFFERENT_LEN_ALT_LOOK_BEHIND.html'
+                                  title='onig_sys::ONIG_SYN_DIFFERENT_LEN_ALT_LOOK_BEHIND'>ONIG_SYN_DIFFERENT_LEN_ALT_LOOK_BEHIND</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_FIXED_INTERVAL_IS_GREEDY_ONLY.html'
+                                  title='onig_sys::ONIG_SYN_FIXED_INTERVAL_IS_GREEDY_ONLY'>ONIG_SYN_FIXED_INTERVAL_IS_GREEDY_ONLY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_NOT_NEWLINE_IN_NEGATIVE_CC.html'
+                                  title='onig_sys::ONIG_SYN_NOT_NEWLINE_IN_NEGATIVE_CC'>ONIG_SYN_NOT_NEWLINE_IN_NEGATIVE_CC</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ATMARK_CAPTURE_HISTORY.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ATMARK_CAPTURE_HISTORY'>ONIG_SYN_OP2_ATMARK_CAPTURE_HISTORY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_CCLASS_SET_OP.html'
+                                  title='onig_sys::ONIG_SYN_OP2_CCLASS_SET_OP'>ONIG_SYN_OP2_CCLASS_SET_OP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_CAPITAL_C_BAR_CONTROL.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_C_BAR_CONTROL'>ONIG_SYN_OP2_ESC_CAPITAL_C_BAR_CONTROL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_CAPITAL_M_BAR_META.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_M_BAR_META'>ONIG_SYN_OP2_ESC_CAPITAL_M_BAR_META</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_CAPITAL_Q_QUOTE.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_Q_QUOTE'>ONIG_SYN_OP2_ESC_CAPITAL_Q_QUOTE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_GNU_BUF_ANCHOR.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_GNU_BUF_ANCHOR'>ONIG_SYN_OP2_ESC_GNU_BUF_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_G_SUBEXP_CALL.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_G_SUBEXP_CALL'>ONIG_SYN_OP2_ESC_G_SUBEXP_CALL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_H_XDIGIT.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_H_XDIGIT'>ONIG_SYN_OP2_ESC_H_XDIGIT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_K_NAMED_BACKREF.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_K_NAMED_BACKREF'>ONIG_SYN_OP2_ESC_K_NAMED_BACKREF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_P_BRACE_CHAR_PROPERTY.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_P_BRACE_CHAR_PROPERTY'>ONIG_SYN_OP2_ESC_P_BRACE_CHAR_PROPERTY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_P_BRACE_CIRCUMFLEX_NOT.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_P_BRACE_CIRCUMFLEX_NOT'>ONIG_SYN_OP2_ESC_P_BRACE_CIRCUMFLEX_NOT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_U_HEX4.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_U_HEX4'>ONIG_SYN_OP2_ESC_U_HEX4</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_ESC_V_VTAB.html'
+                                  title='onig_sys::ONIG_SYN_OP2_ESC_V_VTAB'>ONIG_SYN_OP2_ESC_V_VTAB</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_INEFFECTIVE_ESCAPE.html'
+                                  title='onig_sys::ONIG_SYN_OP2_INEFFECTIVE_ESCAPE'>ONIG_SYN_OP2_INEFFECTIVE_ESCAPE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_OPTION_PERL.html'
+                                  title='onig_sys::ONIG_SYN_OP2_OPTION_PERL'>ONIG_SYN_OP2_OPTION_PERL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_OPTION_RUBY.html'
+                                  title='onig_sys::ONIG_SYN_OP2_OPTION_RUBY'>ONIG_SYN_OP2_OPTION_RUBY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_PLUS_POSSESSIVE_INTERVAL.html'
+                                  title='onig_sys::ONIG_SYN_OP2_PLUS_POSSESSIVE_INTERVAL'>ONIG_SYN_OP2_PLUS_POSSESSIVE_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_PLUS_POSSESSIVE_REPEAT.html'
+                                  title='onig_sys::ONIG_SYN_OP2_PLUS_POSSESSIVE_REPEAT'>ONIG_SYN_OP2_PLUS_POSSESSIVE_REPEAT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_QMARK_GROUP_EFFECT.html'
+                                  title='onig_sys::ONIG_SYN_OP2_QMARK_GROUP_EFFECT'>ONIG_SYN_OP2_QMARK_GROUP_EFFECT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP2_QMARK_LT_NAMED_GROUP.html'
+                                  title='onig_sys::ONIG_SYN_OP2_QMARK_LT_NAMED_GROUP'>ONIG_SYN_OP2_QMARK_LT_NAMED_GROUP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ASTERISK_ZERO_INF.html'
+                                  title='onig_sys::ONIG_SYN_OP_ASTERISK_ZERO_INF'>ONIG_SYN_OP_ASTERISK_ZERO_INF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_BRACE_INTERVAL.html'
+                                  title='onig_sys::ONIG_SYN_OP_BRACE_INTERVAL'>ONIG_SYN_OP_BRACE_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_BRACKET_CC.html'
+                                  title='onig_sys::ONIG_SYN_OP_BRACKET_CC'>ONIG_SYN_OP_BRACKET_CC</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_DECIMAL_BACKREF.html'
+                                  title='onig_sys::ONIG_SYN_OP_DECIMAL_BACKREF'>ONIG_SYN_OP_DECIMAL_BACKREF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_DOT_ANYCHAR.html'
+                                  title='onig_sys::ONIG_SYN_OP_DOT_ANYCHAR'>ONIG_SYN_OP_DOT_ANYCHAR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_ASTERISK_ZERO_INF.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_ASTERISK_ZERO_INF'>ONIG_SYN_OP_ESC_ASTERISK_ZERO_INF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_AZ_BUF_ANCHOR.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_AZ_BUF_ANCHOR'>ONIG_SYN_OP_ESC_AZ_BUF_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_BRACE_INTERVAL.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_BRACE_INTERVAL'>ONIG_SYN_OP_ESC_BRACE_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_B_WORD_BOUND.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_B_WORD_BOUND'>ONIG_SYN_OP_ESC_B_WORD_BOUND</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_CAPITAL_G_BEGIN_ANCHOR.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_CAPITAL_G_BEGIN_ANCHOR'>ONIG_SYN_OP_ESC_CAPITAL_G_BEGIN_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_CONTROL_CHARS.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_CONTROL_CHARS'>ONIG_SYN_OP_ESC_CONTROL_CHARS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_C_CONTROL.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_C_CONTROL'>ONIG_SYN_OP_ESC_C_CONTROL</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_D_DIGIT.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_D_DIGIT'>ONIG_SYN_OP_ESC_D_DIGIT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_LPAREN_SUBEXP.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_LPAREN_SUBEXP'>ONIG_SYN_OP_ESC_LPAREN_SUBEXP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_LTGT_WORD_BEGIN_END.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_LTGT_WORD_BEGIN_END'>ONIG_SYN_OP_ESC_LTGT_WORD_BEGIN_END</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_OCTAL3.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_OCTAL3'>ONIG_SYN_OP_ESC_OCTAL3</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_PLUS_ONE_INF.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_PLUS_ONE_INF'>ONIG_SYN_OP_ESC_PLUS_ONE_INF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_QMARK_ZERO_ONE.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_QMARK_ZERO_ONE'>ONIG_SYN_OP_ESC_QMARK_ZERO_ONE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_S_WHITE_SPACE.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_S_WHITE_SPACE'>ONIG_SYN_OP_ESC_S_WHITE_SPACE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_VBAR_ALT.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_VBAR_ALT'>ONIG_SYN_OP_ESC_VBAR_ALT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_W_WORD.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_W_WORD'>ONIG_SYN_OP_ESC_W_WORD</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_X_BRACE_HEX8.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_X_BRACE_HEX8'>ONIG_SYN_OP_ESC_X_BRACE_HEX8</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_ESC_X_HEX2.html'
+                                  title='onig_sys::ONIG_SYN_OP_ESC_X_HEX2'>ONIG_SYN_OP_ESC_X_HEX2</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_LINE_ANCHOR.html'
+                                  title='onig_sys::ONIG_SYN_OP_LINE_ANCHOR'>ONIG_SYN_OP_LINE_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_LPAREN_SUBEXP.html'
+                                  title='onig_sys::ONIG_SYN_OP_LPAREN_SUBEXP'>ONIG_SYN_OP_LPAREN_SUBEXP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_PLUS_ONE_INF.html'
+                                  title='onig_sys::ONIG_SYN_OP_PLUS_ONE_INF'>ONIG_SYN_OP_PLUS_ONE_INF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_POSIX_BRACKET.html'
+                                  title='onig_sys::ONIG_SYN_OP_POSIX_BRACKET'>ONIG_SYN_OP_POSIX_BRACKET</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_QMARK_NON_GREEDY.html'
+                                  title='onig_sys::ONIG_SYN_OP_QMARK_NON_GREEDY'>ONIG_SYN_OP_QMARK_NON_GREEDY</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_QMARK_ZERO_ONE.html'
+                                  title='onig_sys::ONIG_SYN_OP_QMARK_ZERO_ONE'>ONIG_SYN_OP_QMARK_ZERO_ONE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_VARIABLE_META_CHARACTERS.html'
+                                  title='onig_sys::ONIG_SYN_OP_VARIABLE_META_CHARACTERS'>ONIG_SYN_OP_VARIABLE_META_CHARACTERS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_OP_VBAR_ALT.html'
+                                  title='onig_sys::ONIG_SYN_OP_VBAR_ALT'>ONIG_SYN_OP_VBAR_ALT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_STRICT_CHECK_BACKREF.html'
+                                  title='onig_sys::ONIG_SYN_STRICT_CHECK_BACKREF'>ONIG_SYN_STRICT_CHECK_BACKREF</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_WARN_CC_OP_NOT_ESCAPED.html'
+                                  title='onig_sys::ONIG_SYN_WARN_CC_OP_NOT_ESCAPED'>ONIG_SYN_WARN_CC_OP_NOT_ESCAPED</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_SYN_WARN_REDUNDANT_NESTED_REPEAT.html'
+                                  title='onig_sys::ONIG_SYN_WARN_REDUNDANT_NESTED_REPEAT'>ONIG_SYN_WARN_REDUNDANT_NESTED_REPEAT</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_TRAVERSE_CALLBACK_AT_BOTH.html'
+                                  title='onig_sys::ONIG_TRAVERSE_CALLBACK_AT_BOTH'>ONIG_TRAVERSE_CALLBACK_AT_BOTH</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_TRAVERSE_CALLBACK_AT_FIRST.html'
+                                  title='onig_sys::ONIG_TRAVERSE_CALLBACK_AT_FIRST'>ONIG_TRAVERSE_CALLBACK_AT_FIRST</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.ONIG_TRAVERSE_CALLBACK_AT_LAST.html'
+                                  title='onig_sys::ONIG_TRAVERSE_CALLBACK_AT_LAST'>ONIG_TRAVERSE_CALLBACK_AT_LAST</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table><h2 id='statics' class='section-header'><a href="#statics">Statics</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigDefaultSyntax.html'
+                                  title='onig_sys::OnigDefaultSyntax'>OnigDefaultSyntax</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingASCII.html'
+                                  title='onig_sys::OnigEncodingASCII'>OnigEncodingASCII</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingBIG5.html'
+                                  title='onig_sys::OnigEncodingBIG5'>OnigEncodingBIG5</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingCP1251.html'
+                                  title='onig_sys::OnigEncodingCP1251'>OnigEncodingCP1251</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingEUC_CN.html'
+                                  title='onig_sys::OnigEncodingEUC_CN'>OnigEncodingEUC_CN</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingEUC_JP.html'
+                                  title='onig_sys::OnigEncodingEUC_JP'>OnigEncodingEUC_JP</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingEUC_KR.html'
+                                  title='onig_sys::OnigEncodingEUC_KR'>OnigEncodingEUC_KR</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingEUC_TW.html'
+                                  title='onig_sys::OnigEncodingEUC_TW'>OnigEncodingEUC_TW</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingGB18030.html'
+                                  title='onig_sys::OnigEncodingGB18030'>OnigEncodingGB18030</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_1.html'
+                                  title='onig_sys::OnigEncodingISO_8859_1'>OnigEncodingISO_8859_1</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_10.html'
+                                  title='onig_sys::OnigEncodingISO_8859_10'>OnigEncodingISO_8859_10</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_11.html'
+                                  title='onig_sys::OnigEncodingISO_8859_11'>OnigEncodingISO_8859_11</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_13.html'
+                                  title='onig_sys::OnigEncodingISO_8859_13'>OnigEncodingISO_8859_13</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_14.html'
+                                  title='onig_sys::OnigEncodingISO_8859_14'>OnigEncodingISO_8859_14</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_15.html'
+                                  title='onig_sys::OnigEncodingISO_8859_15'>OnigEncodingISO_8859_15</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_16.html'
+                                  title='onig_sys::OnigEncodingISO_8859_16'>OnigEncodingISO_8859_16</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_2.html'
+                                  title='onig_sys::OnigEncodingISO_8859_2'>OnigEncodingISO_8859_2</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_3.html'
+                                  title='onig_sys::OnigEncodingISO_8859_3'>OnigEncodingISO_8859_3</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_4.html'
+                                  title='onig_sys::OnigEncodingISO_8859_4'>OnigEncodingISO_8859_4</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_5.html'
+                                  title='onig_sys::OnigEncodingISO_8859_5'>OnigEncodingISO_8859_5</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_6.html'
+                                  title='onig_sys::OnigEncodingISO_8859_6'>OnigEncodingISO_8859_6</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_7.html'
+                                  title='onig_sys::OnigEncodingISO_8859_7'>OnigEncodingISO_8859_7</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_8.html'
+                                  title='onig_sys::OnigEncodingISO_8859_8'>OnigEncodingISO_8859_8</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingISO_8859_9.html'
+                                  title='onig_sys::OnigEncodingISO_8859_9'>OnigEncodingISO_8859_9</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingKOI8.html'
+                                  title='onig_sys::OnigEncodingKOI8'>OnigEncodingKOI8</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingKOI8_R.html'
+                                  title='onig_sys::OnigEncodingKOI8_R'>OnigEncodingKOI8_R</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingSJIS.html'
+                                  title='onig_sys::OnigEncodingSJIS'>OnigEncodingSJIS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingUTF16_BE.html'
+                                  title='onig_sys::OnigEncodingUTF16_BE'>OnigEncodingUTF16_BE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingUTF16_LE.html'
+                                  title='onig_sys::OnigEncodingUTF16_LE'>OnigEncodingUTF16_LE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingUTF32_BE.html'
+                                  title='onig_sys::OnigEncodingUTF32_BE'>OnigEncodingUTF32_BE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingUTF32_LE.html'
+                                  title='onig_sys::OnigEncodingUTF32_LE'>OnigEncodingUTF32_LE</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigEncodingUTF8.html'
+                                  title='onig_sys::OnigEncodingUTF8'>OnigEncodingUTF8</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxASIS.html'
+                                  title='onig_sys::OnigSyntaxASIS'>OnigSyntaxASIS</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxEmacs.html'
+                                  title='onig_sys::OnigSyntaxEmacs'>OnigSyntaxEmacs</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxGnuRegex.html'
+                                  title='onig_sys::OnigSyntaxGnuRegex'>OnigSyntaxGnuRegex</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxGrep.html'
+                                  title='onig_sys::OnigSyntaxGrep'>OnigSyntaxGrep</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxJava.html'
+                                  title='onig_sys::OnigSyntaxJava'>OnigSyntaxJava</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxPerl.html'
+                                  title='onig_sys::OnigSyntaxPerl'>OnigSyntaxPerl</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxPerl_NG.html'
+                                  title='onig_sys::OnigSyntaxPerl_NG'>OnigSyntaxPerl_NG</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxPosixBasic.html'
+                                  title='onig_sys::OnigSyntaxPosixBasic'>OnigSyntaxPosixBasic</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxPosixExtended.html'
+                                  title='onig_sys::OnigSyntaxPosixExtended'>OnigSyntaxPosixExtended</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='static' href='static.OnigSyntaxRuby.html'
+                                  title='onig_sys::OnigSyntaxRuby'>OnigSyntaxRuby</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_capture_tree_traverse.html'
+                                  title='onig_sys::onig_capture_tree_traverse'>onig_capture_tree_traverse</a></td>
+                           <td class='docblock short'>
+                                <p>Traverse and callback in capture history data tree.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_copy_encoding.html'
+                                  title='onig_sys::onig_copy_encoding'>onig_copy_encoding</a></td>
+                           <td class='docblock short'>
+                                <p>Copy encoding.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_copy_syntax.html'
+                                  title='onig_sys::onig_copy_syntax'>onig_copy_syntax</a></td>
+                           <td class='docblock short'>
+                                <p>Copy syntax.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_copyright.html'
+                                  title='onig_sys::onig_copyright'>onig_copyright</a></td>
+                           <td class='docblock short'>
+                                <p>Return Copyright String</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_end.html'
+                                  title='onig_sys::onig_end'>onig_end</a></td>
+                           <td class='docblock short'>
+                                <p>The use of this library is finished.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_error_code_to_str.html'
+                                  title='onig_sys::onig_error_code_to_str'>onig_error_code_to_str</a></td>
+                           <td class='docblock short'>
+                                <p>Get error message string.
+  If this function is used for onig_new(),
+  don&#39;t call this after the pattern argument of onig_new() is freed.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_foreach_name.html'
+                                  title='onig_sys::onig_foreach_name'>onig_foreach_name</a></td>
+                           <td class='docblock short'>
+                                <p>Iterate function call for all names.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_free.html'
+                                  title='onig_sys::onig_free'>onig_free</a></td>
+                           <td class='docblock short'>
+                                <p>Free memory used by regex object.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_free_body.html'
+                                  title='onig_sys::onig_free_body'>onig_free_body</a></td>
+                           <td class='docblock short'>
+                                <p>Free memory used by regex object. (Except reg oneself.)</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_capture_tree.html'
+                                  title='onig_sys::onig_get_capture_tree'>onig_get_capture_tree</a></td>
+                           <td class='docblock short'>
+                                <p>Return the root node of capture history data tree.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_case_fold_flag.html'
+                                  title='onig_sys::onig_get_case_fold_flag'>onig_get_case_fold_flag</a></td>
+                           <td class='docblock short'>
+                                <p><code>OnigCaseFoldType onig_get_case_fold_flag(regex_t* reg)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_default_case_fold_flag.html'
+                                  title='onig_sys::onig_get_default_case_fold_flag'>onig_get_default_case_fold_flag</a></td>
+                           <td class='docblock short'>
+                                <p>Get default case fold flag.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_encoding.html'
+                                  title='onig_sys::onig_get_encoding'>onig_get_encoding</a></td>
+                           <td class='docblock short'>
+                                <p><code>OnigEncoding onig_get_encoding(regex_t* reg)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_match_stack_limit_size.html'
+                                  title='onig_sys::onig_get_match_stack_limit_size'>onig_get_match_stack_limit_size</a></td>
+                           <td class='docblock short'>
+                                <p>Return the maximum number of stack size.
+(default: 0 == unlimited)</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_options.html'
+                                  title='onig_sys::onig_get_options'>onig_get_options</a></td>
+                           <td class='docblock short'>
+                                <p><code>OnigOptionType onig_get_options(regex_t* reg)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_syntax.html'
+                                  title='onig_sys::onig_get_syntax'>onig_get_syntax</a></td>
+                           <td class='docblock short'>
+                                <p><code>OnigSyntaxType* onig_get_syntax(regex_t* reg)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_syntax_behavior.html'
+                                  title='onig_sys::onig_get_syntax_behavior'>onig_get_syntax_behavior</a></td>
+                           <td class='docblock short'>
+                                <p><code>unsigned int onig_get_syntax_behavior(OnigSyntaxType* syntax)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_syntax_op.html'
+                                  title='onig_sys::onig_get_syntax_op'>onig_get_syntax_op</a></td>
+                           <td class='docblock short'>
+                                <p><code>unsigned int onig_get_syntax_op(OnigSyntaxType* syntax)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_syntax_op2.html'
+                                  title='onig_sys::onig_get_syntax_op2'>onig_get_syntax_op2</a></td>
+                           <td class='docblock short'>
+                                <p><code>unsigned int onig_get_syntax_op2(OnigSyntaxType* syntax)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_get_syntax_options.html'
+                                  title='onig_sys::onig_get_syntax_options'>onig_get_syntax_options</a></td>
+                           <td class='docblock short'>
+                                <p><code>OnigOptionType onig_get_syntax_options(OnigSyntaxType* syntax)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_init.html'
+                                  title='onig_sys::onig_init'>onig_init</a></td>
+                           <td class='docblock short'>
+                                <p>Initialize library.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_initialize.html'
+                                  title='onig_sys::onig_initialize'>onig_initialize</a></td>
+                           <td class='docblock short'>
+                                <p>Initialise Library</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_initialize_encoding.html'
+                                  title='onig_sys::onig_initialize_encoding'>onig_initialize_encoding</a></td>
+                           <td class='docblock short'>
+                                <p>Onig Initialise Encoding</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_match.html'
+                                  title='onig_sys::onig_match'>onig_match</a></td>
+                           <td class='docblock short'>
+                                <p>Match string and return result and matching region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_name_to_backref_number.html'
+                                  title='onig_sys::onig_name_to_backref_number'>onig_name_to_backref_number</a></td>
+                           <td class='docblock short'>
+                                <p>Return the group number corresponding to the named backref (\k<name>).
+ If two or more regions for the groups of the name are effective,
+ the greatest number in it is obtained.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_name_to_group_numbers.html'
+                                  title='onig_sys::onig_name_to_group_numbers'>onig_name_to_group_numbers</a></td>
+                           <td class='docblock short'>
+                                <p>Return the group number list of the name.
+ Named subexp is defined by (?<name>....).</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_new.html'
+                                  title='onig_sys::onig_new'>onig_new</a></td>
+                           <td class='docblock short'>
+                                <p>Create a regex object.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_new_deluxe.html'
+                                  title='onig_sys::onig_new_deluxe'>onig_new_deluxe</a></td>
+                           <td class='docblock short'>
+                                <p>Create a regex object.
+ This function is deluxe version of onig_new().</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_new_without_alloc.html'
+                                  title='onig_sys::onig_new_without_alloc'>onig_new_without_alloc</a></td>
+                           <td class='docblock short'>
+                                <p>Create a regex object.
+ reg object area is not allocated in this function.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_noname_group_capture_is_active.html'
+                                  title='onig_sys::onig_noname_group_capture_is_active'>onig_noname_group_capture_is_active</a></td>
+                           <td class='docblock short'>
+                                <p>Return noname group capture activity.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_number_of_capture_histories.html'
+                                  title='onig_sys::onig_number_of_capture_histories'>onig_number_of_capture_histories</a></td>
+                           <td class='docblock short'>
+                                <p>Return the number of capture history defined in the pattern.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_number_of_captures.html'
+                                  title='onig_sys::onig_number_of_captures'>onig_number_of_captures</a></td>
+                           <td class='docblock short'>
+                                <p>Return the number of capture group in the pattern.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_number_of_names.html'
+                                  title='onig_sys::onig_number_of_names'>onig_number_of_names</a></td>
+                           <td class='docblock short'>
+                                <p>Return the number of names defined in the pattern.
+  Multiple definitions of one name is counted as one.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_reg_init.html'
+                                  title='onig_sys::onig_reg_init'>onig_reg_init</a></td>
+                           <td class='docblock short'>
+                                <p>Onig Reg Init</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_region_clear.html'
+                                  title='onig_sys::onig_region_clear'>onig_region_clear</a></td>
+                           <td class='docblock short'>
+                                <p>Clear contents of region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_region_copy.html'
+                                  title='onig_sys::onig_region_copy'>onig_region_copy</a></td>
+                           <td class='docblock short'>
+                                <p>Copy contents of region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_region_free.html'
+                                  title='onig_sys::onig_region_free'>onig_region_free</a></td>
+                           <td class='docblock short'>
+                                <p>Free memory used by region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_region_new.html'
+                                  title='onig_sys::onig_region_new'>onig_region_new</a></td>
+                           <td class='docblock short'>
+                                <p>Create a region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_region_resize.html'
+                                  title='onig_sys::onig_region_resize'>onig_region_resize</a></td>
+                           <td class='docblock short'>
+                                <p>Resize group range area of region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_search.html'
+                                  title='onig_sys::onig_search'>onig_search</a></td>
+                           <td class='docblock short'>
+                                <p>Search string and return search result and matching region.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_default_case_fold_flag.html'
+                                  title='onig_sys::onig_set_default_case_fold_flag'>onig_set_default_case_fold_flag</a></td>
+                           <td class='docblock short'>
+                                <p>Set default case fold flag.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_default_syntax.html'
+                                  title='onig_sys::onig_set_default_syntax'>onig_set_default_syntax</a></td>
+                           <td class='docblock short'>
+                                <p>Set default syntax.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_match_stack_limit_size.html'
+                                  title='onig_sys::onig_set_match_stack_limit_size'>onig_set_match_stack_limit_size</a></td>
+                           <td class='docblock short'>
+                                <p>Set the maximum number of stack size.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_meta_char.html'
+                                  title='onig_sys::onig_set_meta_char'>onig_set_meta_char</a></td>
+                           <td class='docblock short'>
+                                <p>Set a variable meta character to the code point value.
+ Except for an escape character, this meta characters specification
+ is not work, if ONIG_SYN_OP_VARIABLE_META_CHARACTERS is not effective
+ by the syntax. (Build-in syntaxes are not effective.)</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_syntax_behavior.html'
+                                  title='onig_sys::onig_set_syntax_behavior'>onig_set_syntax_behavior</a></td>
+                           <td class='docblock short'>
+                                <p><code>void onig_set_syntax_behavior(OnigSyntaxType* syntax, unsigned int behavior)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_syntax_op.html'
+                                  title='onig_sys::onig_set_syntax_op'>onig_set_syntax_op</a></td>
+                           <td class='docblock short'>
+                                <p><code>void onig_set_syntax_op(OnigSyntaxType* syntax, unsigned int op)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_syntax_op2.html'
+                                  title='onig_sys::onig_set_syntax_op2'>onig_set_syntax_op2</a></td>
+                           <td class='docblock short'>
+                                <p><code>void onig_set_syntax_op2(OnigSyntaxType* syntax, unsigned int op2)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_syntax_options.html'
+                                  title='onig_sys::onig_set_syntax_options'>onig_set_syntax_options</a></td>
+                           <td class='docblock short'>
+                                <p><code>void onig_set_syntax_options(OnigSyntaxType* syntax, OnigOptionType options)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_verb_warn_func.html'
+                                  title='onig_sys::onig_set_verb_warn_func'>onig_set_verb_warn_func</a></td>
+                           <td class='docblock short'>
+                                <p>Set verbose warning function.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_set_warn_func.html'
+                                  title='onig_sys::onig_set_warn_func'>onig_set_warn_func</a></td>
+                           <td class='docblock short'>
+                                <p>Set warning function.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_unicode_define_user_property.html'
+                                  title='onig_sys::onig_unicode_define_user_property'>onig_unicode_define_user_property</a></td>
+                           <td class='docblock short'>
+                                <p>Define User Unicode Property</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onig_version.html'
+                                  title='onig_sys::onig_version'>onig_version</a></td>
+                           <td class='docblock short'>
+                                <p>Return version string.  (ex. &quot;5.0.3&quot;)</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_get_default_encoding.html'
+                                  title='onig_sys::onigenc_get_default_encoding'>onigenc_get_default_encoding</a></td>
+                           <td class='docblock short'>
+                                <p>Onigenc Get Default Encoding</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_get_left_adjust_char_head.html'
+                                  title='onig_sys::onigenc_get_left_adjust_char_head'>onigenc_get_left_adjust_char_head</a></td>
+                           <td class='docblock short'>
+                                <p>Return left-adjusted head address of a character.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_get_prev_char_head.html'
+                                  title='onig_sys::onigenc_get_prev_char_head'>onigenc_get_prev_char_head</a></td>
+                           <td class='docblock short'>
+                                <p>Return previous character head address.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_get_right_adjust_char_head.html'
+                                  title='onig_sys::onigenc_get_right_adjust_char_head'>onigenc_get_right_adjust_char_head</a></td>
+                           <td class='docblock short'>
+                                <p>Return right-adjusted head address of a character.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_get_right_adjust_char_head_with_prev.html'
+                                  title='onig_sys::onigenc_get_right_adjust_char_head_with_prev'>onigenc_get_right_adjust_char_head_with_prev</a></td>
+                           <td class='docblock short'>
+                                <p>Onigenc Get Right Adjust Char Head With Prev</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_init.html'
+                                  title='onig_sys::onigenc_init'>onigenc_init</a></td>
+                           <td class='docblock short'>
+                                <p>Onigenc Init</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_set_default_caseconv_table.html'
+                                  title='onig_sys::onigenc_set_default_caseconv_table'>onigenc_set_default_caseconv_table</a></td>
+                           <td class='docblock short'>
+                                <p>Onigenc Set Default Case Conversion Table</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_set_default_encoding.html'
+                                  title='onig_sys::onigenc_set_default_encoding'>onigenc_set_default_encoding</a></td>
+                           <td class='docblock short'>
+                                <p>Onigenc Set Default Encoding</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_step_back.html'
+                                  title='onig_sys::onigenc_step_back'>onigenc_step_back</a></td>
+                           <td class='docblock short'>
+                                <p>Onigenc Step Back</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_str_bytelen_null.html'
+                                  title='onig_sys::onigenc_str_bytelen_null'>onigenc_str_bytelen_null</a></td>
+                           <td class='docblock short'>
+                                <p>Return number of bytes in the string.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_strlen.html'
+                                  title='onig_sys::onigenc_strlen'>onigenc_strlen</a></td>
+                           <td class='docblock short'>
+                                <p>Return number of characters in the string.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.onigenc_strlen_null.html'
+                                  title='onig_sys::onigenc_strlen_null'>onigenc_strlen_null</a></td>
+                           <td class='docblock short'>
+                                <p>Return number of characters in the string.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigApplyAllCaseFoldFunc.html'
+                                  title='onig_sys::OnigApplyAllCaseFoldFunc'>OnigApplyAllCaseFoldFunc</a></td>
+                           <td class='docblock short'>
+                                <p>Apply All Case Fold Callback, see OnigEncodingType-&gt;apply_all_case_fold</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigCaptureTreeTraverseCallback.html'
+                                  title='onig_sys::OnigCaptureTreeTraverseCallback'>OnigCaptureTreeTraverseCallback</a></td>
+                           <td class='docblock short'>
+                                <p>Capture Tree Callback</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigCaseFoldType.html'
+                                  title='onig_sys::OnigCaseFoldType'>OnigCaseFoldType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigCodePoint.html'
+                                  title='onig_sys::OnigCodePoint'>OnigCodePoint</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigCtype.html'
+                                  title='onig_sys::OnigCtype'>OnigCtype</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigDistance.html'
+                                  title='onig_sys::OnigDistance'>OnigDistance</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigEncoding.html'
+                                  title='onig_sys::OnigEncoding'>OnigEncoding</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigForeachNameCallback.html'
+                                  title='onig_sys::OnigForeachNameCallback'>OnigForeachNameCallback</a></td>
+                           <td class='docblock short'>
+                                <p>Foreach Callback</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigOptionType.html'
+                                  title='onig_sys::OnigOptionType'>OnigOptionType</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigRegex.html'
+                                  title='onig_sys::OnigRegex'>OnigRegex</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigRegexMut.html'
+                                  title='onig_sys::OnigRegexMut'>OnigRegexMut</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigSyntaxBehavior.html'
+                                  title='onig_sys::OnigSyntaxBehavior'>OnigSyntaxBehavior</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigSyntaxOp.html'
+                                  title='onig_sys::OnigSyntaxOp'>OnigSyntaxOp</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigSyntaxOp2.html'
+                                  title='onig_sys::OnigSyntaxOp2'>OnigSyntaxOp2</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigUChar.html'
+                                  title='onig_sys::OnigUChar'>OnigUChar</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.OnigWarnFunc.html'
+                                  title='onig_sys::OnigWarnFunc'>OnigWarnFunc</a></td>
+                           <td class='docblock short'>
+                                <p>Warning Callback</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "onig_sys";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

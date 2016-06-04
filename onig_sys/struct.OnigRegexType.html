@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `OnigRegexType` struct in crate `onig_sys`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, OnigRegexType">
+
+    <title>onig_sys::OnigRegexType - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>onig_sys</a></p><script>window.sidebarCurrent = {name: 'OnigRegexType', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>onig_sys</a>::<wbr><a class='struct' href=''>OnigRegexType</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-467' class='srclink' href='../src/onig_sys/onig_sys/src/lib.rs.html#195-235' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct OnigRegexType {
+    pub p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>,
+    pub used: <a class='type' href='../libc/type.c_uint.html' title='libc::c_uint'>c_uint</a>,
+    pub alloc: <a class='type' href='../libc/type.c_uint.html' title='libc::c_uint'>c_uint</a>,
+    pub num_mem: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub num_repeat: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub num_null_check: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub num_comb_exp_check: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub num_call: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub capture_history: <a class='type' href='../libc/type.c_uint.html' title='libc::c_uint'>c_uint</a>,
+    pub bt_mem_start: <a class='type' href='../libc/type.c_uint.html' title='libc::c_uint'>c_uint</a>,
+    pub bt_mem_end: <a class='type' href='../libc/type.c_uint.html' title='libc::c_uint'>c_uint</a>,
+    pub stack_pop_level: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub repeat_range_alloc: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub repeat_range: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='struct' href='../onig_sys/struct.OnigRepeatRange.html' title='onig_sys::OnigRepeatRange'>OnigRepeatRange</a>,
+    pub enc: <a class='type' href='../onig_sys/type.OnigEncoding.html' title='onig_sys::OnigEncoding'>OnigEncoding</a>,
+    pub options: <a class='type' href='../onig_sys/type.OnigOptionType.html' title='onig_sys::OnigOptionType'>OnigOptionType</a>,
+    pub syntax: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='struct' href='../onig_sys/struct.OnigSyntaxType.html' title='onig_sys::OnigSyntaxType'>OnigSyntaxType</a>,
+    pub case_fold_flag: <a class='type' href='../onig_sys/type.OnigCaseFoldType.html' title='onig_sys::OnigCaseFoldType'>OnigCaseFoldType</a>,
+    pub name_table: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='enum' href='../libc/enum.c_void.html' title='libc::c_void'>c_void</a>,
+    pub optimize: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub threshold_len: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub anchor: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub anchor_dmin: <a class='type' href='../onig_sys/type.OnigDistance.html' title='onig_sys::OnigDistance'>OnigDistance</a>,
+    pub anchor_dmax: <a class='type' href='../onig_sys/type.OnigDistance.html' title='onig_sys::OnigDistance'>OnigDistance</a>,
+    pub sub_anchor: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub exact: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>,
+    pub exact_end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>,
+    pub map: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; ONIG_CHAR_TABLE_SIZE as usize]</a>,
+    pub int_map: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub int_map_backward: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub dmin: <a class='type' href='../onig_sys/type.OnigDistance.html' title='onig_sys::OnigDistance'>OnigDistance</a>,
+    pub dmax: <a class='type' href='../onig_sys/type.OnigDistance.html' title='onig_sys::OnigDistance'>OnigDistance</a>,
+    pub chain: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='struct' href='../onig_sys/struct.OnigRegexType.html' title='onig_sys::OnigRegexType'>OnigRegexType</a>,
+}</pre><h2 class='fields'>Fields</h2>
+<table><tr class='stab '>
+                             <td id='structfield.p'><code>p</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.used'><code>used</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.alloc'><code>alloc</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.num_mem'><code>num_mem</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.num_repeat'><code>num_repeat</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.num_null_check'><code>num_null_check</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.num_comb_exp_check'><code>num_comb_exp_check</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.num_call'><code>num_call</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.capture_history'><code>capture_history</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.bt_mem_start'><code>bt_mem_start</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.bt_mem_end'><code>bt_mem_end</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.stack_pop_level'><code>stack_pop_level</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.repeat_range_alloc'><code>repeat_range_alloc</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.repeat_range'><code>repeat_range</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.enc'><code>enc</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.options'><code>options</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.syntax'><code>syntax</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.case_fold_flag'><code>case_fold_flag</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.name_table'><code>name_table</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.optimize'><code>optimize</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.threshold_len'><code>threshold_len</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.anchor'><code>anchor</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.anchor_dmin'><code>anchor_dmin</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.anchor_dmax'><code>anchor_dmax</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.sub_anchor'><code>sub_anchor</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.exact'><code>exact</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.exact_end'><code>exact_end</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.map'><code>map</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.int_map'><code>int_map</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.int_map_backward'><code>int_map_backward</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.dmin'><code>dmin</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.dmax'><code>dmax</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.chain'><code>chain</code></td><td></td></tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "onig_sys";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

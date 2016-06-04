@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `onig` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, onig">
+
+    <title>onig - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'onig', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>onig</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/onig/src/lib.rs.html#1-452' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>This crate provides a safe wrapper around the
+<a href="https://github.com/kkos/oniguruma">Oniguruma</a> regular expression library.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>onig</span>::<span class='ident'>Regex</span>;
+
+<span class='kw'>let</span> <span class='ident'>regex</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>&quot;e(l+)&quot;</span>).<span class='ident'>unwrap</span>();
+<span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>pos</span>) <span class='kw'>in</span> <span class='ident'>regex</span>.<span class='ident'>captures</span>(<span class='string'>&quot;hello&quot;</span>).<span class='ident'>unwrap</span>().<span class='ident'>iter_pos</span>().<span class='ident'>enumerate</span>() {
+    <span class='kw'>match</span> <span class='ident'>pos</span> {
+         <span class='prelude-val'>Some</span>((<span class='ident'>beg</span>, <span class='ident'>end</span>)) <span class='op'>=&gt;</span>
+             <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Group {} captured in position {}:{}&quot;</span>, <span class='ident'>i</span>, <span class='ident'>beg</span>, <span class='ident'>end</span>),
+         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span>
+             <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Group {} is not captured&quot;</span>, <span class='ident'>i</span>)
+    }
+}</pre>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.CaptureNames.html'
+                                  title='onig::CaptureNames'>CaptureNames</a></td>
+                           <td class='docblock short'>
+                                <p>CaptureNames is an iterator over named groups as a tuple with the group name
+and group indexes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.CaptureTreeNode.html'
+                                  title='onig::CaptureTreeNode'>CaptureTreeNode</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.CaptureTreeNodeIter.html'
+                                  title='onig::CaptureTreeNodeIter'>CaptureTreeNodeIter</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Captures.html'
+                                  title='onig::Captures'>Captures</a></td>
+                           <td class='docblock short'>
+                                <p>Captures represents a group of captured strings for a single match.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Error.html'
+                                  title='onig::Error'>Error</a></td>
+                           <td class='docblock short'>
+                                <p>This struture represents an error from the underlying Oniguruma libray.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.FindCaptures.html'
+                                  title='onig::FindCaptures'>FindCaptures</a></td>
+                           <td class='docblock short'>
+                                <p>An iterator that yields all non-overlapping capture groups matching a
+particular regular expression.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.FindMatches.html'
+                                  title='onig::FindMatches'>FindMatches</a></td>
+                           <td class='docblock short'>
+                                <p>An iterator over all non-overlapping matches for a particular string.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Regex.html'
+                                  title='onig::Regex'>Regex</a></td>
+                           <td class='docblock short'>
+                                <p>This struct is a wrapper around an Oniguruma regular expression
+pointer. This represents a compiled regex which can be used in
+search and match operations.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.RegexOptions.html'
+                                  title='onig::RegexOptions'>RegexOptions</a></td>
+                           <td class='docblock short'>
+                                <p>Regex parsing and compilation options.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.RegexSplits.html'
+                                  title='onig::RegexSplits'>RegexSplits</a></td>
+                           <td class='docblock short'>
+                                <p>Yields all substrings delimited by a regular expression match.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.RegexSplitsN.html'
+                                  title='onig::RegexSplitsN'>RegexSplitsN</a></td>
+                           <td class='docblock short'>
+                                <p>Yields at most <code>N</code> substrings delimited by a regular expression match.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Region.html'
+                                  title='onig::Region'>Region</a></td>
+                           <td class='docblock short'>
+                                <p>Represents a set of capture groups found in a search or match.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SearchOptions.html'
+                                  title='onig::SearchOptions'>SearchOptions</a></td>
+                           <td class='docblock short'>
+                                <p>Regex evaluation options.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SubCaptures.html'
+                                  title='onig::SubCaptures'>SubCaptures</a></td>
+                           <td class='docblock short'>
+                                <p>An iterator over capture groups for a particular match of a regular
+ expression.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SubCapturesPos.html'
+                                  title='onig::SubCapturesPos'>SubCapturesPos</a></td>
+                           <td class='docblock short'>
+                                <p>An iterator over capture group positions for a particular match of
+a regular expression.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Syntax.html'
+                                  title='onig::Syntax'>Syntax</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SyntaxBehavior.html'
+                                  title='onig::SyntaxBehavior'>SyntaxBehavior</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SyntaxOperator.html'
+                                  title='onig::SyntaxOperator'>SyntaxOperator</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_CAPTURE_GROUP.html'
+                                  title='onig::REGEX_OPTION_CAPTURE_GROUP'>REGEX_OPTION_CAPTURE_GROUP</a></td>
+                           <td class='docblock short'>
+                                <p>Named and no-named group captured.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_DONT_CAPTURE_GROUP.html'
+                                  title='onig::REGEX_OPTION_DONT_CAPTURE_GROUP'>REGEX_OPTION_DONT_CAPTURE_GROUP</a></td>
+                           <td class='docblock short'>
+                                <p>Only named group captured.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_EXTEND.html'
+                                  title='onig::REGEX_OPTION_EXTEND'>REGEX_OPTION_EXTEND</a></td>
+                           <td class='docblock short'>
+                                <p>Extended pattern form.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_FIND_LONGEST.html'
+                                  title='onig::REGEX_OPTION_FIND_LONGEST'>REGEX_OPTION_FIND_LONGEST</a></td>
+                           <td class='docblock short'>
+                                <p>Find longest match.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_FIND_NOT_EMPTY.html'
+                                  title='onig::REGEX_OPTION_FIND_NOT_EMPTY'>REGEX_OPTION_FIND_NOT_EMPTY</a></td>
+                           <td class='docblock short'>
+                                <p>Ignore empty match.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_IGNORECASE.html'
+                                  title='onig::REGEX_OPTION_IGNORECASE'>REGEX_OPTION_IGNORECASE</a></td>
+                           <td class='docblock short'>
+                                <p>Ambiguity match on.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_MULTILINE.html'
+                                  title='onig::REGEX_OPTION_MULTILINE'>REGEX_OPTION_MULTILINE</a></td>
+                           <td class='docblock short'>
+                                <p><code>&#39;.&#39;</code> match with newline.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_NEGATE_SINGLELINE.html'
+                                  title='onig::REGEX_OPTION_NEGATE_SINGLELINE'>REGEX_OPTION_NEGATE_SINGLELINE</a></td>
+                           <td class='docblock short'>
+                                <p>Clear <code>OPTION_SINGLELINE</code> which is enabled on
+<code>SYNTAX_POSIX_BASIC</code>, <code>SYNTAX_POSIX_EXTENDED</code>,
+<code>SYNTAX_PERL</code>, <code>SYNTAX_PERL_NG</code>, <code>SYNTAX_JAVA</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_NONE.html'
+                                  title='onig::REGEX_OPTION_NONE'>REGEX_OPTION_NONE</a></td>
+                           <td class='docblock short'>
+                                <p>Default options.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.REGEX_OPTION_SINGLELINE.html'
+                                  title='onig::REGEX_OPTION_SINGLELINE'>REGEX_OPTION_SINGLELINE</a></td>
+                           <td class='docblock short'>
+                                <p><code>&#39;^&#39;</code> -&gt; <code>&#39;\A&#39;</code>, <code>&#39;$&#39;</code> -&gt; <code>&#39;\Z&#39;</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEARCH_OPTION_NONE.html'
+                                  title='onig::SEARCH_OPTION_NONE'>SEARCH_OPTION_NONE</a></td>
+                           <td class='docblock short'>
+                                <p>Default options.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEARCH_OPTION_NOTBOL.html'
+                                  title='onig::SEARCH_OPTION_NOTBOL'>SEARCH_OPTION_NOTBOL</a></td>
+                           <td class='docblock short'>
+                                <p>String head isn&#39;t considered as begin of line.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SEARCH_OPTION_NOTEOL.html'
+                                  title='onig::SEARCH_OPTION_NOTEOL'>SEARCH_OPTION_NOTEOL</a></td>
+                           <td class='docblock short'>
+                                <p>String end isn&#39;t considered as end of line.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_ALLOW_DOUBLE_RANGE_OP_IN_CC.html'
+                                  title='onig::SYNTAX_BEHAVIOR_ALLOW_DOUBLE_RANGE_OP_IN_CC'>SYNTAX_BEHAVIOR_ALLOW_DOUBLE_RANGE_OP_IN_CC</a></td>
+                           <td class='docblock short'>
+                                <p><code>[0-9-a]=[0-9\-a]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_ALLOW_INTERVAL_LOW_ABBREV.html'
+                                  title='onig::SYNTAX_BEHAVIOR_ALLOW_INTERVAL_LOW_ABBREV'>SYNTAX_BEHAVIOR_ALLOW_INTERVAL_LOW_ABBREV</a></td>
+                           <td class='docblock short'>
+                                <p><code>{,n} =&gt; {0,n}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_ALLOW_INVALID_INTERVAL.html'
+                                  title='onig::SYNTAX_BEHAVIOR_ALLOW_INVALID_INTERVAL'>SYNTAX_BEHAVIOR_ALLOW_INVALID_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                <p><code>{???</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_ALLOW_MULTIPLEX_DEFINITION_NAME.html'
+                                  title='onig::SYNTAX_BEHAVIOR_ALLOW_MULTIPLEX_DEFINITION_NAME'>SYNTAX_BEHAVIOR_ALLOW_MULTIPLEX_DEFINITION_NAME</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?&lt;x&gt;)(?&lt;x&gt;)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_ALLOW_UNMATCHED_CLOSE_SUBEXP.html'
+                                  title='onig::SYNTAX_BEHAVIOR_ALLOW_UNMATCHED_CLOSE_SUBEXP'>SYNTAX_BEHAVIOR_ALLOW_UNMATCHED_CLOSE_SUBEXP</a></td>
+                           <td class='docblock short'>
+                                <p><code>...)...</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_BACKSLASH_ESCAPE_IN_CC.html'
+                                  title='onig::SYNTAX_BEHAVIOR_BACKSLASH_ESCAPE_IN_CC'>SYNTAX_BEHAVIOR_BACKSLASH_ESCAPE_IN_CC</a></td>
+                           <td class='docblock short'>
+                                <p><code>[..\w..] etc..</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_CAPTURE_ONLY_NAMED_GROUP.html'
+                                  title='onig::SYNTAX_BEHAVIOR_CAPTURE_ONLY_NAMED_GROUP'>SYNTAX_BEHAVIOR_CAPTURE_ONLY_NAMED_GROUP</a></td>
+                           <td class='docblock short'>
+                                <p>See Oniguruma documenation</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS.html'
+                                  title='onig::SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS'>SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS</a></td>
+                           <td class='docblock short'>
+                                <p><code>?, *, +, {n,m}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_CONTEXT_INVALID_REPEAT_OPS.html'
+                                  title='onig::SYNTAX_BEHAVIOR_CONTEXT_INVALID_REPEAT_OPS'>SYNTAX_BEHAVIOR_CONTEXT_INVALID_REPEAT_OPS</a></td>
+                           <td class='docblock short'>
+                                <p><code>error or ignore</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_DIFFERENT_LEN_ALT_LOOK_BEHIND.html'
+                                  title='onig::SYNTAX_BEHAVIOR_DIFFERENT_LEN_ALT_LOOK_BEHIND'>SYNTAX_BEHAVIOR_DIFFERENT_LEN_ALT_LOOK_BEHIND</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?&lt;=a|bc)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_FIXED_INTERVAL_IS_GREEDY_ONLY.html'
+                                  title='onig::SYNTAX_BEHAVIOR_FIXED_INTERVAL_IS_GREEDY_ONLY'>SYNTAX_BEHAVIOR_FIXED_INTERVAL_IS_GREEDY_ONLY</a></td>
+                           <td class='docblock short'>
+                                <p><code>a{n}?=(?:a{n})?</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_NOT_NEWLINE_IN_NEGATIVE_CC.html'
+                                  title='onig::SYNTAX_BEHAVIOR_NOT_NEWLINE_IN_NEGATIVE_CC'>SYNTAX_BEHAVIOR_NOT_NEWLINE_IN_NEGATIVE_CC</a></td>
+                           <td class='docblock short'>
+                                <p><code>[^...]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_STRICT_CHECK_BACKREF.html'
+                                  title='onig::SYNTAX_BEHAVIOR_STRICT_CHECK_BACKREF'>SYNTAX_BEHAVIOR_STRICT_CHECK_BACKREF</a></td>
+                           <td class='docblock short'>
+                                <p><code>/(\1)/,/\1()/ ..</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_WARN_CC_OP_NOT_ESCAPED.html'
+                                  title='onig::SYNTAX_BEHAVIOR_WARN_CC_OP_NOT_ESCAPED'>SYNTAX_BEHAVIOR_WARN_CC_OP_NOT_ESCAPED</a></td>
+                           <td class='docblock short'>
+                                <p><code>[,-,]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_BEHAVIOR_WARN_REDUNDANT_NESTED_REPEAT.html'
+                                  title='onig::SYNTAX_BEHAVIOR_WARN_REDUNDANT_NESTED_REPEAT'>SYNTAX_BEHAVIOR_WARN_REDUNDANT_NESTED_REPEAT</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?:a*)+</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ASTERISK_ZERO_INF.html'
+                                  title='onig::SYNTAX_OPERATOR_ASTERISK_ZERO_INF'>SYNTAX_OPERATOR_ASTERISK_ZERO_INF</a></td>
+                           <td class='docblock short'>
+                                <p><code>*</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY.html'
+                                  title='onig::SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY'>SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?@..),(?@&lt;x&gt;..)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_BRACE_INTERVAL.html'
+                                  title='onig::SYNTAX_OPERATOR_BRACE_INTERVAL'>SYNTAX_OPERATOR_BRACE_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                <p><code>{lower,upper}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_BRACKET_CC.html'
+                                  title='onig::SYNTAX_OPERATOR_BRACKET_CC'>SYNTAX_OPERATOR_BRACKET_CC</a></td>
+                           <td class='docblock short'>
+                                <p><code>[...]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_CCLASS_SET_OP.html'
+                                  title='onig::SYNTAX_OPERATOR_CCLASS_SET_OP'>SYNTAX_OPERATOR_CCLASS_SET_OP</a></td>
+                           <td class='docblock short'>
+                                <p><code>[...&amp;&amp;..[..]..]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_DECIMAL_BACKREF.html'
+                                  title='onig::SYNTAX_OPERATOR_DECIMAL_BACKREF'>SYNTAX_OPERATOR_DECIMAL_BACKREF</a></td>
+                           <td class='docblock short'>
+                                <p><code>\num</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_DOT_ANYCHAR.html'
+                                  title='onig::SYNTAX_OPERATOR_DOT_ANYCHAR'>SYNTAX_OPERATOR_DOT_ANYCHAR</a></td>
+                           <td class='docblock short'>
+                                <p><code>.</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_AZ_BUF_ANCHOR.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_AZ_BUF_ANCHOR'>SYNTAX_OPERATOR_ESC_AZ_BUF_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                <p><code>\A, \Z, \z</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_BRACE_INTERVAL.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_BRACE_INTERVAL'>SYNTAX_OPERATOR_ESC_BRACE_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                <p><code>\{lower,upper\}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_B_WORD_BOUND.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_B_WORD_BOUND'>SYNTAX_OPERATOR_ESC_B_WORD_BOUND</a></td>
+                           <td class='docblock short'>
+                                <p><code>\b, \B</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_CAPITAL_C_BAR_CONTROL.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_CAPITAL_C_BAR_CONTROL'>SYNTAX_OPERATOR_ESC_CAPITAL_C_BAR_CONTROL</a></td>
+                           <td class='docblock short'>
+                                <p><code>\C-x</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_CAPITAL_G_BEGIN_ANCHOR.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_CAPITAL_G_BEGIN_ANCHOR'>SYNTAX_OPERATOR_ESC_CAPITAL_G_BEGIN_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                <p><code>\G</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_CAPITAL_M_BAR_META.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_CAPITAL_M_BAR_META'>SYNTAX_OPERATOR_ESC_CAPITAL_M_BAR_META</a></td>
+                           <td class='docblock short'>
+                                <p><code>\M-x</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_CAPITAL_Q_QUOTE.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_CAPITAL_Q_QUOTE'>SYNTAX_OPERATOR_ESC_CAPITAL_Q_QUOTE</a></td>
+                           <td class='docblock short'>
+                                <p><code>\Q...\E</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_CONTROL_CHARS.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_CONTROL_CHARS'>SYNTAX_OPERATOR_ESC_CONTROL_CHARS</a></td>
+                           <td class='docblock short'>
+                                <p><code>\n,\r,\t,\a ...</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_C_CONTROL.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_C_CONTROL'>SYNTAX_OPERATOR_ESC_C_CONTROL</a></td>
+                           <td class='docblock short'>
+                                <p><code>\cx</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_D_DIGIT.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_D_DIGIT'>SYNTAX_OPERATOR_ESC_D_DIGIT</a></td>
+                           <td class='docblock short'>
+                                <p><code>\d, \D</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_GNU_BUF_ANCHOR.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_GNU_BUF_ANCHOR'>SYNTAX_OPERATOR_ESC_GNU_BUF_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                <p><code>\</code>, \&#39;`</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_G_SUBEXP_CALL.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_G_SUBEXP_CALL'>SYNTAX_OPERATOR_ESC_G_SUBEXP_CALL</a></td>
+                           <td class='docblock short'>
+                                <p><code>\g&lt;name&gt;, \g&lt;n&gt;</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_H_XDIGIT.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_H_XDIGIT'>SYNTAX_OPERATOR_ESC_H_XDIGIT</a></td>
+                           <td class='docblock short'>
+                                <p><code>\h, \H</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_K_NAMED_BACKREF.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_K_NAMED_BACKREF'>SYNTAX_OPERATOR_ESC_K_NAMED_BACKREF</a></td>
+                           <td class='docblock short'>
+                                <p><code>\k&lt;name&gt;</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_LPAREN_SUBEXP.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_LPAREN_SUBEXP'>SYNTAX_OPERATOR_ESC_LPAREN_SUBEXP</a></td>
+                           <td class='docblock short'>
+                                <p><code>\(...\)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_LTGT_WORD_BEGIN_END.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_LTGT_WORD_BEGIN_END'>SYNTAX_OPERATOR_ESC_LTGT_WORD_BEGIN_END</a></td>
+                           <td class='docblock short'>
+                                <p><code>\&lt;. \&gt;</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_OCTAL3.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_OCTAL3'>SYNTAX_OPERATOR_ESC_OCTAL3</a></td>
+                           <td class='docblock short'>
+                                <p><code>\OOO</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_P_BRACE_CHAR_PROPERTY.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_P_BRACE_CHAR_PROPERTY'>SYNTAX_OPERATOR_ESC_P_BRACE_CHAR_PROPERTY</a></td>
+                           <td class='docblock short'>
+                                <p><code>\p{...}, \P{...}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_P_BRACE_CIRCUMFLEX_NOT.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_P_BRACE_CIRCUMFLEX_NOT'>SYNTAX_OPERATOR_ESC_P_BRACE_CIRCUMFLEX_NOT</a></td>
+                           <td class='docblock short'>
+                                <p><code>\p{^..}, \P{^..}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_S_WHITE_SPACE.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_S_WHITE_SPACE'>SYNTAX_OPERATOR_ESC_S_WHITE_SPACE</a></td>
+                           <td class='docblock short'>
+                                <p><code>\s, \S</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_U_HEX4.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_U_HEX4'>SYNTAX_OPERATOR_ESC_U_HEX4</a></td>
+                           <td class='docblock short'>
+                                <p><code>\uHHHH</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_VBAR_ALT.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_VBAR_ALT'>SYNTAX_OPERATOR_ESC_VBAR_ALT</a></td>
+                           <td class='docblock short'>
+                                <p><code>\|</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_V_VTAB.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_V_VTAB'>SYNTAX_OPERATOR_ESC_V_VTAB</a></td>
+                           <td class='docblock short'>
+                                <p><code>\v as VTAB</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_W_WORD.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_W_WORD'>SYNTAX_OPERATOR_ESC_W_WORD</a></td>
+                           <td class='docblock short'>
+                                <p><code>\w, \W</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_X_BRACE_HEX8.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8'>SYNTAX_OPERATOR_ESC_X_BRACE_HEX8</a></td>
+                           <td class='docblock short'>
+                                <p><code>\x{7HHHHHHH}</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_ESC_X_HEX2.html'
+                                  title='onig::SYNTAX_OPERATOR_ESC_X_HEX2'>SYNTAX_OPERATOR_ESC_X_HEX2</a></td>
+                           <td class='docblock short'>
+                                <p><code>\xHH</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_INEFFECTIVE_ESCAPE.html'
+                                  title='onig::SYNTAX_OPERATOR_INEFFECTIVE_ESCAPE'>SYNTAX_OPERATOR_INEFFECTIVE_ESCAPE</a></td>
+                           <td class='docblock short'>
+                                <p><code>\</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_LINE_ANCHOR.html'
+                                  title='onig::SYNTAX_OPERATOR_LINE_ANCHOR'>SYNTAX_OPERATOR_LINE_ANCHOR</a></td>
+                           <td class='docblock short'>
+                                <p><code>^, $</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_LPAREN_SUBEXP.html'
+                                  title='onig::SYNTAX_OPERATOR_LPAREN_SUBEXP'>SYNTAX_OPERATOR_LPAREN_SUBEXP</a></td>
+                           <td class='docblock short'>
+                                <p><code>(...)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_OPTION_PERL.html'
+                                  title='onig::SYNTAX_OPERATOR_OPTION_PERL'>SYNTAX_OPERATOR_OPTION_PERL</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?imsx),(?-imsx)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_OPTION_RUBY.html'
+                                  title='onig::SYNTAX_OPERATOR_OPTION_RUBY'>SYNTAX_OPERATOR_OPTION_RUBY</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?imx), (?-imx)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_PLUS_ONE_INF.html'
+                                  title='onig::SYNTAX_OPERATOR_PLUS_ONE_INF'>SYNTAX_OPERATOR_PLUS_ONE_INF</a></td>
+                           <td class='docblock short'>
+                                <p><code>+</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_PLUS_POSSESSIVE_INTERVAL.html'
+                                  title='onig::SYNTAX_OPERATOR_PLUS_POSSESSIVE_INTERVAL'>SYNTAX_OPERATOR_PLUS_POSSESSIVE_INTERVAL</a></td>
+                           <td class='docblock short'>
+                                <p><code>{n,m}+</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_PLUS_POSSESSIVE_REPEAT.html'
+                                  title='onig::SYNTAX_OPERATOR_PLUS_POSSESSIVE_REPEAT'>SYNTAX_OPERATOR_PLUS_POSSESSIVE_REPEAT</a></td>
+                           <td class='docblock short'>
+                                <p><code>?+,*+,++</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_POSIX_BRACKET.html'
+                                  title='onig::SYNTAX_OPERATOR_POSIX_BRACKET'>SYNTAX_OPERATOR_POSIX_BRACKET</a></td>
+                           <td class='docblock short'>
+                                <p><code>[:xxxx:]</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_QMARK_GROUP_EFFECT.html'
+                                  title='onig::SYNTAX_OPERATOR_QMARK_GROUP_EFFECT'>SYNTAX_OPERATOR_QMARK_GROUP_EFFECT</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?...)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_QMARK_LT_NAMED_GROUP.html'
+                                  title='onig::SYNTAX_OPERATOR_QMARK_LT_NAMED_GROUP'>SYNTAX_OPERATOR_QMARK_LT_NAMED_GROUP</a></td>
+                           <td class='docblock short'>
+                                <p><code>(?&lt;name&gt;...)</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_QMARK_NON_GREEDY.html'
+                                  title='onig::SYNTAX_OPERATOR_QMARK_NON_GREEDY'>SYNTAX_OPERATOR_QMARK_NON_GREEDY</a></td>
+                           <td class='docblock short'>
+                                <p><code>??,*?,+?,{n,m}?</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_QMARK_ZERO_ONE.html'
+                                  title='onig::SYNTAX_OPERATOR_QMARK_ZERO_ONE'>SYNTAX_OPERATOR_QMARK_ZERO_ONE</a></td>
+                           <td class='docblock short'>
+                                <p><code>?</code></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.SYNTAX_OPERATOR_VBAR_ALT.html'
+                                  title='onig::SYNTAX_OPERATOR_VBAR_ALT'>SYNTAX_OPERATOR_VBAR_ALT</a></td>
+                           <td class='docblock short'>
+                                <p><code>|</code></p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Replacer.html'
+                                  title='onig::Replacer'>Replacer</a></td>
+                           <td class='docblock short'>
+                                <p>Replacer describes types that can be used to replace matches in a string.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.copyright.html'
+                                  title='onig::copyright'>copyright</a></td>
+                           <td class='docblock short'>
+                                <p>Get Copyright</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.version.html'
+                                  title='onig::version'>version</a></td>
+                           <td class='docblock short'>
+                                <p>Get Version</p>
+                           </td>
+                       </tr></table><h2 id='impls' class='section-header'><a href="#impls">Implementations</a></h2>
+<table></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "onig";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

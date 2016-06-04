@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Region","Represents a set of capture groups found in a search or match."]]});

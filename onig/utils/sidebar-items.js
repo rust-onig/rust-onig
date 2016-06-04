@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["copyright","Get Copyright"],["version","Get Version"]]});

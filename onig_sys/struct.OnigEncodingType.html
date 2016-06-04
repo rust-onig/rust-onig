@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `OnigEncodingType` struct in crate `onig_sys`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, OnigEncodingType">
+
+    <title>onig_sys::OnigEncodingType - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>onig_sys</a></p><script>window.sidebarCurrent = {name: 'OnigEncodingType', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>onig_sys</a>::<wbr><a class='struct' href=''>OnigEncodingType</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-391' class='srclink' href='../src/onig_sys/onig_sys/src/lib.rs.html#131-177' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct OnigEncodingType {
+    pub mbc_enc_len: extern fn(p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub name: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../libc/unix/bsd/type.c_char.html' title='libc::unix::bsd::c_char'>c_char</a>,
+    pub max_enc_len: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub min_enc_len: <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub is_mbc_newline: extern fn(p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub mbc_to_code: extern fn(p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../onig_sys/type.OnigCodePoint.html' title='onig_sys::OnigCodePoint'>OnigCodePoint</a>,
+    pub code_to_mbclen: extern fn(code: <a class='type' href='../onig_sys/type.OnigCodePoint.html' title='onig_sys::OnigCodePoint'>OnigCodePoint</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub code_to_mbc: extern fn(code: <a class='type' href='../onig_sys/type.OnigCodePoint.html' title='onig_sys::OnigCodePoint'>OnigCodePoint</a>, buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub mbc_case_fold: extern fn(flag: <a class='type' href='../onig_sys/type.OnigCaseFoldType.html' title='onig_sys::OnigCaseFoldType'>OnigCaseFoldType</a>, pp: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, to: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub apply_all_case_fold: extern fn(flag: <a class='type' href='../onig_sys/type.OnigCaseFoldType.html' title='onig_sys::OnigCaseFoldType'>OnigCaseFoldType</a>, f: <a class='type' href='../onig_sys/type.OnigApplyAllCaseFoldFunc.html' title='onig_sys::OnigApplyAllCaseFoldFunc'>OnigApplyAllCaseFoldFunc</a>, arg: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='enum' href='../libc/enum.c_void.html' title='libc::c_void'>c_void</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub get_case_fold_codes_by_str: extern fn(flag: <a class='type' href='../onig_sys/type.OnigCaseFoldType.html' title='onig_sys::OnigCaseFoldType'>OnigCaseFoldType</a>, p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub property_name_to_ctype: extern fn(enc: <a class='type' href='../onig_sys/type.OnigEncoding.html' title='onig_sys::OnigEncoding'>OnigEncoding</a>, p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub is_code_ctype: extern fn(code: <a class='type' href='../onig_sys/type.OnigCodePoint.html' title='onig_sys::OnigCodePoint'>OnigCodePoint</a>, ctype: <a class='type' href='../onig_sys/type.OnigCtype.html' title='onig_sys::OnigCtype'>OnigCtype</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub get_ctype_code_range: extern fn(ctype: <a class='type' href='../onig_sys/type.OnigCtype.html' title='onig_sys::OnigCtype'>OnigCtype</a>, sb_out: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigCodePoint.html' title='onig_sys::OnigCodePoint'>OnigCodePoint</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub left_adjust_char_head: extern fn(start: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>,
+    pub is_allowed_reverse_match: extern fn(p: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>, end: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='type' href='../onig_sys/type.OnigUChar.html' title='onig_sys::OnigUChar'>OnigUChar</a>) -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub init: extern fn() -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+    pub is_initialised: extern fn() -&gt; <a class='type' href='../libc/type.c_int.html' title='libc::c_int'>c_int</a>,
+}</pre><h2 class='fields'>Fields</h2>
+<table><tr class='stab '>
+                             <td id='structfield.mbc_enc_len'><code>mbc_enc_len</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.name'><code>name</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.max_enc_len'><code>max_enc_len</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.min_enc_len'><code>min_enc_len</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.is_mbc_newline'><code>is_mbc_newline</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.mbc_to_code'><code>mbc_to_code</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.code_to_mbclen'><code>code_to_mbclen</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.code_to_mbc'><code>code_to_mbc</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.mbc_case_fold'><code>mbc_case_fold</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.apply_all_case_fold'><code>apply_all_case_fold</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.get_case_fold_codes_by_str'><code>get_case_fold_codes_by_str</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.property_name_to_ctype'><code>property_name_to_ctype</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.is_code_ctype'><code>is_code_ctype</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.get_ctype_code_range'><code>get_ctype_code_range</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.left_adjust_char_head'><code>left_adjust_char_head</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.is_allowed_reverse_match'><code>is_allowed_reverse_match</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.init'><code>init</code></td><td></td></tr><tr class='stab '>
+                             <td id='structfield.is_initialised'><code>is_initialised</code></td><td></td></tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "onig_sys";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
