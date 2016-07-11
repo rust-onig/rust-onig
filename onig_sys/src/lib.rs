@@ -67,7 +67,7 @@ pub type OnigCaptureTreeTraverseCallback = extern "C" fn(c_int,
                                                          -> c_int;
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct OnigRegion {
     pub allocated: c_int,
     pub num_regs: c_int,

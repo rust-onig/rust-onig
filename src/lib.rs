@@ -66,7 +66,7 @@ pub struct Error {
 /// This struct is a wrapper around an Oniguruma regular expression
 /// pointer. This represents a compiled regex which can be used in
 /// search and match operations.
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct Regex {
     raw: onig_sys::OnigRegexMut,
 }
