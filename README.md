@@ -1,6 +1,7 @@
 # Rust Onig
 
 [![Build Status](https://travis-ci.org/rust-onig/rust-onig.svg?branch=master)](https://travis-ci.org/rust-onig/rust-onig)
+[![Build status](https://ci.appveyor.com/api/projects/status/7qxdb44xpw4bkjfi/branch/master?svg=true)](https://ci.appveyor.com/project/iwillspeak/rust-onig/branch/master)
 
 Rust bindings for the [Oniguruma regex library][Onig_wiki], a powerful and mature regular expression library with support for a wide range of character sets and language syntaxes. Oniguruma is written in C. This repository provides two crates: `onig-sys` which provides the raw Rust FFI bindings, and `onig`, which provides a safe Rust wrapper around them.
 
