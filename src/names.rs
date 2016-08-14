@@ -5,6 +5,9 @@ use std::str::from_utf8_unchecked;
 use std::slice::from_raw_parts;
 use libc::{c_int, c_uint, c_ulong, c_void, c_uchar};
 
+#[cfg(windows)]
+use libc::uintptr_t;
+
 use onig_sys;
 
 use super::Regex;
@@ -34,19 +37,22 @@ struct NameEntry {
     name_len: c_int,
     back_num: c_int,
     back_alloc: c_int,
-    // The real type of `back_ref1` and `back_refs` is `libc::c_int`
-    // and `*const libc::c_int`, but we must make sure that it is `i32`
-    // to properly transmute them into `&[u32]`
-    back_ref1: i32,
-    back_refs: *const i32
+    back_ref1: c_int,
+    back_refs: *const c_int
 }
+
+#[cfg(windows)]
+type StDataT = uintptr_t;
+
+#[cfg(not(windows))]
+type StDataT = c_ulong;
 
 #[repr(C)]
 #[derive(Debug)]
 struct StTableEntry {
     hash: c_uint,
-    key: c_ulong,
-    record: c_ulong,
+    key: StDataT,
+    record: StDataT,
     next: *const StTableEntry
 }
 
