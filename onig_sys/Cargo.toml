@@ -17,6 +17,9 @@ documentation = "http://rust-onig.github.io/rust-onig/onig_sys/"
 readme = "../README.md"
 license = "MIT"
 
+[features]
+static_onig = []
+
 [dependencies]
 libc = "0.2"
 
