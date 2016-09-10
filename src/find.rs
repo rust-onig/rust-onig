@@ -1,5 +1,5 @@
 use std::iter::Iterator;
-use super::{Region, Regex, SEARCH_OPTION_NONE};
+use super::{Region, Regex, SearchOptions, SEARCH_OPTION_NONE};
 
 impl Regex {
     /// Returns the capture groups corresponding to the leftmost-first match
@@ -135,6 +135,62 @@ impl Regex {
             splits: self.split(text),
             n: limit,
         }
+    }
+
+    /// Scan the given slice, capturing into the given region and
+    /// executing a callback for each match.
+    pub fn scan_with_region<F>(&self,
+                                    to_search: &str,
+                                    region: &mut Region,
+                                    options: SearchOptions,
+                                    mut callback: F) -> i32
+        where F: Fn(i32, i32, &Region) -> bool {
+
+        use onig_sys::{onig_scan, OnigRegion};
+        use std::mem::transmute;
+        use libc::{c_void, c_int};
+
+        // Find the bounds of the string we're searching
+        let start = to_search.as_ptr();
+        let end = to_search[to_search.len()..].as_ptr();
+
+        extern "C" fn scan_cb<F>(
+            i: c_int, j: c_int, r: *const OnigRegion, ud: *mut c_void) -> c_int
+            where F: Fn(i32, i32, &Region) -> bool {
+
+            let region = Region::clone_from_raw(r);
+            let callback = unsafe { &*(ud as *mut F) };
+            if callback(i, j, &region) {
+                0
+            } else {
+                -1
+            }
+        }
+
+        unsafe {
+            onig_scan(self.raw,
+                      start,
+                      end,
+                      transmute(region),
+                      options.bits(),
+                      scan_cb::<F>,
+                      &mut callback as *mut F  as *mut c_void)
+        }
+    }
+
+    pub fn scan<'t, CB>(&self, to_search: &'t str, callback: CB)
+        where CB : Fn(i32, Captures<'t>) -> bool {
+
+        let mut region = Region::new();
+        self.scan_with_region(to_search, &mut region, SEARCH_OPTION_NONE, |n, s, region| {
+            let captures = Captures{
+                text: to_search,
+                region: region.clone(),
+                offset: s as usize
+            };
+            callback(n, captures)
+        });
+
     }
 }
 

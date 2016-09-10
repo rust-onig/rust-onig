@@ -66,6 +66,11 @@ pub type OnigCaptureTreeTraverseCallback = extern "C" fn(c_int,
                                                          *mut c_void)
                                                          -> c_int;
 
+/// ```c
+/// int (*scan_callback)(int, int, OnigRegion*, void*)
+/// ```
+pub type OnigScanCallback = extern "C" fn (c_int, c_int, *const OnigRegion, *mut c_void) -> c_int;
+
 #[repr(C)]
 #[derive(Debug, Eq, PartialEq)]
 pub struct OnigRegion {
@@ -596,6 +601,28 @@ extern "C" {
                       region: *mut OnigRegion,
                       option: OnigOptionType)
                       -> c_int;
+
+    ///   Scan string and callback with matching region.
+    ///
+    ///   normal return: number of matching times
+    ///   error:         error code
+    ///   interruption:  return value of callback function (!= 0)
+    ///
+    ///   arguments
+    ///   1 reg:    regex object
+    ///   2 str:    target string
+    ///   3 end:    terminate address of target string
+    ///   4 region: address for return group match range info (NULL is allowed)
+    ///   5 option: search time option
+    ///   6 scan_callback: callback function (defined by user)
+    ///   7 callback_arg:  optional argument passed to callback
+    pub fn onig_scan(reg: OnigRegex,
+                     str: *const OnigUChar,
+                     end: *const OnigUChar,
+                     region: *mut OnigRegion,
+                     options: OnigOptionType,
+                     scan_callback: OnigScanCallback,
+                     callback_arg: *mut c_void) -> c_int;
 
     ///   Create a region.
     ///

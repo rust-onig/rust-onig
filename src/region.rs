@@ -39,6 +39,18 @@ impl Region {
         region
     }
 
+    /// Clone From Raw
+    ///
+    /// Construct a new region based on an existing raw
+    /// `*onig_sys::OnigRegion` pointer by copying.
+    pub fn clone_from_raw(ptr: *const onig_sys::OnigRegion) -> Self {
+        let mut region = Self::new();
+        unsafe {
+            onig_sys::onig_region_copy(&mut region.raw, ptr);
+        }
+        region
+    }
+
     /// This can be used to clear out a region so it can be used
     /// again. See [`onig_sys::onig_region_clear`][region_clear]
     ///
@@ -94,6 +106,9 @@ impl Region {
         }
     }
 
+    /// Get Capture Tree
+    ///
+    /// Returns the capture tree for this region, if there is one.
     pub fn tree(&self) -> Option<&CaptureTreeNode> {
         let tree = unsafe { onig_sys::onig_get_capture_tree(&self.raw) };
         if tree.is_null() {
@@ -114,11 +129,7 @@ impl Drop for Region {
 
 impl Clone for Region {
     fn clone(&self) -> Self {
-        let mut new_region = Region::new();
-        unsafe {
-            onig_sys::onig_region_copy(&mut new_region.raw, &self.raw);
-        }
-        new_region
+        Self::clone_from_raw(&self.raw)
     }
 }
 
