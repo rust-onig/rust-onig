@@ -9,9 +9,10 @@ impl Regex {
         let mut region = Region::new();
         self.search_with_options(text, 0, text.len(),
                                  SEARCH_OPTION_NONE, Some(&mut region))
-            .map(|_| Captures {
+            .map(|pos| Captures {
                 text: text,
                 region: region,
+                offset: pos
             })
     }
 
@@ -148,6 +149,7 @@ impl Regex {
 pub struct Captures<'t> {
     text: &'t str,
     region: Region,
+    offset: usize
 }
 
 impl<'t> Captures<'t> {
@@ -192,6 +194,11 @@ impl<'t> Captures<'t> {
             idx: 0,
             caps: self,
         }
+    }
+
+    /// Offset of the captures within the given string slice.
+    pub fn offset(&self) -> usize {
+        self.offset
     }
 }
 
@@ -340,7 +347,8 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         }
         Some(Captures {
             text: self.text,
-            region: region
+            region: region,
+            offset: r.unwrap()
         })
     }
 }
@@ -487,5 +495,17 @@ mod tests {
         let ms = re.captures_iter("a12b2").collect::<Vec<_>>();
         assert_eq!(ms[0].pos(0).unwrap(), (1, 3));
         assert_eq!(ms[1].pos(0).unwrap(), (4, 5));
+    }
+
+    #[test]
+    fn test_captures_stores_match_offset() {
+        let reg = Regex::new(r"\d+\.(\d+)").unwrap();
+        let captures = reg.captures("100 - 3.1415 / 2.0").unwrap();
+        assert_eq!(6, captures.offset());
+        let all_caps = reg
+            .captures_iter("1 - 3234.3 * 123.2 - 100")
+            .map(|cap| cap.offset())
+            .collect::<Vec<_>>();
+        assert_eq!(vec![4, 13], all_caps);
     }
 }
