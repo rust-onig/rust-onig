@@ -61,6 +61,7 @@ impl Region {
         }
     }
 
+    /// Get the current capacity of the region.
     pub fn capacity(&self) -> usize {
         self.raw.allocated as usize
     }
@@ -117,6 +118,14 @@ impl Region {
             Some(unsafe { transmute(tree) })
         }
     }
+
+    /// Get an iterator over the captures in the region.
+    pub fn iter<'a>(&'a self) -> RegionIter<'a> {
+        RegionIter {
+            region: self,
+            pos: 0,
+        }
+    }
 }
 
 impl Drop for Region {
@@ -133,9 +142,46 @@ impl Clone for Region {
     }
 }
 
+impl<'a> IntoIterator for &'a Region {
+    type Item = (usize, usize);
+    type IntoIter = RegionIter<'a>;
+    fn into_iter(self) -> Self::IntoIter {
+        return self.iter();
+    }
+}
+
+/// Region Iterator
+///
+/// This struct is responsible for holding iteration state over a
+/// given region.
+pub struct RegionIter<'a> {
+    region: &'a Region,
+    pos: usize,
+}
+
+impl<'a> Iterator for RegionIter<'a> {
+    type Item = (usize, usize);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = self.region.pos(self.pos);
+        self.pos += 1;
+        next
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let len = self.region.len();
+        (len, Some(len))
+    }
+
+    fn count(self) -> usize {
+        self.region.len()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::super::{Regex, SEARCH_OPTION_NONE};
 
     #[test]
     fn test_region_create() {
@@ -172,5 +218,53 @@ mod tests {
             let region = Region::with_capacity(10);
             assert!(region.capacity() == 10);
         }
+    }
+
+    #[test]
+    fn test_region_empty_iterate() {
+        let region = Region::new();
+        for _ in &region {
+            panic!("region should not contain any elements");
+        }
+    }
+
+    #[test]
+    fn test_region_iter_returns_iterator() {
+        let region = Region::new();
+        let all = region.iter().collect::<Vec<_>>();
+        assert_eq!(all, Vec::new());
+    }
+
+    #[test]
+    fn test_region_iterate_with_captures() {
+        let mut region = Region::new();
+        let reg = Regex::new("(a+)(b+)(c+)").unwrap();
+        let res = reg.search_with_options("aaaabbbbc", 0, 9, SEARCH_OPTION_NONE, Some(&mut region));
+        assert!(res.is_some());
+        let all = region.iter().collect::<Vec<_>>();
+        assert_eq!(all, vec![(0, 9), (0, 4), (4, 8), (8, 9)]);
+    }
+
+    #[test]
+    fn test_region_all_iteration_options() {
+        let mut region = Region::new();
+        let reg = Regex::new("a(b)").unwrap();
+        let res = reg.search_with_options("habitat", 0, 7, SEARCH_OPTION_NONE, Some(&mut region));
+        assert!(res.is_some());
+
+        // collect into a vector by iterating with a for loop
+        let mut a = Vec::<(usize, usize)>::new();
+        for pos in &region {
+            a.push(pos)
+        }
+
+        // collect into a vector by using `iter` and collec
+        let b = region.iter().collect::<Vec<_>>();
+
+        let expected = vec![(1, 3), (2, 3)];
+        assert_eq!(expected, a);
+        assert_eq!(expected, b);
+
+        assert_eq!(2, region.iter().count());
     }
 }
