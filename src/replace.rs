@@ -14,7 +14,8 @@ impl<'t> Replacer for &'t str {
     }
 }
 
-impl<F> Replacer for F where F: FnMut(&Captures) -> String {
+impl<F> Replacer for F where F: FnMut(&Captures) -> String
+{
     fn reg_replace<'a>(&'a mut self, caps: &Captures) -> Cow<'a, str> {
         (*self)(caps).into()
     }
@@ -75,13 +76,12 @@ impl Regex {
     ///
     /// See the documentation for `replace` for details on how to access
     /// submatches in the replacement string.
-    pub fn replacen<R: Replacer>
-                   (&self, text: &str, limit: usize, mut rep: R) -> String {
+    pub fn replacen<R: Replacer>(&self, text: &str, limit: usize, mut rep: R) -> String {
         let mut new = String::with_capacity(text.len());
         let mut last_match = 0;
         for (i, cap) in self.captures_iter(text).enumerate() {
             if limit > 0 && i >= limit {
-                break
+                break;
             }
             // unwrap on 0 is OK because captures only reports matches
             let (s, e) = cap.pos(0).unwrap();

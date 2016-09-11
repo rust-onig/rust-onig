@@ -42,10 +42,8 @@ mod pattern;
 pub use flags::*;
 pub use names::CaptureNames;
 pub use region::Region;
-pub use find::{
-    Captures, SubCaptures, SubCapturesPos,
-    FindMatches, FindCaptures, RegexSplits, RegexSplitsN
-};
+pub use find::{Captures, SubCaptures, SubCapturesPos, FindMatches, FindCaptures, RegexSplits,
+               RegexSplitsN};
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
@@ -74,9 +72,7 @@ pub struct Regex {
 impl Error {
     fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
         let mut buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
-        let len = unsafe {
-            onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info)
-        };
+        let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
             code: code,
@@ -337,8 +333,7 @@ impl Regex {
     /// `is_match`.
     pub fn find(&self, text: &str) -> Option<(usize, usize)> {
         let mut region = Region::new();
-        self.search_with_options(text, 0, text.len(),
-                                 SEARCH_OPTION_NONE, Some(&mut region))
+        self.search_with_options(text, 0, text.len(), SEARCH_OPTION_NONE, Some(&mut region))
             .map(|_| region.pos(0))
             .unwrap_or(None)
     }
@@ -348,9 +343,7 @@ impl Regex {
     }
 
     pub fn capture_histories_len(&self) -> usize {
-        unsafe {
-            onig_sys::onig_number_of_capture_histories(self.raw) as usize
-        }
+        unsafe { onig_sys::onig_number_of_capture_histories(self.raw) as usize }
     }
 }
 
@@ -368,9 +361,7 @@ mod tests {
 
     #[test]
     fn test_regex_create() {
-        Regex::with_options(".*",
-                            REGEX_OPTION_NONE,
-                            Syntax::default()).unwrap();
+        Regex::with_options(".*", REGEX_OPTION_NONE, Syntax::default()).unwrap();
 
         Regex::new(r#"a \w+ word"#).unwrap();
     }
@@ -394,9 +385,7 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("e(l+)").unwrap();
 
-        let r = regex.search_with_options("hello", 0, 5,
-                                          SEARCH_OPTION_NONE,
-                                          Some(&mut region));
+        let r = regex.search_with_options("hello", 0, 5, SEARCH_OPTION_NONE, Some(&mut region));
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(1));
@@ -417,9 +406,7 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("he(l+)").unwrap();
 
-        let r = regex.match_with_options("hello", 0,
-                                         SEARCH_OPTION_NONE,
-                                         Some(&mut region));
+        let r = regex.match_with_options("hello", 0, SEARCH_OPTION_NONE, Some(&mut region));
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(4));
@@ -450,4 +437,3 @@ mod tests {
         assert_eq!(regex.captures_len(), 3);
     }
 }
-

@@ -16,7 +16,7 @@ pub fn version() -> String {
 /// API. Rust onig is licensed seperately. For more information see
 /// LICENSE.md in the source distribution.
 pub fn copyright() -> String {
-    let raw_copy =  unsafe { CStr::from_ptr(onig_sys::onig_copyright()) };
+    let raw_copy = unsafe { CStr::from_ptr(onig_sys::onig_copyright()) };
     raw_copy.to_string_lossy().into_owned()
 }
 
@@ -27,7 +27,7 @@ mod tests {
     #[test]
     pub fn utils_get_version_returns_expected_version() {
         let version = version();
-        assert_eq!(version, "6.0.0");
+        assert_eq!(version, "6.1.1");
     }
 
     #[test]

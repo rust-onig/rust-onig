@@ -25,7 +25,7 @@ impl Regex {
             table: unsafe { (*self.raw).name_table as *const StTable },
             bin_idx: -1,
             entry_ptr: null(),
-            _phantom: PhantomData
+            _phantom: PhantomData,
         }
     }
 }
@@ -38,7 +38,7 @@ struct NameEntry {
     back_num: c_int,
     back_alloc: c_int,
     back_ref1: c_int,
-    back_refs: *const c_int
+    back_refs: *const c_int,
 }
 
 #[cfg(windows)]
@@ -53,7 +53,7 @@ struct StTableEntry {
     hash: c_uint,
     key: StDataT,
     record: StDataT,
-    next: *const StTableEntry
+    next: *const StTableEntry,
 }
 
 #[repr(C)]
@@ -62,7 +62,7 @@ struct StTable {
     type_: *const c_void,
     num_bins: c_int,
     num_entries: c_int,
-    bins: *const *const StTableEntry
+    bins: *const *const StTableEntry,
 }
 
 /// CaptureNames is an iterator over named groups as a tuple with the group name
@@ -74,7 +74,7 @@ pub struct CaptureNames<'r> {
     table: *const StTable,
     bin_idx: c_int,
     entry_ptr: *const StTableEntry,
-    _phantom: PhantomData<&'r Regex>
+    _phantom: PhantomData<&'r Regex>,
 }
 
 impl<'r> Iterator for CaptureNames<'r> {
@@ -84,15 +84,14 @@ impl<'r> Iterator for CaptureNames<'r> {
         unsafe {
             while self.entry_ptr.is_null() {
                 if self.table.is_null() || self.bin_idx + 1 >= (*self.table).num_bins {
-                    return None
+                    return None;
                 }
                 self.bin_idx += 1;
                 self.entry_ptr = *(*self.table).bins.offset(self.bin_idx as isize)
             }
             let entry = (*self.entry_ptr).record as *const NameEntry;
-            let name = from_utf8_unchecked(
-                from_raw_parts((*entry).name, (*entry).name_len as usize)
-            );
+            let name = from_utf8_unchecked(from_raw_parts((*entry).name,
+                                                          (*entry).name_len as usize));
             let groups = if (*entry).back_num > 1 {
                 let ptr = (*entry).back_refs as *const u32;
                 let len = (*entry).back_num as usize;
@@ -131,5 +130,3 @@ mod tests {
                    [("foo", &[1u32] as &[u32]), ("bar", &[2u32, 3] as &[u32])]);
     }
 }
-
-
