@@ -9,11 +9,10 @@ pub struct RegexSearcher<'r, 'a> {
     iter: FindMatches<'r, 'a>,
     pos: usize,
     hay: &'a str,
-    cached_match: Option<(usize, usize)>
+    cached_match: Option<(usize, usize)>,
 }
 
 impl<'r, 'a> Pattern<'a> for &'r Regex {
-
     /// Searcher Type
     ///
     /// The searcher is the type responsible for returning an iterator
@@ -29,7 +28,6 @@ impl<'r, 'a> Pattern<'a> for &'r Regex {
 }
 
 impl<'r, 'a> RegexSearcher<'r, 'a> {
-
     /// New
     ///
     /// Create a regex searcher which uses the given regex to search a
@@ -39,13 +37,12 @@ impl<'r, 'a> RegexSearcher<'r, 'a> {
             iter: reg.find_iter(haystack),
             pos: 0,
             hay: haystack,
-            cached_match: None
+            cached_match: None,
         }
     }
 }
 
 unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
-
     /// Haystack Accessor
     ///
     /// Return the contained reference to the haystack being searched.
@@ -73,7 +70,7 @@ unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
 
         // Search based on the current position
         let next = self.iter.next();
-        
+
         match next {
             // we found a new match at the beginning of our slice, so
             // just return it straight away
@@ -101,7 +98,7 @@ unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
 
 #[cfg(test)]
 mod test {
-    use ::Regex;
+    use Regex;
     use std::str::pattern::{Pattern, Searcher, SearchStep};
 
     #[test]
@@ -121,8 +118,7 @@ mod test {
     #[test]
     pub fn pattern_matches_with_index_returns_all_matches() {
         let pattern = Regex::new("[0-9]+").unwrap();
-        let v: Vec<(usize, &str)> =
-            "hello 1234 12.34 3".match_indices(&pattern).collect();
+        let v: Vec<(usize, &str)> = "hello 1234 12.34 3".match_indices(&pattern).collect();
         assert_eq!(v, [(6, "1234"), (11, "12"), (14, "34"), (17, "3")]);
     }
 

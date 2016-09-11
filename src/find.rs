@@ -7,12 +7,13 @@ impl Regex {
     /// If no match is found, then `None` is returned.
     pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
         let mut region = Region::new();
-        self.search_with_options(text, 0, text.len(),
-                                 SEARCH_OPTION_NONE, Some(&mut region))
-            .map(|pos| Captures {
-                text: text,
-                region: region,
-                offset: pos
+        self.search_with_options(text, 0, text.len(), SEARCH_OPTION_NONE, Some(&mut region))
+            .map(|pos| {
+                Captures {
+                    text: text,
+                    region: region,
+                    offset: pos,
+                }
             })
     }
 
@@ -44,7 +45,7 @@ impl Regex {
             region: Region::new(),
             text: text,
             last_end: 0,
-            skip_next_empty: false
+            skip_next_empty: false,
         }
     }
 
@@ -77,7 +78,7 @@ impl Regex {
             regex: self,
             text: text,
             last_end: 0,
-            skip_next_empty: false
+            skip_next_empty: false,
         }
     }
 
@@ -129,8 +130,7 @@ impl Regex {
     /// assert_eq!(fields, vec!("Hey", "How", "are you?"));
     /// # }
     /// ```
-    pub fn splitn<'r, 't>(&'r self, text: &'t str, limit: usize)
-                         -> RegexSplitsN<'r, 't> {
+    pub fn splitn<'r, 't>(&'r self, text: &'t str, limit: usize) -> RegexSplitsN<'r, 't> {
         RegexSplitsN {
             splits: self.split(text),
             n: limit,
@@ -140,11 +140,13 @@ impl Regex {
     /// Scan the given slice, capturing into the given region and
     /// executing a callback for each match.
     pub fn scan_with_region<F>(&self,
-                                    to_search: &str,
-                                    region: &mut Region,
-                                    options: SearchOptions,
-                                    mut callback: F) -> i32
-        where F: Fn(i32, i32, &Region) -> bool {
+                               to_search: &str,
+                               region: &mut Region,
+                               options: SearchOptions,
+                               mut callback: F)
+                               -> i32
+        where F: Fn(i32, i32, &Region) -> bool
+    {
 
         use onig_sys::{onig_scan, OnigRegion};
         use std::mem::transmute;
@@ -154,9 +156,9 @@ impl Regex {
         let start = to_search.as_ptr();
         let end = to_search[to_search.len()..].as_ptr();
 
-        extern "C" fn scan_cb<F>(
-            i: c_int, j: c_int, r: *const OnigRegion, ud: *mut c_void) -> c_int
-            where F: Fn(i32, i32, &Region) -> bool {
+        extern "C" fn scan_cb<F>(i: c_int, j: c_int, r: *const OnigRegion, ud: *mut c_void) -> c_int
+            where F: Fn(i32, i32, &Region) -> bool
+        {
 
             let region = Region::clone_from_raw(r);
             let callback = unsafe { &*(ud as *mut F) };
@@ -174,19 +176,20 @@ impl Regex {
                       transmute(region),
                       options.bits(),
                       scan_cb::<F>,
-                      &mut callback as *mut F  as *mut c_void)
+                      &mut callback as *mut F as *mut c_void)
         }
     }
 
     pub fn scan<'t, CB>(&self, to_search: &'t str, callback: CB)
-        where CB : Fn(i32, Captures<'t>) -> bool {
+        where CB: Fn(i32, Captures<'t>) -> bool
+    {
 
         let mut region = Region::new();
         self.scan_with_region(to_search, &mut region, SEARCH_OPTION_NONE, |n, s, region| {
-            let captures = Captures{
+            let captures = Captures {
                 text: to_search,
                 region: region.clone(),
-                offset: s as usize
+                offset: s as usize,
             };
             callback(n, captures)
         });
@@ -205,7 +208,7 @@ impl Regex {
 pub struct Captures<'t> {
     text: &'t str,
     region: Region,
-    offset: usize
+    offset: usize,
 }
 
 impl<'t> Captures<'t> {
@@ -316,7 +319,7 @@ pub struct FindMatches<'r, 't> {
     region: Region,
     text: &'t str,
     last_end: usize,
-    skip_next_empty: bool
+    skip_next_empty: bool,
 }
 
 impl<'r, 't> Iterator for FindMatches<'r, 't> {
@@ -324,7 +327,7 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
 
     fn next(&mut self) -> Option<(usize, usize)> {
         if self.last_end > self.text.len() {
-            return None
+            return None;
         }
         self.region.clear();
         let r = self.regex.search_with_options(self.text,
@@ -341,8 +344,11 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
         // Don't accept empty matches immediately following a match.
         // i.e., no infinite loops please.
         if e == s {
-            self.last_end += self.text[self.last_end..].chars()
-                                 .next().map(|c| c.len_utf8()).unwrap_or(1);
+            self.last_end += self.text[self.last_end..]
+                                 .chars()
+                                 .next()
+                                 .map(|c| c.len_utf8())
+                                 .unwrap_or(1);
             if self.skip_next_empty {
                 self.skip_next_empty = false;
                 return self.next();
@@ -366,7 +372,7 @@ pub struct FindCaptures<'r, 't> {
     regex: &'r Regex,
     text: &'t str,
     last_end: usize,
-    skip_next_empty: bool
+    skip_next_empty: bool,
 }
 
 impl<'r, 't> Iterator for FindCaptures<'r, 't> {
@@ -374,7 +380,7 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
 
     fn next(&mut self) -> Option<Captures<'t>> {
         if self.last_end > self.text.len() {
-            return None
+            return None;
         }
 
         let mut region = Region::new();
@@ -391,8 +397,11 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         // Don't accept empty matches immediately following a match.
         // i.e., no infinite loops please.
         if e == s {
-            self.last_end += self.text[self.last_end..].chars()
-                                 .next().map(|c| c.len_utf8()).unwrap_or(1);
+            self.last_end += self.text[self.last_end..]
+                                 .chars()
+                                 .next()
+                                 .map(|c| c.len_utf8())
+                                 .unwrap_or(1);
             if self.skip_next_empty {
                 self.skip_next_empty = false;
                 return self.next();
@@ -404,7 +413,7 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         Some(Captures {
             text: self.text,
             region: region,
-            offset: r.unwrap()
+            offset: r.unwrap(),
         })
     }
 }
@@ -458,7 +467,7 @@ impl<'r, 't> Iterator for RegexSplitsN<'r, 't> {
 
     fn next(&mut self) -> Option<&'t str> {
         if self.n == 0 {
-            return None
+            return None;
         }
         self.n -= 1;
         if self.n == 0 {
@@ -558,10 +567,9 @@ mod tests {
         let reg = Regex::new(r"\d+\.(\d+)").unwrap();
         let captures = reg.captures("100 - 3.1415 / 2.0").unwrap();
         assert_eq!(6, captures.offset());
-        let all_caps = reg
-            .captures_iter("1 - 3234.3 * 123.2 - 100")
-            .map(|cap| cap.offset())
-            .collect::<Vec<_>>();
+        let all_caps = reg.captures_iter("1 - 3234.3 * 123.2 - 100")
+                          .map(|cap| cap.offset())
+                          .collect::<Vec<_>>();
         assert_eq!(vec![4, 13], all_caps);
     }
 }

@@ -16,7 +16,7 @@ pub fn version() -> String {
 /// API. Rust onig is licensed seperately. For more information see
 /// LICENSE.md in the source distribution.
 pub fn copyright() -> String {
-    let raw_copy =  unsafe { CStr::from_ptr(onig_sys::onig_copyright()) };
+    let raw_copy = unsafe { CStr::from_ptr(onig_sys::onig_copyright()) };
     raw_copy.to_string_lossy().into_owned()
 }
 

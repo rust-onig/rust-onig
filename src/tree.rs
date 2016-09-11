@@ -70,11 +70,12 @@ mod tests {
         let mut syntax = Syntax::ruby().clone();
         syntax.enable_operators(SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
 
-        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))",
-                                        REGEX_OPTION_NONE,
-                                        &syntax).unwrap();
+        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))", REGEX_OPTION_NONE, &syntax)
+                        .unwrap();
 
-        let r = regex.search_with_options("- cd aaabbb -", 0, 13,
+        let r = regex.search_with_options("- cd aaabbb -",
+                                          0,
+                                          13,
                                           SEARCH_OPTION_NONE,
                                           Some(&mut region));
 
