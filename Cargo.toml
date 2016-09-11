@@ -1,7 +1,10 @@
 [package]
 name = "onig"
-version = "1.0.0"
-authors = ["Will Speak <will@willspeak.me>", "Ivan Ivashchenko <defuz@me.com>"]
+version = "1.1.0"
+authors = [
+        "Will Speak <will@willspeak.me>",
+        "Ivan Ivashchenko <defuz@me.com>"
+]
 
 description = """Rust-Onig is a set of rust bindings for the
             oniguruma regular expression library."""
@@ -20,5 +23,5 @@ bitflags = "0.7"
 lazy_static = "0.2"
 
 [dependencies.onig_sys]
-version = "1.0"
+version = "61.1"
 path = "onig_sys"

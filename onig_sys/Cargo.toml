@@ -1,6 +1,6 @@
 [package]
 name = "onig_sys"
-version = "1.0.0"
+version = "61.1.0"
 authors = ["Will Speak <will@willspeak.me>", "Ivan Ivashchenko <defuz@me.com>"]
 build = "build.rs"
 links = "onig"
