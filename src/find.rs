@@ -281,6 +281,11 @@ impl<'t> Iterator for SubCaptures<'t> {
             None
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let size = self.caps.len();
+        (size, Some(size))
+    }
 }
 
 /// An iterator over capture group positions for a particular match of
