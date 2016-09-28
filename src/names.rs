@@ -104,6 +104,15 @@ impl<'r> Iterator for CaptureNames<'r> {
             Some((name, groups))
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        if self.table.is_null() {
+            (0, None)
+        } else {
+            let size = unsafe { (*self.table).num_bins } as usize;
+            (size, Some(size))
+        }
+    }
 }
 
 #[cfg(test)]
