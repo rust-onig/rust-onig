@@ -487,6 +487,10 @@ impl<'r, 't> Iterator for RegexSplitsN<'r, 't> {
             self.splits.next()
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (0, Some(self.n))
+    }
 }
 
 #[cfg(test)]
