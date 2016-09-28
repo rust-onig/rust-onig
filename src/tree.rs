@@ -58,6 +58,11 @@ impl<'t> Iterator for CaptureTreeNodeIter<'t> {
             None
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let size = self.node.len();
+        (size, Some(size))
+    }
 }
 
 #[cfg(test)]
