@@ -309,6 +309,11 @@ impl<'t> Iterator for SubCapturesPos<'t> {
             None
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let size = self.caps.len();
+        (size, Some(size))
+    }
 }
 
 /// An iterator over all non-overlapping matches for a particular string.
