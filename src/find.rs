@@ -281,6 +281,11 @@ impl<'t> Iterator for SubCaptures<'t> {
             None
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let size = self.caps.len();
+        (size, Some(size))
+    }
 }
 
 /// An iterator over capture group positions for a particular match of
@@ -303,6 +308,11 @@ impl<'t> Iterator for SubCapturesPos<'t> {
         } else {
             None
         }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let size = self.caps.len();
+        (size, Some(size))
     }
 }
 
@@ -476,6 +486,10 @@ impl<'r, 't> Iterator for RegexSplitsN<'r, 't> {
         } else {
             self.splits.next()
         }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (0, Some(self.n))
     }
 }
 
