@@ -14,10 +14,21 @@ fn main() {
         println!("- {}: {:?}", name, indices);
     }
 
+    let mut region = Region::new();
+
     if let Some(position) = r.search_with_options(string, 0, string.len(),
-                                                  SEARCH_OPTION_NONE, None)
+                                                  SEARCH_OPTION_NONE, Some(&mut region))
     {
-        println!("match at {}", position);
+        println!("match at {} in {:?}", position, string);
+
+        r.foreach_name(|name, groups| {
+            for group in groups {
+                let pos = region.pos(*group as usize).unwrap();
+                println!("- {} ({}): {} - {}", name, group, pos.0, pos.1);
+            }
+
+            true
+        });
     } else {
         println!("search fail")
     }
