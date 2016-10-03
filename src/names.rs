@@ -8,7 +8,7 @@ use libc::{c_int, c_uint, c_ulong, c_void, c_uchar};
 #[cfg(windows)]
 use libc::uintptr_t;
 
-use onig_sys;
+use onig_sys::{self, OnigUChar, OnigRegex};
 
 use super::Regex;
 
@@ -26,6 +26,37 @@ impl Regex {
             bin_idx: -1,
             entry_ptr: null(),
             _phantom: PhantomData,
+        }
+    }
+
+    /// Calls `callback` for each named group in the regex. Each callback gets the group name
+    /// and group indices.
+    pub fn foreach_name<F>(&self, mut callback: F) -> i32
+        where F: Fn(&str, &[u32]) -> bool
+    {
+        extern "C" fn foreach_cb<F>(name: *const OnigUChar, name_end: *const OnigUChar,
+            ngroup_num: c_int, group_nums: *const c_int, regex: OnigRegex, arg: *mut c_void)
+            -> c_int
+            where F: Fn(&str, &[u32]) -> bool
+        {
+            let name = unsafe {
+                from_utf8_unchecked(from_raw_parts(name, (name_end as usize - name as usize)))
+            };
+
+            let groups = unsafe { from_raw_parts(group_nums as *const u32, ngroup_num as usize) };
+
+            let callback = unsafe { &*(arg as *mut F) };
+
+            if callback(name, groups) {
+                0
+            } else {
+                -1
+            }
+        }
+
+        unsafe {
+            onig_sys::onig_foreach_name(self.raw, foreach_cb::<F>,
+                &mut callback as *mut F as *mut c_void)
         }
     }
 }
