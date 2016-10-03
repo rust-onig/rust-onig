@@ -152,9 +152,11 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::Regex;
-    /// let r = Regex::with_encoding(r#"hello (\w+)"#);
-    /// assert!(r.is_ok());
+    /// use onig::{Regex, ByteBuffer};
+    /// let utf8 = Regex::with_encoding("hello");
+    /// assert!(utf8.is_ok());
+    /// let ascii = Regex::with_encoding(ByteBuffer::ascii(b"world"));
+    /// assert!(ascii.is_ok());
     /// ```
     pub fn with_encoding<T>(pattern: T) -> Result<Regex, Error>
         where T: EncodedStringBuffer
@@ -212,8 +214,9 @@ impl Regex {
     ///
     /// # Examples
     /// ```
-    /// use onig::{Regex, Syntax, REGEX_OPTION_SINGLELINE};
-    /// let r = Regex::with_options_and_encoding("hello",
+    /// use onig::{Regex, Syntax, ByteBuffer, REGEX_OPTION_SINGLELINE};
+    /// let pattern = ByteBuffer::ascii(b"hello");
+    /// let r = Regex::with_options_and_encoding(pattern,
     ///                                          REGEX_OPTION_SINGLELINE,
     ///                                          Syntax::default());
     /// assert!(r.is_ok());
