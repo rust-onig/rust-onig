@@ -45,7 +45,7 @@ pub use names::CaptureNames;
 pub use region::Region;
 pub use find::{Captures, SubCaptures, SubCapturesPos, FindMatches, FindCaptures, RegexSplits,
                RegexSplitsN};
-pub use buffers::EncodedStringBuffer;
+pub use buffers::{EncodedStringBuffer, ByteBuffer};
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
