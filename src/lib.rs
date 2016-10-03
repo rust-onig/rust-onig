@@ -34,6 +34,7 @@ mod names;
 mod syntax;
 mod tree;
 mod utils;
+mod buffers;
 
 #[cfg(feature="std-pattern")]
 mod pattern;
@@ -44,6 +45,7 @@ pub use names::CaptureNames;
 pub use region::Region;
 pub use find::{Captures, SubCaptures, SubCapturesPos, FindMatches, FindCaptures, RegexSplits,
                RegexSplitsN};
+pub use buffers::EncodedStringBuffer;
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
@@ -114,6 +116,8 @@ lazy_static! {
 }
 
 impl Regex {
+    /// Create a Regex
+    ///
     /// Simple regular expression constructor. Compiles a new regular
     /// expression with the default options using the ruby syntax.
     /// Once compiled, it can be used repeatedly to search in a string. If an
@@ -130,8 +134,32 @@ impl Regex {
     /// let r = Regex::new(r#"hello (\w+)"#);
     /// assert!(r.is_ok());
     /// ```
-    pub fn new(pattern: &str) -> Result<Regex, Error> {
-        Regex::with_options(pattern, REGEX_OPTION_NONE, Syntax::default())
+    pub fn new(pattern: &str) -> Result<Regex, Error>
+    {
+        Regex::with_encoding(pattern)
+    }
+
+    /// Create a Regex, Specifying an Encoding
+    ///
+    /// Attempts to compile `pattern` into a new `Regex`
+    /// instance. Instead of assuming UTF-8 as the encoding scheme the
+    /// encoding is inferred from the `pattern` buffer.
+    ///
+    /// # Arguments
+    ///
+    /// * `pattern` - The regex pattern to compile
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use onig::Regex;
+    /// let r = Regex::with_encoding(r#"hello (\w+)"#);
+    /// assert!(r.is_ok());
+    /// ```
+    pub fn with_encoding<T>(pattern: T) -> Result<Regex, Error>
+        where T: EncodedStringBuffer
+    {
+        Regex::with_options_and_encoding(pattern, REGEX_OPTION_NONE, Syntax::default())
     }
 
     /// Create a new Regex
@@ -161,10 +189,43 @@ impl Regex {
     pub fn with_options(pattern: &str,
                         option: RegexOptions,
                         syntax: &Syntax)
-                        -> Result<Regex, Error> {
+                        -> Result<Regex, Error>
+    {
+        Regex::with_options_and_encoding(pattern, option, syntax)
+    }
+
+    /// Create a new Regex, Specifying Options and Ecoding
+    ///
+    /// Attempts to comile the given `pattern` into a new `Regex`
+    /// instance. Instead of assuming UTF-8 as the encoding scheme the
+    /// encoding is inferred from the `pattern` buffer. If the regex
+    /// fails to compile the returned `Error` value from
+    /// [`onig_new`][regex_new] contains more information.
+    ///
+    /// [regex_new]: ./onig_sys/fn.onig_new.html
+    ///
+    /// # Arguments
+    ///
+    ///  * `pattern` - The regex pattern to compile.
+    ///  * `options` - The regex compilation options.
+    ///  * `syntax`  - The syntax which the regex is written in.
+    ///
+    /// # Examples
+    /// ```
+    /// use onig::{Regex, Syntax, REGEX_OPTION_SINGLELINE};
+    /// let r = Regex::with_options_and_encoding("hello",
+    ///                                          REGEX_OPTION_SINGLELINE,
+    ///                                          Syntax::default());
+    /// assert!(r.is_ok());
+    /// ```
+    pub fn with_options_and_encoding<T>(pattern: T,
+                           option: RegexOptions,
+                           syntax: &Syntax)
+                           -> Result<Regex, Error>
+        where T : EncodedStringBuffer
+    {
         // Convert the rust types to those required for the call to
         // `onig_new`.
-        let pattern_bytes = pattern.as_bytes();
         let mut reg: onig_sys::OnigRegexMut = null_mut();
         let reg_ptr = &mut reg as *mut onig_sys::OnigRegexMut;
 
@@ -182,10 +243,10 @@ impl Regex {
             // more than one thread at a time.
             let _guard = REGEX_NEW_MUTEX.lock().unwrap();
             onig_sys::onig_new(reg_ptr,
-                               pattern_bytes.as_ptr(),
-                               pattern_bytes[pattern_bytes.len()..].as_ptr(),
+                               pattern.start_ptr(),
+                               pattern.limit_ptr(),
                                option.bits(),
-                               &onig_sys::OnigEncodingUTF8,
+                               pattern.encoding(),
                                transmute(syntax),
                                &mut error)
         };
