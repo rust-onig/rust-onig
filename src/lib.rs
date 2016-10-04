@@ -45,7 +45,7 @@ pub use names::CaptureNames;
 pub use region::Region;
 pub use find::{Captures, SubCaptures, SubCapturesPos, FindMatches, FindCaptures, RegexSplits,
                RegexSplitsN};
-pub use buffers::{EncodedStringBuffer, ByteBuffer};
+pub use buffers::{EncodedChars, EncodedBytes};
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
@@ -152,14 +152,14 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{Regex, ByteBuffer};
+    /// use onig::{Regex, EncodedBytes};
     /// let utf8 = Regex::with_encoding("hello");
     /// assert!(utf8.is_ok());
-    /// let ascii = Regex::with_encoding(ByteBuffer::ascii(b"world"));
+    /// let ascii = Regex::with_encoding(EncodedBytes::ascii(b"world"));
     /// assert!(ascii.is_ok());
     /// ```
     pub fn with_encoding<T>(pattern: T) -> Result<Regex, Error>
-        where T: EncodedStringBuffer
+        where T: EncodedChars
     {
         Regex::with_options_and_encoding(pattern, REGEX_OPTION_NONE, Syntax::default())
     }
@@ -214,8 +214,8 @@ impl Regex {
     ///
     /// # Examples
     /// ```
-    /// use onig::{Regex, Syntax, ByteBuffer, REGEX_OPTION_SINGLELINE};
-    /// let pattern = ByteBuffer::ascii(b"hello");
+    /// use onig::{Regex, Syntax, EncodedBytes, REGEX_OPTION_SINGLELINE};
+    /// let pattern = EncodedBytes::ascii(b"hello");
     /// let r = Regex::with_options_and_encoding(pattern,
     ///                                          REGEX_OPTION_SINGLELINE,
     ///                                          Syntax::default());
@@ -225,7 +225,7 @@ impl Regex {
                            option: RegexOptions,
                            syntax: &Syntax)
                            -> Result<Regex, Error>
-        where T : EncodedStringBuffer
+        where T : EncodedChars
     {
         // Convert the rust types to those required for the call to
         // `onig_new`.
