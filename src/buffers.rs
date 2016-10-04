@@ -10,7 +10,7 @@ use onig_sys;
 ///
 /// Represents a buffer of characters with encoding information
 /// attached.
-pub trait EncodedStringBuffer {
+pub trait EncodedChars {
 
     /// Pointer to the start of the pattern
     ///
@@ -30,7 +30,7 @@ pub trait EncodedStringBuffer {
     }
 }
 
-impl <T> EncodedStringBuffer for T where T: AsRef<str> {
+impl <T> EncodedChars for T where T: AsRef<str> {
 
     fn start_ptr(&self) -> *const onig_sys::OnigUChar {
         self.as_ref().as_bytes().as_ptr()
@@ -45,12 +45,12 @@ impl <T> EncodedStringBuffer for T where T: AsRef<str> {
 /// Byte Buffer
 ///
 /// Represents a buffer of bytes, with an encoding.
-pub struct ByteBuffer<'a> {
+pub struct EncodedBytes<'a> {
     bytes: &'a[u8],
     enc: onig_sys::OnigEncoding
 }
 
-impl<'a> ByteBuffer<'a> {
+impl<'a> EncodedBytes<'a> {
 
     /// New Buffer from Parts
     ///
@@ -62,8 +62,8 @@ impl<'a> ByteBuffer<'a> {
     /// # Returns
     ///
     /// A new buffer instance
-    pub fn from_parts(bytes: &'a[u8], enc: onig_sys::OnigEncoding) -> ByteBuffer<'a> {
-        ByteBuffer {
+    pub fn from_parts(bytes: &'a[u8], enc: onig_sys::OnigEncoding) -> EncodedBytes<'a> {
+        EncodedBytes {
             bytes: bytes,
             enc: enc
         }
@@ -78,15 +78,15 @@ impl<'a> ByteBuffer<'a> {
     /// # Returns
     ///
     /// A new buffer instance
-    pub fn ascii(bytes: &'a[u8]) -> ByteBuffer<'a> {
-        ByteBuffer {
+    pub fn ascii(bytes: &'a[u8]) -> EncodedBytes<'a> {
+        EncodedBytes {
             bytes: bytes,
             enc: &onig_sys::OnigEncodingASCII
         }
     }
 }
 
-impl<'a> EncodedStringBuffer for ByteBuffer<'a> {
+impl<'a> EncodedChars for EncodedBytes<'a> {
 
     fn start_ptr(&self) -> *const onig_sys::OnigUChar {
         self.bytes.as_ptr()
@@ -120,7 +120,7 @@ pub mod tests {
     #[test]
     pub fn rust_bytes_encoding_is_ascii() {
         let fizz = b"fizz";
-        let buff = ByteBuffer::ascii(fizz);
+        let buff = EncodedBytes::ascii(fizz);
         assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding, buff.encoding());
     }
 
@@ -133,14 +133,14 @@ pub mod tests {
     #[test]
     pub fn rust_bytes_ptr_offsets_are_valid() {
         let fozz = b"foo.*bar";
-        let buff = ByteBuffer::ascii(fozz);
+        let buff = EncodedBytes::ascii(fozz);
         assert_eq!(buff.limit_ptr() as usize - buff.start_ptr() as usize, fozz.len());
     }
 
     #[test]
     pub fn byte_buffer_create() {
         let buff = b"hello world";
-        let enc_buffer = ByteBuffer::from_parts(buff, &onig_sys::OnigEncodingASCII);
+        let enc_buffer = EncodedBytes::from_parts(buff, &onig_sys::OnigEncodingASCII);
         assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding, enc_buffer.encoding());
         assert_eq!(enc_buffer.limit_ptr() as usize - enc_buffer.start_ptr() as usize, buff.len());
     }
