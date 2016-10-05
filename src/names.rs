@@ -32,12 +32,12 @@ impl Regex {
     /// Calls `callback` for each named group in the regex. Each callback gets the group name
     /// and group indices.
     pub fn foreach_name<F>(&self, mut callback: F) -> i32
-        where F: Fn(&str, &[u32]) -> bool
+        where F: FnMut(&str, &[u32]) -> bool
     {
         extern "C" fn foreach_cb<F>(name: *const OnigUChar, name_end: *const OnigUChar,
-            ngroup_num: c_int, group_nums: *const c_int, regex: OnigRegex, arg: *mut c_void)
+            ngroup_num: c_int, group_nums: *const c_int, _regex: OnigRegex, arg: *mut c_void)
             -> c_int
-            where F: Fn(&str, &[u32]) -> bool
+            where F: FnMut(&str, &[u32]) -> bool
         {
             let name = unsafe {
                 from_utf8_unchecked(from_raw_parts(name, (name_end as usize - name as usize)))
@@ -45,13 +45,9 @@ impl Regex {
 
             let groups = unsafe { from_raw_parts(group_nums as *const u32, ngroup_num as usize) };
 
-            let callback = unsafe { &*(arg as *mut F) };
+            let callback = unsafe { &mut *(arg as *mut F) };
 
-            if callback(name, groups) {
-                0
-            } else {
-                -1
-            }
+            if callback(name, groups) { 0 } else { -1 }
         }
 
         unsafe {
