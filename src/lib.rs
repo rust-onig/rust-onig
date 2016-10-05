@@ -343,7 +343,7 @@ impl Regex {
         assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
             let offset = chars.start_ptr().offset(at as isize);
-            assert!(offset < chars.limit_ptr());
+            assert!(offset <= chars.limit_ptr());
             onig_sys::onig_match(self.raw,
                                  chars.start_ptr(),
                                  chars.limit_ptr(),
@@ -402,9 +402,61 @@ impl Regex {
                                options: SearchOptions,
                                region: Option<&mut Region>)
                                -> Option<usize> {
-        let (beg, end) = (str.as_ptr(), str[str.len()..].as_ptr());
-        let (start, range) = (str[from..].as_ptr(), str[to..].as_ptr());
+        self.search_with_encoding(str, from, to, options, region)
+    }
+
+    /// Search for a Pattern in a String with an Encoding
+    ///
+    /// Search for matches the regex in a string. This method will
+    /// return the index of the first match of the regex within the
+    /// string, if there is one. If `from` is less than `to`, then
+    /// search is performed in forward order, otherwice – in backward
+    /// order.
+    ///
+    /// The encoding of the buffer passed to search in must match the
+    /// encoding of the regex.
+    ///
+    /// # Arguments
+    ///
+    ///  * `chars` - The character buffer to search in.
+    ///  * `from` - The byte index in the passed slice to start search
+    ///  * `to` - The byte index in the passed slice to finish search
+    ///  * `options` - The options for the search.
+    ///  * `region` - The region for return group match range info
+    ///
+    /// # Returns
+    ///
+    /// `Some(pos)` if the regex matches, where `pos` is the
+    /// byte-position of the start of the match. `None` if the regex
+    /// doesn't match anywhere in `chars`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use onig::{Regex,EncodedBytes,SEARCH_OPTION_NONE};
+    ///
+    /// let r = Regex::with_encoding(EncodedBytes::ascii(b"l{1,2}")).unwrap();
+    /// let res = r.search_with_encoding(EncodedBytes::ascii(b"hello"),
+    ///                                  0, 5, SEARCH_OPTION_NONE, None);
+    /// assert!(res.is_some()); // it matches
+    /// assert!(res.unwrap() == 2); // match starts at character 3
+    /// ```
+    pub fn search_with_encoding<T>(&self,
+                                   chars: T,
+                                   from: usize,
+                                   to: usize,
+                                   options: SearchOptions,
+                                   region: Option<&mut Region>)
+                                   -> Option<usize>
+        where T: EncodedChars
+    {
+        let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
+        assert_eq!(self.encoding(), chars.encoding());
         let r = unsafe {
+            let start = beg.offset(from as isize);
+            let range = beg.offset(to as isize);
+            assert!(start <= end);
+            assert!(range <= end);
             onig_sys::onig_search(self.raw,
                                   beg,
                                   end,
