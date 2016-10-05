@@ -485,18 +485,47 @@ impl Regex {
             .unwrap_or(false)
     }
 
-    /// Returns the start and end byte range of the leftmost-first match in
-    /// `text`. If no match exists, then `None` is returned.
+    /// Find a Match in a Buffer, With Encoding
+    ///
+    /// Finds the first match of the regular expression within the
+    /// buffer.
     ///
     /// Note that this should only be used if you want to discover the position
     /// of the match. Testing the existence of a match is faster if you use
     /// `is_match`.
+    ///
+    /// # Arguments
+    ///  * `text` - The text to search in.
+    ///
+    /// # Returns
+    ///
+    ///  The offset of the start and end of the first match. If no
+    ///  match exists `None` is returned.
     pub fn find(&self, text: &str) -> Option<(usize, usize)> {
-        let mut region = Region::new();
-        self.search_with_options(text, 0, text.len(), SEARCH_OPTION_NONE, Some(&mut region))
-            .map(|_| region.pos(0))
-            .unwrap_or(None)
+        self.find_with_encoding(text)
     }
+
+    /// Find a Match in a Buffer, With Encoding
+    ///
+    /// Finds the first match of the regular expression within the
+    /// buffer.
+    ///
+    /// # Arguments
+    ///  * `text` - The text to search in.
+    ///
+    /// # Returns
+    ///
+    ///  The offset of the start and end of the first match. If no
+    ///  match exists `None` is returned.
+    pub fn find_with_encoding<T>(&self, text: T) -> Option<(usize, usize)>
+        where T: EncodedChars
+    {
+        let mut region = Region::new();
+        let len = text.len();
+        self.search_with_encoding(text, 0, len, SEARCH_OPTION_NONE, Some(&mut region))
+            .and_then(|_| region.pos(0))
+    }
+
 
     /// Get the Encoding of the Regex
     ///

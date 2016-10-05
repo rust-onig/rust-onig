@@ -28,6 +28,8 @@ pub trait EncodedChars {
     fn encoding(&self) -> onig_sys::OnigEncoding {
         &onig_sys::OnigEncodingUTF8
     }
+
+    fn len(&self) -> usize;
 }
 
 impl <T> EncodedChars for T where T: AsRef<str> {
@@ -39,6 +41,10 @@ impl <T> EncodedChars for T where T: AsRef<str> {
     fn limit_ptr(&self) -> *const onig_sys::OnigUChar {
         let bytes = self.as_ref().as_bytes();
         bytes[bytes.len()..].as_ptr()
+    }
+
+    fn len(&self) -> usize {
+        self.as_ref().len()
     }
 }
 
@@ -98,6 +104,10 @@ impl<'a> EncodedChars for EncodedBytes<'a> {
 
     fn encoding(&self) -> onig_sys::OnigEncoding {
         self.enc
+    }
+
+    fn len(&self) -> usize {
+        self.bytes.len()
     }
 }
 
