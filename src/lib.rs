@@ -261,13 +261,11 @@ impl Regex {
         }
     }
 
-    /// Match string
+    /// Match String
     ///
-    /// Match the regex against a string. This method will start at
-    /// the beginning of the string and try and match the regex. If
-    /// the regex matches then the return value is the number of
-    /// characers which matched. If the regex doesn't match the return
-    /// is `None`.
+    /// Try to match the regex against the given string slice,
+    /// starting at a given offset. This method works the same way as
+    /// `match_with_encoding`, but the encoding is always utf-8.
     ///
     /// # Arguments
     ///
@@ -297,13 +295,59 @@ impl Regex {
                               options: SearchOptions,
                               region: Option<&mut Region>)
                               -> Option<usize> {
-        let (beg, end) = (str.as_ptr(), str[str.len()..].as_ptr());
-        let start = str[at..].as_ptr();
+        self.match_with_encoding(str, at, options, region)
+    }
+
+    /// Match String with Encoding
+    ///
+    /// Match the regex against a string. This method will start at
+    /// the offset `at` into the string and try and match the
+    /// regex. If the regex matches then the return value is the
+    /// number of characers which matched. If the regex doesn't match
+    /// the return is `None`.
+    ///
+    /// The contents of `chars` must have the same encoding that was
+    /// used to construct the regex.
+    ///
+    /// # Arguments
+    ///
+    /// * `chars` - The buffer to match against.
+    /// * `at` - The byte index in the passed buffer to start matching
+    /// * `options` - The regex match options.
+    /// * `region` - The region for return group match range info
+    ///
+    /// # Returns
+    ///
+    /// `Some(len)` if the regex matched, with `len` being the number
+    /// of bytes matched. `None` if the regex doesn't match.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use onig::{Regex, EncodedBytes, SEARCH_OPTION_NONE};
+    ///
+    /// let r = Regex::with_encoding(EncodedBytes::ascii(b".*")).unwrap();
+    /// let res = r.match_with_encoding(EncodedBytes::ascii(b"world"),
+    ///                                 0, SEARCH_OPTION_NONE, None);
+    /// assert!(res.is_some()); // it matches
+    /// assert!(res.unwrap() == 5); // 5 characters matched
+    /// ```
+    pub fn match_with_encoding<T>(&self,
+                                  chars: T,
+                                  at: usize,
+                                  options: SearchOptions,
+                                  region: Option<&mut Region>)
+                                  -> Option<usize>
+        where T: EncodedChars
+    {
+        assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
+            let offset = chars.start_ptr().offset(at as isize);
+            assert!(offset < chars.limit_ptr());
             onig_sys::onig_match(self.raw,
-                                 beg,
-                                 end,
-                                 start,
+                                 chars.start_ptr(),
+                                 chars.limit_ptr(),
+                                 offset,
                                  match region {
                                      Some(region) => transmute(region),
                                      None => 0 as *mut onig_sys::OnigRegion,
@@ -400,6 +444,16 @@ impl Regex {
         self.search_with_options(text, 0, text.len(), SEARCH_OPTION_NONE, Some(&mut region))
             .map(|_| region.pos(0))
             .unwrap_or(None)
+    }
+
+    /// Get the Encoding of the Regex
+    ///
+    /// # Returns
+    ///
+    /// Returns a reference to an oniguruma encoding which was used
+    /// when this regex was created.
+    pub fn encoding(&self) -> onig_sys::OnigEncoding {
+        unsafe { onig_sys::onig_get_encoding(self.raw) }
     }
 
     pub fn captures_len(&self) -> usize {
