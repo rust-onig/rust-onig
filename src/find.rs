@@ -162,11 +162,7 @@ impl Regex {
 
             let region = Region::clone_from_raw(r);
             let callback = unsafe { &*(ud as *mut F) };
-            if callback(i, j, &region) {
-                0
-            } else {
-                -1
-            }
+            if callback(i, j, &region) { 0 } else { -1 }
         }
 
         unsafe {
@@ -264,7 +260,7 @@ impl<'t> Captures<'t> {
 /// An iterator over capture groups for a particular match of a regular
 /// expression.
 ///
-///`'t` is the lifetime of the matched text.
+/// `'t` is the lifetime of the matched text.
 pub struct SubCaptures<'t> {
     idx: usize,
     caps: &'t Captures<'t>,
@@ -355,10 +351,10 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
         // i.e., no infinite loops please.
         if e == s {
             self.last_end += self.text[self.last_end..]
-                                 .chars()
-                                 .next()
-                                 .map(|c| c.len_utf8())
-                                 .unwrap_or(1);
+                .chars()
+                .next()
+                .map(|c| c.len_utf8())
+                .unwrap_or(1);
             if self.skip_next_empty {
                 self.skip_next_empty = false;
                 return self.next();
@@ -408,10 +404,10 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         // i.e., no infinite loops please.
         if e == s {
             self.last_end += self.text[self.last_end..]
-                                 .chars()
-                                 .next()
-                                 .map(|c| c.len_utf8())
-                                 .unwrap_or(1);
+                .chars()
+                .next()
+                .map(|c| c.len_utf8())
+                .unwrap_or(1);
             if self.skip_next_empty {
                 self.skip_next_empty = false;
                 return self.next();
@@ -582,8 +578,8 @@ mod tests {
         let captures = reg.captures("100 - 3.1415 / 2.0").unwrap();
         assert_eq!(6, captures.offset());
         let all_caps = reg.captures_iter("1 - 3234.3 * 123.2 - 100")
-                          .map(|cap| cap.offset())
-                          .collect::<Vec<_>>();
+            .map(|cap| cap.offset())
+            .collect::<Vec<_>>();
         assert_eq!(vec![4, 13], all_caps);
     }
 }

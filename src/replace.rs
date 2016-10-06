@@ -14,7 +14,8 @@ impl<'t> Replacer for &'t str {
     }
 }
 
-impl<F> Replacer for F where F: FnMut(&Captures) -> String
+impl<F> Replacer for F
+    where F: FnMut(&Captures) -> String
 {
     fn reg_replace<'a>(&'a mut self, caps: &Captures) -> Cow<'a, str> {
         (*self)(caps).into()
