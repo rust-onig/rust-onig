@@ -34,9 +34,13 @@ impl Regex {
     pub fn foreach_name<F>(&self, mut callback: F) -> i32
         where F: FnMut(&str, &[u32]) -> bool
     {
-        extern "C" fn foreach_cb<F>(name: *const OnigUChar, name_end: *const OnigUChar,
-            ngroup_num: c_int, group_nums: *const c_int, _regex: OnigRegex, arg: *mut c_void)
-            -> c_int
+        extern "C" fn foreach_cb<F>(name: *const OnigUChar,
+                                    name_end: *const OnigUChar,
+                                    ngroup_num: c_int,
+                                    group_nums: *const c_int,
+                                    _regex: OnigRegex,
+                                    arg: *mut c_void)
+                                    -> c_int
             where F: FnMut(&str, &[u32]) -> bool
         {
             let name = unsafe {
@@ -51,8 +55,9 @@ impl Regex {
         }
 
         unsafe {
-            onig_sys::onig_foreach_name(self.raw, foreach_cb::<F>,
-                &mut callback as *mut F as *mut c_void)
+            onig_sys::onig_foreach_name(self.raw,
+                                        foreach_cb::<F>,
+                                        &mut callback as *mut F as *mut c_void)
         }
     }
 }

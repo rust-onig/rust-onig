@@ -11,7 +11,6 @@ use onig_sys;
 /// Represents a buffer of characters with encoding information
 /// attached.
 pub trait EncodedChars {
-
     /// Pointer to the start of the pattern
     ///
     /// This should point to the first character in the buffer,
@@ -32,8 +31,9 @@ pub trait EncodedChars {
     fn len(&self) -> usize;
 }
 
-impl <T> EncodedChars for T where T: AsRef<str> {
-
+impl<T> EncodedChars for T
+    where T: AsRef<str>
+{
     fn start_ptr(&self) -> *const onig_sys::OnigUChar {
         self.as_ref().as_bytes().as_ptr()
     }
@@ -52,12 +52,11 @@ impl <T> EncodedChars for T where T: AsRef<str> {
 ///
 /// Represents a buffer of bytes, with an encoding.
 pub struct EncodedBytes<'a> {
-    bytes: &'a[u8],
-    enc: onig_sys::OnigEncoding
+    bytes: &'a [u8],
+    enc: onig_sys::OnigEncoding,
 }
 
 impl<'a> EncodedBytes<'a> {
-
     /// New Buffer from Parts
     ///
     /// # Arguments
@@ -68,10 +67,10 @@ impl<'a> EncodedBytes<'a> {
     /// # Returns
     ///
     /// A new buffer instance
-    pub fn from_parts(bytes: &'a[u8], enc: onig_sys::OnigEncoding) -> EncodedBytes<'a> {
+    pub fn from_parts(bytes: &'a [u8], enc: onig_sys::OnigEncoding) -> EncodedBytes<'a> {
         EncodedBytes {
             bytes: bytes,
-            enc: enc
+            enc: enc,
         }
     }
 
@@ -84,16 +83,15 @@ impl<'a> EncodedBytes<'a> {
     /// # Returns
     ///
     /// A new buffer instance
-    pub fn ascii(bytes: &'a[u8]) -> EncodedBytes<'a> {
+    pub fn ascii(bytes: &'a [u8]) -> EncodedBytes<'a> {
         EncodedBytes {
             bytes: bytes,
-            enc: &onig_sys::OnigEncodingASCII
+            enc: &onig_sys::OnigEncodingASCII,
         }
     }
 }
 
 impl<'a> EncodedChars for EncodedBytes<'a> {
-
     fn start_ptr(&self) -> *const onig_sys::OnigUChar {
         self.bytes.as_ptr()
     }
@@ -121,37 +119,44 @@ pub mod tests {
     #[test]
     pub fn rust_string_encoding_is_utf8() {
         let foo = "foo";
-        assert_eq!(&onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding, foo.encoding());
+        assert_eq!(&onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding,
+                   foo.encoding());
 
         let bar = String::from(".*");
-        assert_eq!(&onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding, bar.encoding());
+        assert_eq!(&onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding,
+                   bar.encoding());
     }
 
     #[test]
     pub fn rust_bytes_encoding_is_ascii() {
         let fizz = b"fizz";
         let buff = EncodedBytes::ascii(fizz);
-        assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding, buff.encoding());
+        assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding,
+                   buff.encoding());
     }
 
     #[test]
     pub fn rust_string_ptr_offsets_are_valid() {
         let test_string = "hello world";
-        assert_eq!(test_string.limit_ptr() as usize - test_string.start_ptr() as usize, test_string.len());
+        assert_eq!(test_string.limit_ptr() as usize - test_string.start_ptr() as usize,
+                   test_string.len());
     }
 
     #[test]
     pub fn rust_bytes_ptr_offsets_are_valid() {
         let fozz = b"foo.*bar";
         let buff = EncodedBytes::ascii(fozz);
-        assert_eq!(buff.limit_ptr() as usize - buff.start_ptr() as usize, fozz.len());
+        assert_eq!(buff.limit_ptr() as usize - buff.start_ptr() as usize,
+                   fozz.len());
     }
 
     #[test]
     pub fn byte_buffer_create() {
         let buff = b"hello world";
         let enc_buffer = EncodedBytes::from_parts(buff, &onig_sys::OnigEncodingASCII);
-        assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding, enc_buffer.encoding());
-        assert_eq!(enc_buffer.limit_ptr() as usize - enc_buffer.start_ptr() as usize, buff.len());
+        assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding,
+                   enc_buffer.encoding());
+        assert_eq!(enc_buffer.limit_ptr() as usize - enc_buffer.start_ptr() as usize,
+                   buff.len());
     }
 }

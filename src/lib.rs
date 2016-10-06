@@ -134,8 +134,7 @@ impl Regex {
     /// let r = Regex::new(r#"hello (\w+)"#);
     /// assert!(r.is_ok());
     /// ```
-    pub fn new(pattern: &str) -> Result<Regex, Error>
-    {
+    pub fn new(pattern: &str) -> Result<Regex, Error> {
         Regex::with_encoding(pattern)
     }
 
@@ -191,8 +190,7 @@ impl Regex {
     pub fn with_options(pattern: &str,
                         option: RegexOptions,
                         syntax: &Syntax)
-                        -> Result<Regex, Error>
-    {
+                        -> Result<Regex, Error> {
         Regex::with_options_and_encoding(pattern, option, syntax)
     }
 
@@ -222,10 +220,10 @@ impl Regex {
     /// assert!(r.is_ok());
     /// ```
     pub fn with_options_and_encoding<T>(pattern: T,
-                           option: RegexOptions,
-                           syntax: &Syntax)
-                           -> Result<Regex, Error>
-        where T : EncodedChars
+                                        option: RegexOptions,
+                                        syntax: &Syntax)
+                                        -> Result<Regex, Error>
+        where T: EncodedChars
     {
         // Convert the rust types to those required for the call to
         // `onig_new`.

@@ -96,10 +96,8 @@ impl Region {
         if pos >= self.len() {
             return None;
         }
-        let (beg, end) = unsafe {
-            (*self.raw.beg.offset(pos as isize),
-             *self.raw.end.offset(pos as isize))
-        };
+        let (beg, end) =
+            unsafe { (*self.raw.beg.offset(pos as isize), *self.raw.end.offset(pos as isize)) };
         if beg != onig_sys::ONIG_REGION_NOTPOS {
             Some((beg as usize, end as usize))
         } else {
