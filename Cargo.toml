@@ -22,9 +22,11 @@ libc = "0.2"
 bitflags = "0.7"
 lazy_static = "0.2"
 
-[dependencies.onig_sys]
+[target.'cfg(not(target_env = "musl"))'.dependencies.onig_sys]
 version = "61.1"
 path = "onig_sys"
 
-[target.'cfg(target_env = "musl")'.dependencies]
-onig_sys = { features = [ "static_onig"] }
+[target.'cfg(target_env = "musl")'.dependencies.onig_sys]
+features = [ "static_onig"]
+version = "61.1"
+path = "onig_sys"
