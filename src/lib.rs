@@ -80,7 +80,7 @@
 //!
 //! ```toml
 //! [dependencies.onig]
-//! version = "1.0"
+//! version = "1.2"
 //! features = ["std-pattern"]
 //! ```
 

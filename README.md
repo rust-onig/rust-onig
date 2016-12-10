@@ -15,7 +15,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-onig = "1.0"
+onig = "1.2"
 ```
 
 Add the following extern to your crate root:
@@ -40,14 +40,13 @@ for (i, pos) in regex.captures("hello").unwrap().iter_pos().enumerate() {
 }
 ```
 
-
 ## Rust-Onig is Open Source
 
 The contents of this repository are distributed under the MIT license. See [LICENSE](LICENSE.md) for more details.
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
- [onig_crate_doc]: http://rust-onig.github.io/rust-onig/onig/
+ [onig_crate_doc]: https://docs.rs/onig/1.2.0/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/examples
- [regex_new]: http://rust-onig.github.io/rust-onig/onig/struct.Regex.html#method.new
- [regex_is_match]: http://rust-onig.github.io/rust-onig/onig/struct.Regex.html#method.is_match
- [regex_find]: http://rust-onig.github.io/rust-onig/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/1.2.0/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/1.2.0/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/1.2.0/onig/struct.Regex.html#method.find
