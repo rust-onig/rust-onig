@@ -25,7 +25,7 @@ pub trait EncodedChars {
 
     /// The encoding of the contents of the buffer
     fn encoding(&self) -> onig_sys::OnigEncoding {
-        &onig_sys::OnigEncodingUTF8
+        unsafe { &onig_sys::OnigEncodingUTF8 }
     }
 
     fn len(&self) -> usize;
@@ -86,7 +86,7 @@ impl<'a> EncodedBytes<'a> {
     pub fn ascii(bytes: &'a [u8]) -> EncodedBytes<'a> {
         EncodedBytes {
             bytes: bytes,
-            enc: &onig_sys::OnigEncodingASCII,
+            enc: unsafe { &onig_sys::OnigEncodingASCII },
         }
     }
 }
@@ -119,11 +119,11 @@ pub mod tests {
     #[test]
     pub fn rust_string_encoding_is_utf8() {
         let foo = "foo";
-        assert_eq!(&onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding,
+        assert_eq!(unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
                    foo.encoding());
 
         let bar = String::from(".*");
-        assert_eq!(&onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding,
+        assert_eq!(unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
                    bar.encoding());
     }
 
@@ -131,7 +131,7 @@ pub mod tests {
     pub fn rust_bytes_encoding_is_ascii() {
         let fizz = b"fizz";
         let buff = EncodedBytes::ascii(fizz);
-        assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding,
+        assert_eq!(unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
                    buff.encoding());
     }
 
@@ -153,8 +153,8 @@ pub mod tests {
     #[test]
     pub fn byte_buffer_create() {
         let buff = b"hello world";
-        let enc_buffer = EncodedBytes::from_parts(buff, &onig_sys::OnigEncodingASCII);
-        assert_eq!(&onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding,
+        let enc_buffer = EncodedBytes::from_parts(buff, unsafe { &onig_sys::OnigEncodingASCII });
+        assert_eq!(unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
                    enc_buffer.encoding());
         assert_eq!(enc_buffer.limit_ptr() as usize - enc_buffer.start_ptr() as usize,
                    buff.len());
