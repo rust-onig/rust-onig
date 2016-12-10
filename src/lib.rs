@@ -16,6 +16,73 @@
 //!     }
 //! }
 //! ```
+//!
+//! # Match vs Search
+//!
+//! There are two basic things you can do with a `Regex` pattern; test
+//! if the pattern matches the whole of a given string, and search for
+//! occurences of the pattern within a string. Oniguruma exposes these
+//! two concepts with the *match* and *search* APIs.
+//!
+//! In addition two these two base Onigurma APIs this crate exposes a
+//! third *find* API, built on top of the *search* API.
+//!
+//! ```
+//! # use onig::Regex;
+//! let pattern = Regex::new("hello").unwrap();
+//! assert_eq!(true, pattern.find("hello world").is_some());
+//! assert_eq!(false, pattern.is_match("hello world"));
+//! ```
+//!
+//! ## The *Match* API
+//!
+//! Functions in the match API check if a pattern matches the entire
+//! string. The simplest of these is `Regex::is_match`. This retuns a
+//! `true` if the pattern matches the string. For more complex useage
+//! then `Regex::match_with_options` and `Regex::match_with_encoding`
+//! can be used. These allow the capture groups to be inspected,
+//! matching with different options, and matching sub-sections of a
+//! given text.
+//!
+//! ## The *Search* API
+//!
+//! Function in the search API search for a pattern anywhere within a
+//! string. The simplist of these is `Regex::find`. This returns the
+//! offset of the first occurence of the pattern within the string.
+//! For more complex useage `Regex::search_with_options` and
+//! `Regex::search_with_encoding` can be used. These allow capture
+//! groups to be inspected, searching with different options and
+//! searching within subsections of a given text.
+//!
+//! ## The *Find* API
+//!
+//! The find API is built on top of the search API. Functions in this
+//! API allow iteration across all matches of the pattern within a
+//! string, not just the first one. The functions deal with some of
+//! the complexities of this, such as zero-length matches.
+//!
+//! The simplest step-up from the basic search API `Regex::find` is
+//! getting the captures relating to a match with the
+//! `Regex::capturess` method. To find capture information for all
+//! matches within a string `Regex::find_iter` and
+//! `Regex::captures_iter` can be used. The former exposes the start
+//! and end of the match as `Regex::find` does, the latter exposes the
+//! whole capture group information as `Regex::captures` does.
+//!
+//! # The `std::pattern` API
+//!
+//! In addition to the main Oniguruma API it is possible to use the
+//! `Regex` object with the
+//! [`std::pattern`](https://doc.rust-lang.org/std/str/pattern/)
+//! API. To enable support compile with the `std-pattern` feature. If
+//! you're using Cargo you can do this by adding the following to your
+//! Cargo.toml:
+//!
+//! ```toml
+//! [dependencies.onig]
+//! version = "1.0"
+//! features = ["std-pattern"]
+//! ```
 
 #![cfg_attr(feature = "std-pattern", feature(pattern))]
 
@@ -265,6 +332,9 @@ impl Regex {
     /// starting at a given offset. This method works the same way as
     /// `match_with_encoding`, but the encoding is always utf-8.
     ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
+    ///
     /// # Arguments
     ///
     /// * `str` - The string slice to match against.
@@ -303,6 +373,9 @@ impl Regex {
     /// regex. If the regex matches then the return value is the
     /// number of characers which matched. If the regex doesn't match
     /// the return is `None`.
+    ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
     ///
     /// The contents of `chars` must have the same encoding that was
     /// used to construct the regex.
@@ -369,6 +442,9 @@ impl Regex {
     /// there is one. If `from` is less than `to`, then search is performed
     /// in forward order, otherwice – in backward order.
     ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
+    ///
     /// # Arguments
     ///
     ///  * `str` - The string to search in.
@@ -410,6 +486,9 @@ impl Regex {
     /// string, if there is one. If `from` is less than `to`, then
     /// search is performed in forward order, otherwice – in backward
     /// order.
+    ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
     ///
     /// The encoding of the buffer passed to search in must match the
     /// encoding of the regex.
@@ -477,6 +556,16 @@ impl Regex {
     }
 
     /// Returns true if and only if the regex matches the string given.
+    ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
+    ///
+    /// # Arguments
+    ///  * `text` - The string slice to test against the pattern.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the pattern matches the whole of `text`, `false` otherwise.
     pub fn is_match(&self, text: &str) -> bool {
         self.match_with_options(text, 0, SEARCH_OPTION_NONE, None)
             .map(|r| r == text.len())
@@ -488,9 +577,11 @@ impl Regex {
     /// Finds the first match of the regular expression within the
     /// buffer.
     ///
-    /// Note that this should only be used if you want to discover the position
-    /// of the match. Testing the existence of a match is faster if you use
-    /// `is_match`.
+    /// Note that this should only be used if you want to discover the
+    /// position of the match within a string. Testing if a pattern
+    /// matches the whole string is faster if you use `is_match`.  For
+    /// more information see [Match vs
+    /// Search](index.html#match-vs-search)
     ///
     /// # Arguments
     ///  * `text` - The text to search in.
@@ -507,6 +598,9 @@ impl Regex {
     ///
     /// Finds the first match of the regular expression within the
     /// buffer.
+    ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
     ///
     /// # Arguments
     ///  * `text` - The text to search in.
