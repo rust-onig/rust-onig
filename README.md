@@ -45,8 +45,8 @@ for (i, pos) in regex.captures("hello").unwrap().iter_pos().enumerate() {
 The contents of this repository are distributed under the MIT license. See [LICENSE](LICENSE.md) for more details.
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
- [onig_crate_doc]: https://docs.rs/onig/1.2.0/onig/
+ [onig_crate_doc]: https://docs.rs/onig/1.2.1/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/examples
- [regex_new]: https://docs.rs/onig/1.2.0/onig/struct.Regex.html#method.new
- [regex_is_match]: https://docs.rs/onig/1.2.0/onig/struct.Regex.html#method.is_match
- [regex_find]: https://docs.rs/onig/1.2.0/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/1.2.1/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/1.2.1/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/1.2.1/onig/struct.Regex.html#method.find
