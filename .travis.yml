@@ -9,6 +9,9 @@ rust:
 - beta
 - nightly
 
+branches:
+  only:
+    - master
 env:
   - ONIG_FEATURES=
 
@@ -49,4 +52,3 @@ matrix:
     - rust: nightly
       os: osx
       env: ONIG_FEATURES=std-pattern
-    

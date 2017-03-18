@@ -7,7 +7,7 @@ links = "onig"
 
 description = """The Onig Sys crate contains raw rust bindings to the
 oniguruma library. This crate exposes a set of unsafe functions which
-can then be used by other craetes to create safe wrappers around
+can then be used by other crates to create safe wrappers around
 Oniguruma.
 
 You probably don't want to link to this crate directly."""
@@ -25,4 +25,6 @@ libc = "0.2"
 
 [build-dependencies]
 pkg-config = "0.3"
-cmake = "0.1"
+
+[target.'cfg(not(target_env="msvc"))'.build-dependencies.cmake]
+version = "0.1"

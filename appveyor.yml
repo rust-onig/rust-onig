@@ -6,6 +6,9 @@
 # Rust needs at least Visual Studio 2013 Appveyor OS for MSVC targets.
 os: Visual Studio 2015
 
+# Don't build pull requests twice
+skip_branch_with_pr: true
+
 ## Build Matrix ##
 
 # This configuration will setup a build for each channel & target combination (12 windows
@@ -30,12 +33,16 @@ environment:
 
 ### MSVC Toolchains ###
 
-  # # Stable 64-bit MSVC
-  #   - channel: stable
-  #     target: x86_64-pc-windows-msvc
-  # # Stable 32-bit MSVC
-  #   - channel: stable
-  #     target: i686-pc-windows-msvc
+  # Stable 64-bit MSVC
+    - channel: stable
+      target: x86_64-pc-windows-msvc
+      TOOLCHAIN: msvc
+      PLATFORM: x86_64
+  # Stable 32-bit MSVC
+    - channel: stable
+      target: i686-pc-windows-msvc
+      TOOLCHAIN: msvc
+      PLATFORM: i686
   # # Beta 64-bit MSVC
   #   - channel: beta
   #     target: x86_64-pc-windows-msvc
@@ -54,26 +61,32 @@ environment:
   # Stable 64-bit GNU
     - channel: stable
       target: x86_64-pc-windows-gnu
+      TOOLCHAIN: msys
       MSYS_BITS: 64
   # Stable 32-bit GNU
     - channel: stable
       target: i686-pc-windows-gnu
+      TOOLCHAIN: msys
       MSYS_BITS: 32
   # Beta 64-bit GNU
     - channel: beta
       target: x86_64-pc-windows-gnu
+      TOOLCHAIN: msys
       MSYS_BITS: 64
   # Beta 32-bit GNU
     - channel: beta
       target: i686-pc-windows-gnu
+      TOOLCHAIN: msys
       MSYS_BITS: 32
   # Nightly 64-bit GNU
     - channel: nightly
       target: x86_64-pc-windows-gnu
+      TOOLCHAIN: msys
       MSYS_BITS: 64
   # Nightly 32-bit GNU
     - channel: nightly
       target: i686-pc-windows-gnu
+      TOOLCHAIN: msys
       MSYS_BITS: 32
 
 ### Allowed failures ###
@@ -110,11 +123,10 @@ matrix:
 install:
 - cmd: git submodule update --init
 - ps: .\appveyor_rust_install.ps1
-- set PATH=C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin;%PATH%
-
-# Alternative install command for simple configurations without build matrix (uncomment line and
-# comment above line):
-#- ps: .\appveyor_rust_install.ps1 -channel stable -target x86_64-pc-windows-msvc
+- if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "i686" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat"
+- if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
+- if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
+- if "%TOOLCHAIN%" == "msys" set PATH=C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin;%PATH%
 
 ## Build Script ##
 
