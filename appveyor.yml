@@ -111,6 +111,7 @@ install:
 - cmd: git submodule update --init
 - ps: .\appveyor_rust_install.ps1
 - set PATH=C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin;%PATH%
+- '"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64'
 
 # Alternative install command for simple configurations without build matrix (uncomment line and
 # comment above line):
