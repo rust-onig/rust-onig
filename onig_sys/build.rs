@@ -38,13 +38,13 @@ fn compile(static_link: bool) {
 pub fn compile(static_link: bool) {
     use std::process::Command;
 
-    // TODO: does this need to be dynamically looked up?
     let onig_dir = env::current_dir().unwrap().join("oniguruma");
     let build_dir = onig_dir.join("src");
     let lib_name = if static_link { "onig_s" } else { "onig" };
     
     let bitness = if cfg!(target_pointer_width="64") { "64" } else { "32" };
 
+    // Execute the oniguruma NMAKE command for the chosen architecture.
     let r = Command::new("cmd")
         .args(&["/c", &format!("make_win{}.bat", bitness)])
         .current_dir(&onig_dir)
