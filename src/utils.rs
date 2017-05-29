@@ -27,7 +27,7 @@ mod tests {
     #[test]
     pub fn utils_get_version_returns_expected_version() {
         let version = version();
-        assert_eq!(version, "6.1.3");
+        assert_eq!(version, "6.3.0");
     }
 
     #[test]
