@@ -46,6 +46,12 @@ matrix:
   allow_failures:
     - rust: nightly
   include:
+    - rust: stable
+      os: osx
+      env: RUSTONIG_STATIC_LIBONIG=1
+    - rust: stable
+      os: linux
+      env: RUSTONIG_STATIC_LIBONIG=1
     - rust: nightly
       os: linux
       env: ONIG_FEATURES=std-pattern
