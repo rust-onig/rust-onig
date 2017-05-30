@@ -69,7 +69,7 @@ pub type OnigCaptureTreeTraverseCallback = extern "C" fn(c_int,
 /// ```c
 /// int (*scan_callback)(int, int, OnigRegion*, void*)
 /// ```
-pub type OnigScanCallback = extern "C" fn (c_int, c_int, *const OnigRegion, *mut c_void) -> c_int;
+pub type OnigScanCallback = extern "C" fn(c_int, c_int, *const OnigRegion, *mut c_void) -> c_int;
 
 #[repr(C)]
 #[derive(Debug, Eq, PartialEq)]
@@ -138,16 +138,10 @@ pub struct OnigEncodingType {
     pub name: *const c_char,
     pub max_enc_len: c_int,
     pub min_enc_len: c_int,
-    pub is_mbc_newline: extern "C" fn(p: *const OnigUChar,
-                                      end: *const OnigUChar)
-                                      -> c_int,
-    pub mbc_to_code: extern "C" fn(p: *const OnigUChar,
-                                   end: *const OnigUChar)
-                                   -> OnigCodePoint,
+    pub is_mbc_newline: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> c_int,
+    pub mbc_to_code: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> OnigCodePoint,
     pub code_to_mbclen: extern "C" fn(code: OnigCodePoint) -> c_int,
-    pub code_to_mbc: extern "C" fn(code: OnigCodePoint,
-                                   buf: *mut OnigUChar)
-                                   -> c_int,
+    pub code_to_mbc: extern "C" fn(code: OnigCodePoint, buf: *mut OnigUChar) -> c_int,
     pub mbc_case_fold: extern "C" fn(flag: OnigCaseFoldType,
                                      pp: *const *const OnigUChar,
                                      end: *const OnigUChar,
@@ -165,18 +159,13 @@ pub struct OnigEncodingType {
                                               p: *const OnigUChar,
                                               end: *const OnigUChar)
                                               -> c_int,
-    pub is_code_ctype: extern "C" fn(code: OnigCodePoint,
-                                     ctype: OnigCtype)
-                                     -> c_int,
+    pub is_code_ctype: extern "C" fn(code: OnigCodePoint, ctype: OnigCtype) -> c_int,
     pub get_ctype_code_range: extern "C" fn(ctype: OnigCtype,
                                             sb_out: *const OnigCodePoint /* ... */)
                                             -> c_int,
-    pub left_adjust_char_head: extern "C" fn(start: *const OnigUChar,
-                                             p: *const OnigUChar)
+    pub left_adjust_char_head: extern "C" fn(start: *const OnigUChar, p: *const OnigUChar)
                                              -> *const OnigUChar,
-    pub is_allowed_reverse_match: extern "C" fn(p: *const OnigUChar,
-                                                end: *const OnigUChar)
-                                                -> c_int,
+    pub is_allowed_reverse_match: extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> c_int,
     pub init: extern "C" fn() -> c_int,
     pub is_initialised: extern "C" fn() -> c_int,
 }
@@ -622,7 +611,8 @@ extern "C" {
                      region: *mut OnigRegion,
                      options: OnigOptionType,
                      scan_callback: OnigScanCallback,
-                     callback_arg: *mut c_void) -> c_int;
+                     callback_arg: *mut c_void)
+                     -> c_int;
 
     ///   Create a region.
     ///
@@ -1001,5 +991,5 @@ extern "C" {
     /// const char* onig_copyright(void);
     /// ```
     pub fn onig_copyright() -> *const c_char;
-    
+
 }

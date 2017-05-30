@@ -35,7 +35,7 @@ extern "C" {
                              s: *const OnigUChar,
                              n: c_int)
                              -> *const OnigUChar;
-    
+
     /// Onigenc Set Default Encoding
     ///
     /// ```c
@@ -49,14 +49,14 @@ extern "C" {
     /// OnigEncoding onigenc_get_default_encoding(void);
     /// ```
     pub fn onigenc_get_default_encoding() -> OnigEncoding;
-    
+
     /// Onigenc Set Default Case Conversion Table
     ///
     /// ```c
     /// void  onigenc_set_default_caseconv_table(const OnigUChar* table);
     /// ```
     pub fn onigenc_set_default_caseconv_table(table: *const OnigUChar);
-    
+
     /// Onigenc Get Right Adjust Char Head With Prev
     ///
     /// ```c
@@ -65,12 +65,11 @@ extern "C" {
     ///     const OnigUChar* start,
     ///     const OnigUChar* s,
     ///     const OnigUChar** prev);
-    pub fn onigenc_get_right_adjust_char_head_with_prev(
-        enc: OnigEncoding,
-        start: *const OnigUChar,
-        s: *const OnigUChar,
-        prev: *mut *const OnigUChar)
-        -> *const OnigUChar;
+    pub fn onigenc_get_right_adjust_char_head_with_prev(enc: OnigEncoding,
+                                                        start: *const OnigUChar,
+                                                        s: *const OnigUChar,
+                                                        prev: *mut *const OnigUChar)
+                                                        -> *const OnigUChar;
 
     ///   Return previous character head address.
     ///

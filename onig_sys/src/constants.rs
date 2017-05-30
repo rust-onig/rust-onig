@@ -30,7 +30,7 @@ define_consts!(OnigCtype,
 
 // Options
 define_consts!(OnigOptionType,
-    // Compile time
+// Compile time
     ONIG_OPTION_DEFAULT            = ONIG_OPTION_NONE;
     ONIG_OPTION_NONE               = 0;
     ONIG_OPTION_IGNORECASE         = 1;
@@ -42,7 +42,7 @@ define_consts!(OnigOptionType,
     ONIG_OPTION_NEGATE_SINGLELINE  = ONIG_OPTION_FIND_NOT_EMPTY     << 1;
     ONIG_OPTION_DONT_CAPTURE_GROUP = ONIG_OPTION_NEGATE_SINGLELINE  << 1;
     ONIG_OPTION_CAPTURE_GROUP      = ONIG_OPTION_DONT_CAPTURE_GROUP << 1;
-    // Search time
+// Search time
     ONIG_OPTION_NOTBOL             = ONIG_OPTION_CAPTURE_GROUP      << 1;
     ONIG_OPTION_NOTEOL             = ONIG_OPTION_NOTBOL             << 1;
     ONIG_OPTION_POSIX_REGION       = ONIG_OPTION_NOTEOL             << 1;
@@ -222,9 +222,7 @@ define_consts!(c_uint,
 );
 
 // Infinite distance
-define_consts!(OnigDistance,
-    ONIG_INFINITE_DISTANCE = !0
-);
+define_consts!(OnigDistance, ONIG_INFINITE_DISTANCE = !0);
 
 // Case fold flags
 define_consts!(OnigCaseFoldType,
