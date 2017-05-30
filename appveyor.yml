@@ -38,6 +38,12 @@ environment:
       target: x86_64-pc-windows-msvc
       TOOLCHAIN: msvc
       PLATFORM: x86_64
+  # Stable 64-bit with static onig
+    - channel: stable
+      target: x86_64-pc-windows-msvc
+      TOOLCHAIN: msvc
+      PLATFORM: x86_64
+      RUSTONIG_STATIC_LIBONIG: 1
   # Stable 32-bit MSVC
     - channel: stable
       target: i686-pc-windows-msvc
@@ -63,6 +69,12 @@ environment:
       target: x86_64-pc-windows-gnu
       TOOLCHAIN: msys
       MSYS_BITS: 64
+  # Stable 64-bit GNU static onig
+    - channel: stable
+      target: x86_64-pc-windows-gnu
+      TOOLCHAIN: msys
+      MSYS_BITS: 64
+      RUSTONIG_STATIC_LIBONIG: 1
   # Stable 32-bit GNU
     - channel: stable
       target: i686-pc-windows-gnu
