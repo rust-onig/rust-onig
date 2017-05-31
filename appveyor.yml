@@ -29,6 +29,7 @@ skip_branch_with_pr: true
 #
 # Comment out channel/target combos you do not wish to build in CI.
 environment:
+  RUSTONIG_STATIC_LIBONIG: 1
   matrix:
 
 ### MSVC Toolchains ###
@@ -127,9 +128,6 @@ install:
 - if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 - if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
 - if "%TOOLCHAIN%" == "msys" set PATH=C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin;%PATH%
-
-environment:
-  RUSTONIG_STATIC_LIBONIG: 1
 
 ## Build Script ##
 

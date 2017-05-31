@@ -40,6 +40,17 @@ for (i, pos) in regex.captures("hello").unwrap().iter_pos().enumerate() {
 }
 ```
 
+## Static Linking
+
+By default `rust-onig` will be dynamically lined to `libonig`. If your would rather that static linking is used then the environment variable `RUSTONIG_STATIC_LIBONIG` can be set. On *nix:
+
+    $ RUSTONIG_STATIC_LIBONING=1 cargo build
+
+Or Windows:
+
+    > set RUSTONIG_STATIC_LIBONIG=1
+    > cargo build
+
 ## Rust-Onig is Open Source
 
 The contents of this repository are distributed under the MIT license. See [LICENSE](LICENSE.md) for more details.
