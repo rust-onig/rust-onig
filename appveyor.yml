@@ -38,12 +38,6 @@ environment:
       target: x86_64-pc-windows-msvc
       TOOLCHAIN: msvc
       PLATFORM: x86_64
-  # Stable 64-bit with static onig
-    - channel: stable
-      target: x86_64-pc-windows-msvc
-      TOOLCHAIN: msvc
-      PLATFORM: x86_64
-      RUSTONIG_STATIC_LIBONIG: 1
   # Stable 32-bit MSVC
     - channel: stable
       target: i686-pc-windows-msvc
@@ -69,12 +63,6 @@ environment:
       target: x86_64-pc-windows-gnu
       TOOLCHAIN: msys
       MSYS_BITS: 64
-  # Stable 64-bit GNU static onig
-    - channel: stable
-      target: x86_64-pc-windows-gnu
-      TOOLCHAIN: msys
-      MSYS_BITS: 64
-      RUSTONIG_STATIC_LIBONIG: 1
   # Stable 32-bit GNU
     - channel: stable
       target: i686-pc-windows-gnu
@@ -140,6 +128,9 @@ install:
 - if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
 - if "%TOOLCHAIN%" == "msys" set PATH=C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin;%PATH%
 
+environment:
+  RUSTONIG_STATIC_LIBONIG: 1
+
 ## Build Script ##
 
 # 'cargo test' takes care of building for us, so disable Appveyor's build stage. This prevents
@@ -150,4 +141,4 @@ build: false
 # perform other testing commands. Rust will automatically be placed in the PATH environment
 # variable.
 test_script:
-- cmd: cargo test --features static-libonig --verbose
+- cmd: cargo test --verbose
