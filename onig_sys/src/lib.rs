@@ -970,6 +970,13 @@ extern "C" {
                                              ranges: *const OnigCodePoint)
                                              -> c_int;
 
+    /// Se the maximum number of captures
+    ///
+    /// Default capture number limit (32767) is not changed. Call
+    /// onig_set_capture_num_limit(0) to be unlimited.
+    ///
+    pub fn onig_set_capture_num_limit(limit: c_int) -> c_int;
+
     ///   The use of this library is finished.
     ///
     ///   `int onig_end(void)`
