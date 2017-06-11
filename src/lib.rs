@@ -116,7 +116,7 @@ pub use buffers::{EncodedChars, EncodedBytes};
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::Syntax;
-pub use utils::{version, copyright};
+pub use utils::{version, copyright, define_user_property};
 
 use std::{error, fmt, str};
 use std::sync::Mutex;

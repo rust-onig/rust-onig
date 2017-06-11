@@ -1,4 +1,5 @@
-use std::ffi::CStr;
+use std::mem;
+use std::ffi::{CStr, CString};
 use onig_sys;
 
 /// Get Version
@@ -18,6 +19,29 @@ pub fn version() -> String {
 pub fn copyright() -> String {
     let raw_copy = unsafe { CStr::from_ptr(onig_sys::onig_copyright()) };
     raw_copy.to_string_lossy().into_owned()
+}
+
+pub type CodePointRange = (onig_sys::OnigCodePoint, onig_sys::OnigCodePoint);
+
+/// Create a User Defined Proeprty
+///
+/// Creates a new user defined property from the given OnigCodePoint vlaues.
+pub fn define_user_property(name: &str, ranges: &[CodePointRange]) -> i32 {
+    let mut raw_ranges = vec![ranges.len() as onig_sys::OnigCodePoint];
+    for &(start, end) in ranges {
+        raw_ranges.push(start);
+        raw_ranges.push(end);
+    }
+    let name = CString::new(name).unwrap();
+    let r =
+        unsafe { onig_sys::onig_unicode_define_user_property(name.as_ptr(), raw_ranges.as_ptr()) };
+
+    // Deliberately leak the memory here as Onig expects to be able to
+    // hang on to the pointer we just gave it. I'm not happy about it
+    // but this does work and the amounts of memory leaked should be
+    // trivial.
+    mem::forget(raw_ranges);
+    r
 }
 
 #[cfg(test)]
