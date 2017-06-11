@@ -115,7 +115,7 @@ pub use find::{Captures, SubCaptures, SubCapturesPos, FindMatches, FindCaptures,
 pub use buffers::{EncodedChars, EncodedBytes};
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
-pub use syntax::Syntax;
+pub use syntax::{Syntax, MetaChar};
 pub use utils::{version, copyright, define_user_property};
 
 use std::{error, fmt, str};

@@ -137,6 +137,9 @@ bitflags! {
         /// `\x{7HHHHHHH}`
         const SYNTAX_OPERATOR_ESC_X_BRACE_HEX8
             = (onig_sys::ONIG_SYN_OP_ESC_X_BRACE_HEX8 as u64),
+        /// Variable meta characters
+        const SYNTAX_OPERATOR_VARIABLE_META_CHARACTERS
+            = (onig_sys::ONIG_SYN_OP_VARIABLE_META_CHARACTERS as u64),
         /// `\Q...\E`
         const SYNTAX_OPERATOR_ESC_CAPITAL_Q_QUOTE
             = (onig_sys::ONIG_SYN_OP2_ESC_CAPITAL_Q_QUOTE as u64) << 32,
@@ -258,5 +261,16 @@ bitflags! {
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_LAST,
         const CALLBACK_AT_BOTH =
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_BOTH
+    }
+}
+
+bitflags! {
+    pub flags MetaCharType: libc::c_uint {
+        const META_CHAR_ESCAPE = onig_sys::ONIG_META_CHAR_ESCAPE,
+        const META_CHAR_ANYCHAR =  onig_sys::ONIG_META_CHAR_ANYCHAR,
+        const META_CHAR_ANYTIME =  onig_sys::ONIG_META_CHAR_ANYTIME,
+        const META_CHAR_ZERO_OR_ONE_TIME =  onig_sys::ONIG_META_CHAR_ZERO_OR_ONE_TIME,
+        const META_CHAR_ONE_OR_MORE_TIME =  onig_sys::ONIG_META_CHAR_ONE_OR_MORE_TIME,
+        const META_CHAR_ANYCHAR_ANYTIME =  onig_sys::ONIG_META_CHAR_ANYCHAR_ANYTIME
     }
 }

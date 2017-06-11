@@ -1,6 +1,11 @@
 use std::mem::transmute;
 use onig_sys;
-use super::{SyntaxOperator, SyntaxBehavior, RegexOptions};
+use super::{SyntaxOperator, SyntaxBehavior, RegexOptions, MetaCharType};
+
+pub enum MetaChar {
+    Character(char),
+    Ineffective,
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct Syntax {
@@ -119,6 +124,17 @@ impl Syntax {
         let options = options.bits() as onig_sys::OnigOptionType;
         unsafe {
             onig_sys::onig_set_syntax_options(&mut self.raw, options);
+        }
+    }
+
+    pub fn set_meta_char(&mut self, what: MetaCharType, meta: MetaChar) {
+        let what = what.bits();
+        let code = match meta {
+            MetaChar::Ineffective => onig_sys::ONIG_INEFFECTIVE_META_CHAR,
+            MetaChar::Character(char) => char as u32,
+        };
+        unsafe {
+            onig_sys::onig_set_meta_char(&mut self.raw, what, code);
         }
     }
 }
