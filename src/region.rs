@@ -4,6 +4,7 @@ use libc::c_int;
 use onig_sys;
 
 use super::CaptureTreeNode;
+use super::flags::{TraverseCallbackAt, CALLBACK_AT_FIRST};
 
 /// Represents a set of capture groups found in a search or match.
 #[derive(Debug, Eq, PartialEq)]
@@ -122,6 +123,52 @@ impl Region {
         RegionIter {
             region: self,
             pos: 0,
+        }
+    }
+
+    /// Walk the Tree of Captures
+    ///
+    /// The given callback is invoked for each node in the capture
+    /// tree. Each node is passed to the callback before any children.
+    pub fn tree_traverse<F>(&self, callback: F) -> i32
+        where F: Fn(u32, (usize, usize), u32) -> bool
+    {
+        self.tree_traverse_at(CALLBACK_AT_FIRST, callback)
+    }
+
+    /// Walk the Tree of Captures in a Given Order
+    ///
+    /// The given callback is invoked for each node in the capture
+    /// tree. The order in which the callback is invoked can be
+    /// chosen.
+    pub fn tree_traverse_at<F>(&self, at: TraverseCallbackAt, mut callback: F) -> i32
+        where F: Fn(u32, (usize, usize), u32) -> bool
+    {
+        use onig_sys::onig_capture_tree_traverse;
+        use libc::{c_void, c_int};
+
+        extern "C" fn traverse_cb<F>(group: c_int,
+                                     beg: c_int,
+                                     end: c_int,
+                                     level: c_int,
+                                     _at: c_int,
+                                     ud: *mut c_void)
+                                     -> c_int
+            where F: Fn(u32, (usize, usize), u32) -> bool
+        {
+            let callback = unsafe { &*(ud as *mut F) };
+            if callback(group as u32, (beg as usize, end as usize), level as u32) {
+                0
+            } else {
+                -1
+            }
+        }
+
+        unsafe {
+            onig_capture_tree_traverse(&self.raw,
+                                       at.bits(), // ONIG_TRAVERSE_CALLBACK_AT_FIRST,
+                                       traverse_cb::<F>,
+                                       &mut callback as *mut F as *mut c_void)
         }
     }
 }

@@ -828,7 +828,7 @@ extern "C" {
     pub fn onig_capture_tree_traverse(region: *const OnigRegion,
                                       at: c_int,
                                       func: OnigCaptureTreeTraverseCallback,
-                                      arg: c_void)
+                                      arg: *mut c_void)
                                       -> c_int;
 
 

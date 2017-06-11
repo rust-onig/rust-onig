@@ -1,4 +1,5 @@
 use onig_sys;
+use libc;
 
 bitflags! {
     /// Regex parsing and compilation options.
@@ -246,5 +247,16 @@ bitflags! {
         /// `(?:a*)+`
         const SYNTAX_BEHAVIOR_WARN_REDUNDANT_NESTED_REPEAT
             = onig_sys::ONIG_SYN_WARN_REDUNDANT_NESTED_REPEAT
+    }
+}
+
+bitflags! {
+    pub flags TraverseCallbackAt: libc::c_int {
+        const CALLBACK_AT_FIRST =
+            onig_sys::ONIG_TRAVERSE_CALLBACK_AT_FIRST,
+        const CALLBACK_AT_LAST =
+            onig_sys::ONIG_TRAVERSE_CALLBACK_AT_LAST,
+        const CALLBACK_AT_BOTH =
+            onig_sys::ONIG_TRAVERSE_CALLBACK_AT_BOTH
     }
 }
