@@ -48,6 +48,8 @@ pub fn compile(static_link: bool) {
     let r = Command::new("cmd")
         .args(&["/c", &format!("make_win{}.bat", bitness)])
         .current_dir(&onig_dir)
+        .env_remove("MFLAGS")
+        .env_remove("MAKEFLAGS")
         .output()
         .expect("error running build");
 
