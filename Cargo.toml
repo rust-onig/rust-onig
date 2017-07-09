@@ -1,6 +1,6 @@
 [package]
 name = "onig"
-version = "1.4.0"
+version = "1.4.1"
 authors = [
         "Will Speak <will@willspeak.me>",
         "Ivan Ivashchenko <defuz@me.com>"
@@ -23,10 +23,10 @@ bitflags = "0.7"
 lazy_static = "0.2"
 
 [target.'cfg(not(target_env = "musl"))'.dependencies.onig_sys]
-version = "64.0.0"
+version = "64.0.1"
 path = "onig_sys"
 
 [target.'cfg(target_env = "musl")'.dependencies.onig_sys]
 features = [ "static_onig"]
-version = "64.0.0"
+version = "64.0.1"
 path = "onig_sys"
