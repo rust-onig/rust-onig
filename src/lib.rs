@@ -138,6 +138,9 @@ pub struct Regex {
     raw: onig_sys::OnigRegexMut,
 }
 
+unsafe impl Send for Regex {}
+unsafe impl Sync for Regex {}
+
 impl Error {
     fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
         let mut buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
