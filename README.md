@@ -15,7 +15,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-onig = "1.5"
+onig = "1.6"
 ```
 
 Add the following extern to your crate root:
@@ -56,8 +56,8 @@ Or Windows:
 The contents of this repository are distributed under the MIT license. See [LICENSE](LICENSE.md) for more details.
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
- [onig_crate_doc]: https://docs.rs/onig/1.5.0/onig/
+ [onig_crate_doc]: https://docs.rs/onig/1.6.0/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/examples
- [regex_new]: https://docs.rs/onig/1.5.0/onig/struct.Regex.html#method.new
- [regex_is_match]: https://docs.rs/onig/1.5.0/onig/struct.Regex.html#method.is_match
- [regex_find]: https://docs.rs/onig/1.5.0/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/1.6.0/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/1.6.0/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/1.6.0/onig/struct.Regex.html#method.find
