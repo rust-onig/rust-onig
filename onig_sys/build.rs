@@ -44,6 +44,18 @@ pub fn compile(static_link: bool) {
         "32"
     };
 
+    let clean = Command::new("nmake")
+        .args(&["-f", "Makefile.windows", "clean"])
+        .current_dir(onig_dir.join("src"))
+        .env_remove("MFLAGS")
+        .env_remove("MAKEFLAGS")
+        .status()
+        .expect("error cleaning repository");
+
+    if !clean.success() {
+        panic!("Build error: clean returned '{}'", clean);
+    }
+
     // Execute the oniguruma NMAKE command for the chosen architecture.
     let r = Command::new("cmd")
         .args(&["/c", &format!("make_win{}.bat", bitness)])
