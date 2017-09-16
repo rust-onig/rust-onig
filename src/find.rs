@@ -1,5 +1,5 @@
 use std::iter::Iterator;
-use super::{Region, Regex, SearchOptions, SEARCH_OPTION_NONE};
+use super::{Region, Regex, SearchOptions};
 
 impl Regex {
     /// Returns the capture groups corresponding to the leftmost-first match
@@ -7,7 +7,11 @@ impl Regex {
     /// If no match is found, then `None` is returned.
     pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
         let mut region = Region::new();
-        self.search_with_options(text, 0, text.len(), SEARCH_OPTION_NONE, Some(&mut region))
+        self.search_with_options(text,
+                                 0,
+                                 text.len(),
+                                 SearchOptions::SEARCH_OPTION_NONE,
+                                 Some(&mut region))
             .map(|pos| {
                 Captures {
                     text: text,
@@ -181,7 +185,10 @@ impl Regex {
     {
 
         let mut region = Region::new();
-        self.scan_with_region(to_search, &mut region, SEARCH_OPTION_NONE, |n, s, region| {
+        self.scan_with_region(to_search,
+                              &mut region,
+                              SearchOptions::SEARCH_OPTION_NONE,
+                              |n, s, region| {
             let captures = Captures {
                 text: to_search,
                 region: region.clone(),
@@ -339,7 +346,7 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
         let r = self.regex.search_with_options(self.text,
                                                self.last_end,
                                                self.text.len(),
-                                               SEARCH_OPTION_NONE,
+                                               SearchOptions::SEARCH_OPTION_NONE,
                                                Some(&mut self.region));
         if r.is_none() {
             return None;
@@ -393,7 +400,7 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         let r = self.regex.search_with_options(self.text,
                                                self.last_end,
                                                self.text.len(),
-                                               SEARCH_OPTION_NONE,
+                                               SearchOptions::SEARCH_OPTION_NONE,
                                                Some(&mut region));
         if r.is_none() {
             return None;

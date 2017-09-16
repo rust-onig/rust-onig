@@ -4,7 +4,7 @@ use onig::*;
 
 fn exec(syntax: &Syntax, pattern: &str, to_search: &str) {
 
-    let reg = Regex::with_options(pattern, REGEX_OPTION_NONE, syntax).unwrap();
+    let reg = Regex::with_options(pattern, RegexOptions::REGEX_OPTION_NONE, syntax).unwrap();
 
     match reg.captures(to_search) {
         Some(caps) => {

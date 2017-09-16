@@ -4,7 +4,7 @@ use libc::c_int;
 use onig_sys;
 
 use super::CaptureTreeNode;
-use super::flags::{TraverseCallbackAt, CALLBACK_AT_FIRST};
+use super::flags::TraverseCallbackAt;
 
 /// Represents a set of capture groups found in a search or match.
 #[derive(Debug, Eq, PartialEq)]
@@ -133,7 +133,7 @@ impl Region {
     pub fn tree_traverse<F>(&self, callback: F) -> i32
         where F: Fn(u32, (usize, usize), u32) -> bool
     {
-        self.tree_traverse_at(CALLBACK_AT_FIRST, callback)
+        self.tree_traverse_at(TraverseCallbackAt::CALLBACK_AT_FIRST, callback)
     }
 
     /// Walk the Tree of Captures in a Given Order
@@ -226,7 +226,7 @@ impl<'a> Iterator for RegionIter<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use super::super::{Regex, SEARCH_OPTION_NONE};
+    use super::super::{Regex, SearchOptions};
 
     #[test]
     fn test_region_create() {
@@ -284,7 +284,11 @@ mod tests {
     fn test_region_iterate_with_captures() {
         let mut region = Region::new();
         let reg = Regex::new("(a+)(b+)(c+)").unwrap();
-        let res = reg.search_with_options("aaaabbbbc", 0, 9, SEARCH_OPTION_NONE, Some(&mut region));
+        let res = reg.search_with_options("aaaabbbbc",
+                                          0,
+                                          9,
+                                          SearchOptions::SEARCH_OPTION_NONE,
+                                          Some(&mut region));
         assert!(res.is_some());
         let all = region.iter().collect::<Vec<_>>();
         assert_eq!(all, vec![(0, 9), (0, 4), (4, 8), (8, 9)]);
@@ -294,7 +298,11 @@ mod tests {
     fn test_region_all_iteration_options() {
         let mut region = Region::new();
         let reg = Regex::new("a(b)").unwrap();
-        let res = reg.search_with_options("habitat", 0, 7, SEARCH_OPTION_NONE, Some(&mut region));
+        let res = reg.search_with_options("habitat",
+                                          0,
+                                          7,
+                                          SearchOptions::SEARCH_OPTION_NONE,
+                                          Some(&mut region));
         assert!(res.is_some());
 
         // collect into a vector by iterating with a for loop

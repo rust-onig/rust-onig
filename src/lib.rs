@@ -230,7 +230,9 @@ impl Regex {
     pub fn with_encoding<T>(pattern: T) -> Result<Regex, Error>
         where T: EncodedChars
     {
-        Regex::with_options_and_encoding(pattern, REGEX_OPTION_NONE, Syntax::default())
+        Regex::with_options_and_encoding(pattern,
+                                         RegexOptions::REGEX_OPTION_NONE,
+                                         Syntax::default())
     }
 
     /// Create a new Regex
@@ -249,9 +251,9 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{Regex, Syntax, REGEX_OPTION_NONE};
+    /// use onig::{Regex, Syntax, RegexOptions};
     /// let r = Regex::with_options("hello.*world",
-    ///                             REGEX_OPTION_NONE,
+    ///                             RegexOptions::REGEX_OPTION_NONE,
     ///                             Syntax::default());
     /// assert!(r.is_ok());
     /// ```
@@ -282,10 +284,10 @@ impl Regex {
     ///
     /// # Examples
     /// ```
-    /// use onig::{Regex, Syntax, EncodedBytes, REGEX_OPTION_SINGLELINE};
+    /// use onig::{Regex, Syntax, EncodedBytes, RegexOptions};
     /// let pattern = EncodedBytes::ascii(b"hello");
     /// let r = Regex::with_options_and_encoding(pattern,
-    ///                                          REGEX_OPTION_SINGLELINE,
+    ///                                          RegexOptions::REGEX_OPTION_SINGLELINE,
     ///                                          Syntax::default());
     /// assert!(r.is_ok());
     /// ```
@@ -353,10 +355,10 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{Regex, SEARCH_OPTION_NONE};
+    /// use onig::{Regex, SearchOptions};
     ///
     /// let r = Regex::new(".*").unwrap();
-    /// let res = r.match_with_options("hello", 0, SEARCH_OPTION_NONE, None);
+    /// let res = r.match_with_options("hello", 0, SearchOptions::SEARCH_OPTION_NONE, None);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
     /// ```
@@ -398,11 +400,11 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{Regex, EncodedBytes, SEARCH_OPTION_NONE};
+    /// use onig::{Regex, EncodedBytes, SearchOptions};
     ///
     /// let r = Regex::with_encoding(EncodedBytes::ascii(b".*")).unwrap();
     /// let res = r.match_with_encoding(EncodedBytes::ascii(b"world"),
-    ///                                 0, SEARCH_OPTION_NONE, None);
+    ///                                 0, SearchOptions::SEARCH_OPTION_NONE, None);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
     /// ```
@@ -465,10 +467,10 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{Regex, SEARCH_OPTION_NONE};
+    /// use onig::{Regex, SearchOptions};
     ///
     /// let r = Regex::new("l{1,2}").unwrap();
-    /// let res = r.search_with_options("hello", 0, 5, SEARCH_OPTION_NONE, None);
+    /// let res = r.search_with_options("hello", 0, 5, SearchOptions::SEARCH_OPTION_NONE, None);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
     /// ```
@@ -513,11 +515,11 @@ impl Regex {
     /// # Examples
     ///
     /// ```
-    /// use onig::{Regex,EncodedBytes,SEARCH_OPTION_NONE};
+    /// use onig::{Regex, EncodedBytes, SearchOptions};
     ///
     /// let r = Regex::with_encoding(EncodedBytes::ascii(b"l{1,2}")).unwrap();
     /// let res = r.search_with_encoding(EncodedBytes::ascii(b"hello"),
-    ///                                  0, 5, SEARCH_OPTION_NONE, None);
+    ///                                  0, 5, SearchOptions::SEARCH_OPTION_NONE, None);
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
     /// ```
@@ -570,7 +572,7 @@ impl Regex {
     ///
     /// `true` if the pattern matches the whole of `text`, `false` otherwise.
     pub fn is_match(&self, text: &str) -> bool {
-        self.match_with_options(text, 0, SEARCH_OPTION_NONE, None)
+        self.match_with_options(text, 0, SearchOptions::SEARCH_OPTION_NONE, None)
             .map(|r| r == text.len())
             .unwrap_or(false)
     }
@@ -617,7 +619,11 @@ impl Regex {
     {
         let mut region = Region::new();
         let len = text.len();
-        self.search_with_encoding(text, 0, len, SEARCH_OPTION_NONE, Some(&mut region))
+        self.search_with_encoding(text,
+                                  0,
+                                  len,
+                                  SearchOptions::SEARCH_OPTION_NONE,
+                                  Some(&mut region))
             .and_then(|_| region.pos(0))
     }
 
@@ -655,7 +661,7 @@ mod tests {
 
     #[test]
     fn test_regex_create() {
-        Regex::with_options(".*", REGEX_OPTION_NONE, Syntax::default()).unwrap();
+        Regex::with_options(".*", RegexOptions::REGEX_OPTION_NONE, Syntax::default()).unwrap();
 
         Regex::new(r#"a \w+ word"#).unwrap();
     }
@@ -670,7 +676,7 @@ mod tests {
     #[test]
     fn test_failed_match() {
         let regex = Regex::new("foo").unwrap();
-        let res = regex.match_with_options("bar", 0, SEARCH_OPTION_NONE, None);
+        let res = regex.match_with_options("bar", 0, SearchOptions::SEARCH_OPTION_NONE, None);
         assert!(res.is_none());
     }
 
@@ -679,7 +685,11 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("e(l+)").unwrap();
 
-        let r = regex.search_with_options("hello", 0, 5, SEARCH_OPTION_NONE, Some(&mut region));
+        let r = regex.search_with_options("hello",
+                                          0,
+                                          5,
+                                          SearchOptions::SEARCH_OPTION_NONE,
+                                          Some(&mut region));
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(1));
@@ -700,7 +710,10 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("he(l+)").unwrap();
 
-        let r = regex.match_with_options("hello", 0, SEARCH_OPTION_NONE, Some(&mut region));
+        let r = regex.match_with_options("hello",
+                                         0,
+                                         SearchOptions::SEARCH_OPTION_NONE,
+                                         Some(&mut region));
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(4));

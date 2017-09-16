@@ -12,7 +12,7 @@ fn main() {
         println!("Compiling '{}'", arg);
         let regex_compilation = Regex::with_options(
             &arg,
-            onig::REGEX_OPTION_SINGLELINE,
+            onig::RegexOptions::REGEX_OPTION_SINGLELINE,
             onig::Syntax::emacs());
         match regex_compilation {
             Ok(regex) => {regexes.insert(arg, regex);},
@@ -26,7 +26,7 @@ fn main() {
             for (name, regex) in regexes.iter() {
                 let res = regex.search_with_options(&line,
                                                     0, line.len(),
-                                                    onig::SEARCH_OPTION_NONE,
+                                                    onig::SearchOptions::SEARCH_OPTION_NONE,
                                                     None);
                 match res {
                     Some(pos) => println!("{} => matched @ {}", name, pos),

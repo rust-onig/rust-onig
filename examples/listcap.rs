@@ -5,7 +5,7 @@ use onig::*;
 fn ex(hay: &str, pattern: &str, syntax: &Syntax) {
 
     let reg = Regex::with_options(pattern,
-                                  REGEX_OPTION_NONE,
+                                  RegexOptions::REGEX_OPTION_NONE,
                                   syntax).unwrap();
 
     println!("number of captures: {}", reg.captures_len());
@@ -16,7 +16,7 @@ fn ex(hay: &str, pattern: &str, syntax: &Syntax) {
     let r = reg.search_with_options(hay,
                                     0,
                                     hay.len(),
-                                    SEARCH_OPTION_NONE,
+                                    SearchOptions::SEARCH_OPTION_NONE,
                                     Some(&mut region));
     if let Some(pos) = r {
         println!("match at {}", pos);
@@ -34,7 +34,7 @@ fn ex(hay: &str, pattern: &str, syntax: &Syntax) {
 
 fn main() {
     let mut syn = Syntax::default().clone();
-    syn.enable_operators(SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
+    syn.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
 
     ex("((())())", "\\g<p>(?@<p>\\(\\g<s>\\)){0}(?@<s>(?:\\g<p>)*|){0}", &syn);
     ex("x00x00x00", "(?@x(?@\\d+))+", &syn);

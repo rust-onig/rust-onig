@@ -73,15 +73,17 @@ mod tests {
     fn test_regex_search_with_region_tree() {
         let mut region = Region::new();
         let mut syntax = Syntax::ruby().clone();
-        syntax.enable_operators(SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
+        syntax.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
 
-        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))", REGEX_OPTION_NONE, &syntax)
+        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))",
+                                        RegexOptions::REGEX_OPTION_NONE,
+                                        &syntax)
             .unwrap();
 
         let r = regex.search_with_options("- cd aaabbb -",
                                           0,
                                           13,
-                                          SEARCH_OPTION_NONE,
+                                          SearchOptions::SEARCH_OPTION_NONE,
                                           Some(&mut region));
 
         assert_eq!(r, Some(2));
