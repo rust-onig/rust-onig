@@ -25,48 +25,24 @@ if (!$target) {
     $target = "x86_64-pc-windows-msvc"
 }
 
-$downloadUrl = "https://static.rust-lang.org/dist/"
-if ($env:RUST_DOWNLOAD_URL) {
-    $downloadUrl = $env:RUST_DOWNLOAD_URL
+$toolchain = "${channel}-${target}"
+
+echo "Downloading rustup"
+
+appveyor DownloadFile "https://win.rustup.rs/" -FileName "rustup-init.exe" 2>&1
+./rustup-init.exe -y --default-host=x86_64-pc-windows-msvc 2>&1
+
+$env:PATH+=";C:\Users\appveyor\.cargo\bin"
+
+if ($toolchain -ne "x86_64-pc-windows-msvc") {
+	echo "Setting default toolchain to ${toolchain}"
+
+	rustup default $toolchain
 }
-
-$installDir = "C:\Rust"
-if ($env:RUST_INSTALL_DIR) {
-    $installUrl = $env:RUST_INSTALL_DIR
-}
-
-if ($channel -eq "stable") {
-    # Download manifest so we can find actual filename of installer to download. Needed for stable.
-    echo "Downloading $channel channel manifest"
-    $manifest = "${env:Temp}\channel-rust-${channel}"
-    Start-FileDownload "${downloadUrl}channel-rust-${channel}" -FileName "$manifest"
-
-    # Search the manifest lines for the correct filename based on target
-    $match = Get-Content "$manifest" | Select-String -pattern "${target}.exe" -simplematch
-
-    if (!$match -or !$match.line) {
-        throw "Could not find $target in $channel channel manifest"
-    }
-
-    $installer = $match.line
-} else {
-    # Otherwise download the file specified by channel directly.
-    $installer = "rust-${channel}-${target}.exe"
-}
-
-# Download installer
-echo "Downloading ${downloadUrl}$installer"
-Start-FileDownload "${downloadUrl}$installer" -FileName "${env:Temp}\$installer"
-
-# Execute installer and wait for it to finish
-echo "Installing $installer to $installDir"
-&"${env:Temp}\$installer" /VERYSILENT /NORESTART /DIR="$installDir" | Write-Output
-
-# Add Rust to the path.
-$env:Path += ";${installDir}\bin;C:\MinGW\bin"
 
 echo "Installation of $channel Rust $target completed"
 
 # Test and display installed version information for rustc and cargo
-rustc -V
-cargo -V
+rustc -vV
+cargo -vV
+rustup -vV
