@@ -77,13 +77,21 @@ pub fn compile(static_link: bool) {
              lib_name);
 }
 
+#[cfg(not(target_env = "musl"))]
+fn should_static_link() -> bool {
+    env::var("CARGO_FEATURE_STATIC_ONIG").is_ok() ||
+        env::var("RUSTONIG_STATIC_LIBONIG").is_ok()
+}
+
+#[cfg(target_env = "musl")]
+fn should_static_link() -> bool {
+    true
+}
+
 pub fn main() {
     if let Ok(_) = pkg_config::find_library("oniguruma") {
         return;
     }
 
-    let static_link = env::var("CARGO_FEATURE_STATIC_ONIG").is_ok() ||
-                      env::var("RUSTONIG_STATIC_LIBONIG").is_ok();
-
-    compile(static_link);
+    compile(should_static_link());
 }

@@ -15,18 +15,12 @@ license = "MIT"
 
 [features]
 std-pattern = []
-static-libonig = ["onig_sys/static_onig"]
 
 [dependencies]
 libc = "0.2"
 bitflags = "1.0"
 lazy_static = "0.2"
 
-[target.'cfg(not(target_env = "musl"))'.dependencies.onig_sys]
-version = "65.0.1"
-path = "onig_sys"
-
-[target.'cfg(target_env = "musl")'.dependencies.onig_sys]
-features = [ "static_onig"]
-version = "65.0.1"
+[dependencies.onig_sys]
+version = "66.1.0"
 path = "onig_sys"
