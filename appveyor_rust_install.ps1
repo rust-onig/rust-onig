@@ -41,5 +41,6 @@ rustup default $toolchain
 echo "Installation of $channel Rust $target completed"
 
 # Test and display installed version information for rustc and cargo
-rustc -V
-cargo -V
+rustc -vV
+cargo -vV
+rustup -vV
