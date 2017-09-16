@@ -27,8 +27,10 @@ if (!$target) {
 
 $toolchain = "${channel}-${target}"
 
-Start-FileDownload "https://win.rustup.rs/" -FileName "rustup-init.exe"
-&./rustup-init.exe -y --default-host=$target
+echo "Downloading rustup"
+
+& appveyor DownloadFile "https://win.rustup.rs/" -FileName "rustup-init.exe"
+& ./rustup-init.exe -y --default-host=$target
 
 $env:PATH+=";C:\Users\appveyor\.cargo\bin"
 
