@@ -29,14 +29,16 @@ $toolchain = "${channel}-${target}"
 
 echo "Downloading rustup"
 
-& appveyor DownloadFile "https://win.rustup.rs/" -FileName "rustup-init.exe" 2>&1
-& ./rustup-init.exe -y --default-host=x86_64-pc-windows-msvc 2>&1
+appveyor DownloadFile "https://win.rustup.rs/" -FileName "rustup-init.exe" 2>&1
+./rustup-init.exe -y --default-host=x86_64-pc-windows-msvc 2>&1
 
 $env:PATH+=";C:\Users\appveyor\.cargo\bin"
 
-echo "Setting default toolchain to ${toolchain}"
+if ($toolchain != "x86_64-pc-windows-msvc") {
+	echo "Setting default toolchain to ${toolchain}"
 
-rustup default $toolchain
+	rustup default $toolchain
+}
 
 echo "Installation of $channel Rust $target completed"
 
