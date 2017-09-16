@@ -34,7 +34,7 @@ appveyor DownloadFile "https://win.rustup.rs/" -FileName "rustup-init.exe" 2>&1
 
 $env:PATH+=";C:\Users\appveyor\.cargo\bin"
 
-if ($toolchain != "x86_64-pc-windows-msvc") {
+if ($toolchain -ne "x86_64-pc-windows-msvc") {
 	echo "Setting default toolchain to ${toolchain}"
 
 	rustup default $toolchain
