@@ -34,8 +34,8 @@ fn compile(static_link: bool) {
 pub fn compile(static_link: bool) {
     use std::process::Command;
 
-    let onig_dir = env::current_dir().unwrap().join("oniguruma");
-    let build_dir = onig_dir.join("src");
+    let onig_sys_dir = env::current_dir().unwrap();
+    let build_dir = env::var("OUT_DIR").unwrap();
     let lib_name = if static_link { "onig_s" } else { "onig" };
 
     let bitness = if cfg!(target_pointer_width = "64") {
@@ -44,22 +44,12 @@ pub fn compile(static_link: bool) {
         "32"
     };
 
-    let clean = Command::new("nmake")
-        .args(&["-f", "Makefile.windows", "clean"])
-        .current_dir(onig_dir.join("src"))
-        .env_remove("MFLAGS")
-        .env_remove("MAKEFLAGS")
-        .status()
-        .expect("error cleaning repository");
-
-    if !clean.success() {
-        panic!("Build error: clean returned '{}'", clean);
-    }
-
     // Execute the oniguruma NMAKE command for the chosen architecture.
+    let cmd = format!("make_win{}.bat", bitness);
+    println!("{}", cmd);
     let r = Command::new("cmd")
-        .args(&["/c", &format!("make_win{}.bat", bitness)])
-        .current_dir(&onig_dir)
+        .args(&["/c", &(onig_sys_dir.join(cmd).display().to_string())])
+        .current_dir(&build_dir)
         .env_remove("MFLAGS")
         .env_remove("MAKEFLAGS")
         .output()
@@ -71,7 +61,7 @@ pub fn compile(static_link: bool) {
         panic!("Build error:\nSTDERR:{}\nSTDOUT:{}", err, out);
     }
 
-    println!("cargo:rustc-link-search=native={}", build_dir.display());
+    println!("cargo:rustc-link-search=native={}", build_dir);
     println!("cargo:rustc-link-lib={}={}",
              rustc_link_type(static_link),
              lib_name);
