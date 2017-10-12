@@ -26,7 +26,7 @@ fn compile(static_link: bool) {
         .build();
 
     println!("cargo:rustc-link-search=native={}",
-             dst.join("build").display());
+             dst.join("build").to_string_lossy());
     println!("cargo:rustc-link-lib={}=onig", rustc_link_type(static_link));
 }
 
@@ -48,7 +48,7 @@ pub fn compile(static_link: bool) {
     let cmd = format!("make_win{}.bat", bitness);
     println!("{}", cmd);
     let r = Command::new("cmd")
-        .args(&["/c", &(onig_sys_dir.join(cmd).display().to_string())])
+        .args(&["/c", &(onig_sys_dir.join(cmd).to_string_lossy())])
         .current_dir(&build_dir)
         .env_remove("MFLAGS")
         .env_remove("MAKEFLAGS")
