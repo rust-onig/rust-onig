@@ -75,7 +75,7 @@ fn compile(link_type: LinkType) {
 }
 
 #[cfg(target_env = "msvc")]
-pub fn compile(link_type: LinkType) {
+fn compile(link_type: LinkType) {
     use std::process::Command;
 
     let onig_sys_dir = env::current_dir().unwrap();
