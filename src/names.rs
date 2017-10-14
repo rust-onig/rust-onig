@@ -29,16 +29,19 @@ impl Regex {
     /// Calls `callback` for each named group in the regex. Each callback gets the group name
     /// and group indices.
     pub fn foreach_name<F>(&self, mut callback: F) -> i32
-        where F: FnMut(&str, &[u32]) -> bool
+    where
+        F: FnMut(&str, &[u32]) -> bool,
     {
-        extern "C" fn foreach_cb<F>(name: *const OnigUChar,
-                                    name_end: *const OnigUChar,
-                                    ngroup_num: c_int,
-                                    group_nums: *const c_int,
-                                    _regex: OnigRegex,
-                                    arg: *mut c_void)
-                                    -> c_int
-            where F: FnMut(&str, &[u32]) -> bool
+        extern "C" fn foreach_cb<F>(
+            name: *const OnigUChar,
+            name_end: *const OnigUChar,
+            ngroup_num: c_int,
+            group_nums: *const c_int,
+            _regex: OnigRegex,
+            arg: *mut c_void,
+        ) -> c_int
+        where
+            F: FnMut(&str, &[u32]) -> bool,
         {
             let name = unsafe {
                 from_utf8_unchecked(from_raw_parts(name, (name_end as usize - name as usize)))
@@ -52,9 +55,11 @@ impl Regex {
         }
 
         unsafe {
-            onig_sys::onig_foreach_name(self.raw,
-                                        foreach_cb::<F>,
-                                        &mut callback as *mut F as *mut c_void)
+            onig_sys::onig_foreach_name(
+                self.raw,
+                foreach_cb::<F>,
+                &mut callback as *mut F as *mut c_void,
+            )
         }
     }
 }
@@ -119,8 +124,8 @@ impl<'r> Iterator for CaptureNames<'r> {
                 self.entry_ptr = *(*self.table).bins.offset(self.bin_idx as isize)
             }
             let entry = (*self.entry_ptr).record as *const NameEntry;
-            let name = from_utf8_unchecked(from_raw_parts((*entry).name,
-                                                          (*entry).name_len as usize));
+            let name =
+                from_utf8_unchecked(from_raw_parts((*entry).name, (*entry).name_len as usize));
             let groups = if (*entry).back_num > 1 {
                 let ptr = (*entry).back_refs as *const u32;
                 let len = (*entry).back_num as usize;
@@ -164,7 +169,9 @@ mod tests {
         assert_eq!(names, vec![]);
         let regex = Regex::new("(?<foo>he)(?<bar>l+)(?<bar>o)").unwrap();
         let names = regex.capture_names().collect::<Vec<_>>();
-        assert_eq!(names,
-                   [("foo", &[1u32] as &[u32]), ("bar", &[2u32, 3] as &[u32])]);
+        assert_eq!(
+            names,
+            [("foo", &[1u32] as &[u32]), ("bar", &[2u32, 3] as &[u32])]
+        );
     }
 }

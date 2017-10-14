@@ -12,8 +12,12 @@ fn main() {
         println!("Compiling '{}'", arg);
         let regex_compilation = Regex::new(&arg);
         match regex_compilation {
-            Ok(regex) => {regexes.insert(arg, regex);},
-            Err(error) => {panic!("{:?}", error);}
+            Ok(regex) => {
+                regexes.insert(arg, regex);
+            }
+            Err(error) => {
+                panic!("{:?}", error);
+            }
         }
     }
 
@@ -28,7 +32,7 @@ fn main() {
                             println!("{} => '{}'", i, mat.unwrap());
                         }
                     }
-                    None => println!("{} => did not match", name)
+                    None => println!("{} => did not match", name),
                 }
             }
         }

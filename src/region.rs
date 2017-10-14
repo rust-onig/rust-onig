@@ -97,8 +97,12 @@ impl Region {
         if pos >= self.len() {
             return None;
         }
-        let (beg, end) =
-            unsafe { (*self.raw.beg.offset(pos as isize), *self.raw.end.offset(pos as isize)) };
+        let (beg, end) = unsafe {
+            (
+                *self.raw.beg.offset(pos as isize),
+                *self.raw.end.offset(pos as isize),
+            )
+        };
         if beg != onig_sys::ONIG_REGION_NOTPOS {
             Some((beg as usize, end as usize))
         } else {
@@ -131,7 +135,8 @@ impl Region {
     /// The given callback is invoked for each node in the capture
     /// tree. Each node is passed to the callback before any children.
     pub fn tree_traverse<F>(&self, callback: F) -> i32
-        where F: Fn(u32, (usize, usize), u32) -> bool
+    where
+        F: Fn(u32, (usize, usize), u32) -> bool,
     {
         self.tree_traverse_at(TraverseCallbackAt::CALLBACK_AT_FIRST, callback)
     }
@@ -142,19 +147,22 @@ impl Region {
     /// tree. The order in which the callback is invoked can be
     /// chosen.
     pub fn tree_traverse_at<F>(&self, at: TraverseCallbackAt, mut callback: F) -> i32
-        where F: Fn(u32, (usize, usize), u32) -> bool
+    where
+        F: Fn(u32, (usize, usize), u32) -> bool,
     {
         use onig_sys::onig_capture_tree_traverse;
         use libc::{c_void, c_int};
 
-        extern "C" fn traverse_cb<F>(group: c_int,
-                                     beg: c_int,
-                                     end: c_int,
-                                     level: c_int,
-                                     _at: c_int,
-                                     ud: *mut c_void)
-                                     -> c_int
-            where F: Fn(u32, (usize, usize), u32) -> bool
+        extern "C" fn traverse_cb<F>(
+            group: c_int,
+            beg: c_int,
+            end: c_int,
+            level: c_int,
+            _at: c_int,
+            ud: *mut c_void,
+        ) -> c_int
+        where
+            F: Fn(u32, (usize, usize), u32) -> bool,
         {
             let callback = unsafe { &*(ud as *mut F) };
             if callback(group as u32, (beg as usize, end as usize), level as u32) {
@@ -165,10 +173,12 @@ impl Region {
         }
 
         unsafe {
-            onig_capture_tree_traverse(&self.raw,
-                                       at.bits(), // ONIG_TRAVERSE_CALLBACK_AT_FIRST,
-                                       traverse_cb::<F>,
-                                       &mut callback as *mut F as *mut c_void)
+            onig_capture_tree_traverse(
+                &self.raw,
+                at.bits(), // ONIG_TRAVERSE_CALLBACK_AT_FIRST,
+                traverse_cb::<F>,
+                &mut callback as *mut F as *mut c_void,
+            )
         }
     }
 }
@@ -284,11 +294,13 @@ mod tests {
     fn test_region_iterate_with_captures() {
         let mut region = Region::new();
         let reg = Regex::new("(a+)(b+)(c+)").unwrap();
-        let res = reg.search_with_options("aaaabbbbc",
-                                          0,
-                                          9,
-                                          SearchOptions::SEARCH_OPTION_NONE,
-                                          Some(&mut region));
+        let res = reg.search_with_options(
+            "aaaabbbbc",
+            0,
+            9,
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        );
         assert!(res.is_some());
         let all = region.iter().collect::<Vec<_>>();
         assert_eq!(all, vec![(0, 9), (0, 4), (4, 8), (8, 9)]);
@@ -298,11 +310,13 @@ mod tests {
     fn test_region_all_iteration_options() {
         let mut region = Region::new();
         let reg = Regex::new("a(b)").unwrap();
-        let res = reg.search_with_options("habitat",
-                                          0,
-                                          7,
-                                          SearchOptions::SEARCH_OPTION_NONE,
-                                          Some(&mut region));
+        let res = reg.search_with_options(
+            "habitat",
+            0,
+            7,
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        );
         assert!(res.is_some());
 
         // collect into a vector by iterating with a for loop

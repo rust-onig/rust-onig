@@ -103,7 +103,7 @@ mod tree;
 mod utils;
 mod buffers;
 
-#[cfg(feature="std-pattern")]
+#[cfg(feature = "std-pattern")]
 mod pattern;
 
 // re-export the onig types publically
@@ -228,11 +228,14 @@ impl Regex {
     /// assert!(ascii.is_ok());
     /// ```
     pub fn with_encoding<T>(pattern: T) -> Result<Regex, Error>
-        where T: EncodedChars
+    where
+        T: EncodedChars,
     {
-        Regex::with_options_and_encoding(pattern,
-                                         RegexOptions::REGEX_OPTION_NONE,
-                                         Syntax::default())
+        Regex::with_options_and_encoding(
+            pattern,
+            RegexOptions::REGEX_OPTION_NONE,
+            Syntax::default(),
+        )
     }
 
     /// Create a new Regex
@@ -259,10 +262,11 @@ impl Regex {
     /// ```
     ///
     /// [regex_new]: ./onig_sys/fn.onig_new.html
-    pub fn with_options(pattern: &str,
-                        option: RegexOptions,
-                        syntax: &Syntax)
-                        -> Result<Regex, Error> {
+    pub fn with_options(
+        pattern: &str,
+        option: RegexOptions,
+        syntax: &Syntax,
+    ) -> Result<Regex, Error> {
         Regex::with_options_and_encoding(pattern, option, syntax)
     }
 
@@ -291,11 +295,13 @@ impl Regex {
     ///                                          Syntax::default());
     /// assert!(r.is_ok());
     /// ```
-    pub fn with_options_and_encoding<T>(pattern: T,
-                                        option: RegexOptions,
-                                        syntax: &Syntax)
-                                        -> Result<Regex, Error>
-        where T: EncodedChars
+    pub fn with_options_and_encoding<T>(
+        pattern: T,
+        option: RegexOptions,
+        syntax: &Syntax,
+    ) -> Result<Regex, Error>
+    where
+        T: EncodedChars,
     {
         // Convert the rust types to those required for the call to
         // `onig_new`.
@@ -315,13 +321,15 @@ impl Regex {
             // Grab a lock to make sure that `onig_new` isn't called by
             // more than one thread at a time.
             let _guard = REGEX_NEW_MUTEX.lock().unwrap();
-            onig_sys::onig_new(reg_ptr,
-                               pattern.start_ptr(),
-                               pattern.limit_ptr(),
-                               option.bits(),
-                               pattern.encoding(),
-                               transmute(syntax),
-                               &mut error)
+            onig_sys::onig_new(
+                reg_ptr,
+                pattern.start_ptr(),
+                pattern.limit_ptr(),
+                option.bits(),
+                pattern.encoding(),
+                transmute(syntax),
+                &mut error,
+            )
         };
 
         if err == onig_sys::ONIG_NORMAL {
@@ -362,12 +370,13 @@ impl Regex {
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
     /// ```
-    pub fn match_with_options(&self,
-                              str: &str,
-                              at: usize,
-                              options: SearchOptions,
-                              region: Option<&mut Region>)
-                              -> Option<usize> {
+    pub fn match_with_options(
+        &self,
+        str: &str,
+        at: usize,
+        options: SearchOptions,
+        region: Option<&mut Region>,
+    ) -> Option<usize> {
         self.match_with_encoding(str, at, options, region)
     }
 
@@ -408,27 +417,31 @@ impl Regex {
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 5); // 5 characters matched
     /// ```
-    pub fn match_with_encoding<T>(&self,
-                                  chars: T,
-                                  at: usize,
-                                  options: SearchOptions,
-                                  region: Option<&mut Region>)
-                                  -> Option<usize>
-        where T: EncodedChars
+    pub fn match_with_encoding<T>(
+        &self,
+        chars: T,
+        at: usize,
+        options: SearchOptions,
+        region: Option<&mut Region>,
+    ) -> Option<usize>
+    where
+        T: EncodedChars,
     {
         assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
             let offset = chars.start_ptr().offset(at as isize);
             assert!(offset <= chars.limit_ptr());
-            onig_sys::onig_match(self.raw,
-                                 chars.start_ptr(),
-                                 chars.limit_ptr(),
-                                 offset,
-                                 match region {
-                                     Some(region) => transmute(region),
-                                     None => 0 as *mut onig_sys::OnigRegion,
-                                 },
-                                 options.bits())
+            onig_sys::onig_match(
+                self.raw,
+                chars.start_ptr(),
+                chars.limit_ptr(),
+                offset,
+                match region {
+                    Some(region) => transmute(region),
+                    None => 0 as *mut onig_sys::OnigRegion,
+                },
+                options.bits(),
+            )
         };
 
         if r >= 0 {
@@ -474,13 +487,14 @@ impl Regex {
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
     /// ```
-    pub fn search_with_options(&self,
-                               str: &str,
-                               from: usize,
-                               to: usize,
-                               options: SearchOptions,
-                               region: Option<&mut Region>)
-                               -> Option<usize> {
+    pub fn search_with_options(
+        &self,
+        str: &str,
+        from: usize,
+        to: usize,
+        options: SearchOptions,
+        region: Option<&mut Region>,
+    ) -> Option<usize> {
         self.search_with_encoding(str, from, to, options, region)
     }
 
@@ -523,14 +537,16 @@ impl Regex {
     /// assert!(res.is_some()); // it matches
     /// assert!(res.unwrap() == 2); // match starts at character 3
     /// ```
-    pub fn search_with_encoding<T>(&self,
-                                   chars: T,
-                                   from: usize,
-                                   to: usize,
-                                   options: SearchOptions,
-                                   region: Option<&mut Region>)
-                                   -> Option<usize>
-        where T: EncodedChars
+    pub fn search_with_encoding<T>(
+        &self,
+        chars: T,
+        from: usize,
+        to: usize,
+        options: SearchOptions,
+        region: Option<&mut Region>,
+    ) -> Option<usize>
+    where
+        T: EncodedChars,
     {
         let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
         assert_eq!(self.encoding(), chars.encoding());
@@ -539,16 +555,18 @@ impl Regex {
             let range = beg.offset(to as isize);
             assert!(start <= end);
             assert!(range <= end);
-            onig_sys::onig_search(self.raw,
-                                  beg,
-                                  end,
-                                  start,
-                                  range,
-                                  match region {
-                                      Some(region) => transmute(region),
-                                      None => 0 as *mut onig_sys::OnigRegion,
-                                  },
-                                  options.bits())
+            onig_sys::onig_search(
+                self.raw,
+                beg,
+                end,
+                start,
+                range,
+                match region {
+                    Some(region) => transmute(region),
+                    None => 0 as *mut onig_sys::OnigRegion,
+                },
+                options.bits(),
+            )
         };
 
         if r >= 0 {
@@ -615,16 +633,18 @@ impl Regex {
     ///  The offset of the start and end of the first match. If no
     ///  match exists `None` is returned.
     pub fn find_with_encoding<T>(&self, text: T) -> Option<(usize, usize)>
-        where T: EncodedChars
+    where
+        T: EncodedChars,
     {
         let mut region = Region::new();
         let len = text.len();
-        self.search_with_encoding(text,
-                                  0,
-                                  len,
-                                  SearchOptions::SEARCH_OPTION_NONE,
-                                  Some(&mut region))
-            .and_then(|_| region.pos(0))
+        self.search_with_encoding(
+            text,
+            0,
+            len,
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        ).and_then(|_| region.pos(0))
     }
 
 
@@ -685,11 +705,13 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("e(l+)").unwrap();
 
-        let r = regex.search_with_options("hello",
-                                          0,
-                                          5,
-                                          SearchOptions::SEARCH_OPTION_NONE,
-                                          Some(&mut region));
+        let r = regex.search_with_options(
+            "hello",
+            0,
+            5,
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        );
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(1));
@@ -710,10 +732,12 @@ mod tests {
         let mut region = Region::new();
         let regex = Regex::new("he(l+)").unwrap();
 
-        let r = regex.match_with_options("hello",
-                                         0,
-                                         SearchOptions::SEARCH_OPTION_NONE,
-                                         Some(&mut region));
+        let r = regex.match_with_options(
+            "hello",
+            0,
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        );
 
         assert!(region.tree().is_none());
         assert_eq!(r, Some(4));
