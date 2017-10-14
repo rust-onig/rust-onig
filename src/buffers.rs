@@ -32,7 +32,8 @@ pub trait EncodedChars {
 }
 
 impl<T> EncodedChars for T
-    where T: AsRef<str>
+where
+    T: AsRef<str>,
 {
     fn start_ptr(&self) -> *const onig_sys::OnigUChar {
         self.as_ref().as_bytes().as_ptr()
@@ -119,44 +120,58 @@ pub mod tests {
     #[test]
     pub fn rust_string_encoding_is_utf8() {
         let foo = "foo";
-        assert_eq!(unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
-                   foo.encoding());
+        assert_eq!(
+            unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
+            foo.encoding()
+        );
 
         let bar = String::from(".*");
-        assert_eq!(unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
-                   bar.encoding());
+        assert_eq!(
+            unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
+            bar.encoding()
+        );
     }
 
     #[test]
     pub fn rust_bytes_encoding_is_ascii() {
         let fizz = b"fizz";
         let buff = EncodedBytes::ascii(fizz);
-        assert_eq!(unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
-                   buff.encoding());
+        assert_eq!(
+            unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
+            buff.encoding()
+        );
     }
 
     #[test]
     pub fn rust_string_ptr_offsets_are_valid() {
         let test_string = "hello world";
-        assert_eq!(test_string.limit_ptr() as usize - test_string.start_ptr() as usize,
-                   test_string.len());
+        assert_eq!(
+            test_string.limit_ptr() as usize - test_string.start_ptr() as usize,
+            test_string.len()
+        );
     }
 
     #[test]
     pub fn rust_bytes_ptr_offsets_are_valid() {
         let fozz = b"foo.*bar";
         let buff = EncodedBytes::ascii(fozz);
-        assert_eq!(buff.limit_ptr() as usize - buff.start_ptr() as usize,
-                   fozz.len());
+        assert_eq!(
+            buff.limit_ptr() as usize - buff.start_ptr() as usize,
+            fozz.len()
+        );
     }
 
     #[test]
     pub fn byte_buffer_create() {
         let buff = b"hello world";
         let enc_buffer = EncodedBytes::from_parts(buff, unsafe { &onig_sys::OnigEncodingASCII });
-        assert_eq!(unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
-                   enc_buffer.encoding());
-        assert_eq!(enc_buffer.limit_ptr() as usize - enc_buffer.start_ptr() as usize,
-                   buff.len());
+        assert_eq!(
+            unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
+            enc_buffer.encoding()
+        );
+        assert_eq!(
+            enc_buffer.limit_ptr() as usize - enc_buffer.start_ptr() as usize,
+            buff.len()
+        );
     }
 }

@@ -3,14 +3,14 @@ extern crate onig;
 use onig::*;
 
 fn scan_callback<'t>(n: i32, caps: Captures<'t>) -> bool {
-    
+
     println!("scan: {}", n);
     println!("match at {}", caps.offset());
 
     for (i, cap) in caps.iter_pos().enumerate() {
         match cap {
             Some(pos) => println!("{}: {:?}", i, pos),
-            None => println!("{}: did not capture", i)
+            None => println!("{}: did not capture", i),
         }
     }
 
@@ -23,6 +23,6 @@ fn exec(pattern: &str, to_match: &str) {
 }
 
 fn main() {
-  exec("\\Ga+\\s*", "a aa aaa baaa");
-  exec("a+\\s*", "a aa aaa baaa");
+    exec("\\Ga+\\s*", "a aa aaa baaa");
+    exec("a+\\s*", "a aa aaa baaa");
 }

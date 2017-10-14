@@ -14,10 +14,10 @@ fn main() {
             for (i, cap) in caps.iter_pos().enumerate() {
                 match cap {
                     Some(pos) => println!("{}: {:?}", i, pos),
-                    None => println!("{}: did not capture", i)
+                    None => println!("{}: did not capture", i),
                 }
             }
         }
-        None => println!("search fail")
+        None => println!("search fail"),
     }
 }

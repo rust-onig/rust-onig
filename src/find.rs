@@ -7,12 +7,13 @@ impl Regex {
     /// If no match is found, then `None` is returned.
     pub fn captures<'t>(&self, text: &'t str) -> Option<Captures<'t>> {
         let mut region = Region::new();
-        self.search_with_options(text,
-                                 0,
-                                 text.len(),
-                                 SearchOptions::SEARCH_OPTION_NONE,
-                                 Some(&mut region))
-            .map(|pos| {
+        self.search_with_options(
+            text,
+            0,
+            text.len(),
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        ).map(|pos| {
                 Captures {
                     text: text,
                     region: region,
@@ -143,13 +144,15 @@ impl Regex {
 
     /// Scan the given slice, capturing into the given region and
     /// executing a callback for each match.
-    pub fn scan_with_region<F>(&self,
-                               to_search: &str,
-                               region: &mut Region,
-                               options: SearchOptions,
-                               mut callback: F)
-                               -> i32
-        where F: Fn(i32, i32, &Region) -> bool
+    pub fn scan_with_region<F>(
+        &self,
+        to_search: &str,
+        region: &mut Region,
+        options: SearchOptions,
+        mut callback: F,
+    ) -> i32
+    where
+        F: Fn(i32, i32, &Region) -> bool,
     {
 
         use onig_sys::{onig_scan, OnigRegion};
@@ -161,7 +164,8 @@ impl Regex {
         let end = to_search[to_search.len()..].as_ptr();
 
         extern "C" fn scan_cb<F>(i: c_int, j: c_int, r: *const OnigRegion, ud: *mut c_void) -> c_int
-            where F: Fn(i32, i32, &Region) -> bool
+        where
+            F: Fn(i32, i32, &Region) -> bool,
         {
 
             let region = Region::clone_from_raw(r);
@@ -170,32 +174,37 @@ impl Regex {
         }
 
         unsafe {
-            onig_scan(self.raw,
-                      start,
-                      end,
-                      transmute(region),
-                      options.bits(),
-                      scan_cb::<F>,
-                      &mut callback as *mut F as *mut c_void)
+            onig_scan(
+                self.raw,
+                start,
+                end,
+                transmute(region),
+                options.bits(),
+                scan_cb::<F>,
+                &mut callback as *mut F as *mut c_void,
+            )
         }
     }
 
     pub fn scan<'t, CB>(&self, to_search: &'t str, callback: CB)
-        where CB: Fn(i32, Captures<'t>) -> bool
+    where
+        CB: Fn(i32, Captures<'t>) -> bool,
     {
 
         let mut region = Region::new();
-        self.scan_with_region(to_search,
-                              &mut region,
-                              SearchOptions::SEARCH_OPTION_NONE,
-                              |n, s, region| {
-            let captures = Captures {
-                text: to_search,
-                region: region.clone(),
-                offset: s as usize,
-            };
-            callback(n, captures)
-        });
+        self.scan_with_region(
+            to_search,
+            &mut region,
+            SearchOptions::SEARCH_OPTION_NONE,
+            |n, s, region| {
+                let captures = Captures {
+                    text: to_search,
+                    region: region.clone(),
+                    offset: s as usize,
+                };
+                callback(n, captures)
+            },
+        );
 
     }
 }
@@ -242,20 +251,14 @@ impl<'t> Captures<'t> {
     /// Creates an iterator of all the capture groups in order of appearance in
     /// the regular expression.
     pub fn iter(&'t self) -> SubCaptures<'t> {
-        SubCaptures {
-            idx: 0,
-            caps: self,
-        }
+        SubCaptures { idx: 0, caps: self }
     }
 
     /// Creates an iterator of all the capture group positions in order of
     /// appearance in the regular expression. Positions are byte indices in
     /// terms of the original string matched.
     pub fn iter_pos(&'t self) -> SubCapturesPos<'t> {
-        SubCapturesPos {
-            idx: 0,
-            caps: self,
-        }
+        SubCapturesPos { idx: 0, caps: self }
     }
 
     /// Offset of the captures within the given string slice.
@@ -343,11 +346,13 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
             return None;
         }
         self.region.clear();
-        let r = self.regex.search_with_options(self.text,
-                                               self.last_end,
-                                               self.text.len(),
-                                               SearchOptions::SEARCH_OPTION_NONE,
-                                               Some(&mut self.region));
+        let r = self.regex.search_with_options(
+            self.text,
+            self.last_end,
+            self.text.len(),
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut self.region),
+        );
         if r.is_none() {
             return None;
         }
@@ -397,11 +402,13 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         }
 
         let mut region = Region::new();
-        let r = self.regex.search_with_options(self.text,
-                                               self.last_end,
-                                               self.text.len(),
-                                               SearchOptions::SEARCH_OPTION_NONE,
-                                               Some(&mut region));
+        let r = self.regex.search_with_options(
+            self.text,
+            self.last_end,
+            self.text.len(),
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        );
         if r.is_none() {
             return None;
         }

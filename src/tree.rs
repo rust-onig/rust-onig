@@ -23,10 +23,7 @@ impl CaptureTreeNode {
     }
 
     pub fn children<'t>(&'t self) -> CaptureTreeNodeIter<'t> {
-        CaptureTreeNodeIter {
-            idx: 0,
-            node: self,
-        }
+        CaptureTreeNodeIter { idx: 0, node: self }
     }
 }
 
@@ -75,16 +72,19 @@ mod tests {
         let mut syntax = Syntax::ruby().clone();
         syntax.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_ATMARK_CAPTURE_HISTORY);
 
-        let regex = Regex::with_options("(?@a+(?@b+))|(?@c+(?@d+))",
-                                        RegexOptions::REGEX_OPTION_NONE,
-                                        &syntax)
-            .unwrap();
+        let regex = Regex::with_options(
+            "(?@a+(?@b+))|(?@c+(?@d+))",
+            RegexOptions::REGEX_OPTION_NONE,
+            &syntax,
+        ).unwrap();
 
-        let r = regex.search_with_options("- cd aaabbb -",
-                                          0,
-                                          13,
-                                          SearchOptions::SEARCH_OPTION_NONE,
-                                          Some(&mut region));
+        let r = regex.search_with_options(
+            "- cd aaabbb -",
+            0,
+            13,
+            SearchOptions::SEARCH_OPTION_NONE,
+            Some(&mut region),
+        );
 
         assert_eq!(r, Some(2));
         assert_eq!(region.len(), 5);

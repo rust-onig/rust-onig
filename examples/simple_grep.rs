@@ -13,10 +13,15 @@ fn main() {
         let regex_compilation = Regex::with_options(
             &arg,
             onig::RegexOptions::REGEX_OPTION_SINGLELINE,
-            onig::Syntax::emacs());
+            onig::Syntax::emacs(),
+        );
         match regex_compilation {
-            Ok(regex) => {regexes.insert(arg, regex);},
-            Err(error) => {panic!("{:?}", error);}
+            Ok(regex) => {
+                regexes.insert(arg, regex);
+            }
+            Err(error) => {
+                panic!("{:?}", error);
+            }
         }
     }
 
@@ -24,13 +29,16 @@ fn main() {
     for line in stdin.lock().lines() {
         if let Ok(line) = line {
             for (name, regex) in regexes.iter() {
-                let res = regex.search_with_options(&line,
-                                                    0, line.len(),
-                                                    onig::SearchOptions::SEARCH_OPTION_NONE,
-                                                    None);
+                let res = regex.search_with_options(
+                    &line,
+                    0,
+                    line.len(),
+                    onig::SearchOptions::SEARCH_OPTION_NONE,
+                    None,
+                );
                 match res {
                     Some(pos) => println!("{} => matched @ {}", name, pos),
-                    None => println!("{} => did not match", name)
+                    None => println!("{} => did not match", name),
                 }
             }
         }

@@ -16,8 +16,13 @@ fn main() {
 
     let mut region = Region::new();
 
-    if let Some(position) = r.search_with_options(string, 0, string.len(),
-                                                  SearchOptions::SEARCH_OPTION_NONE, Some(&mut region))
+    if let Some(position) = r.search_with_options(
+        string,
+        0,
+        string.len(),
+        SearchOptions::SEARCH_OPTION_NONE,
+        Some(&mut region),
+    )
     {
         println!("match at {} in {:?}", position, string);
 
