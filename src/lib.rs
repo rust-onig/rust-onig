@@ -143,7 +143,7 @@ unsafe impl Sync for Regex {}
 
 impl Error {
     fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
-        let mut buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
+        let buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
         let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
