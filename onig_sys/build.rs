@@ -1,42 +1,89 @@
 extern crate pkg_config;
 
-#[cfg(not(target_env="msvc"))]
+#[cfg(not(target_env = "msvc"))]
 extern crate cmake;
 
 use std::env;
+use std::fmt;
 
-fn rustc_link_type(static_link: bool) -> &'static str {
-    if static_link { "static" } else { "dylib" }
+/// # Link Type Enumeration
+///
+/// Holds the differnet types of linking we support in this
+/// script. Used to keep track of what the default link type is and
+/// what override has been specified, if any, in the environment.
+enum LinkType {
+    /// Static linking. This corrresponds to the `static` type in Cargo.
+    Static,
+    /// Dynamic linking. This corresponds to the `dylib` type in Cargo.
+    Dynamic,
 }
 
+impl fmt::Display for LinkType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                &LinkType::Static => "static",
+                &LinkType::Dynamic => "dylib",
+            }
+        )
+    }
+}
 
-#[cfg(not(target_env="msvc"))]
-fn compile(static_link: bool) {
+/// # Link Type Override
+///
+/// Retuns the override from the environment, if any is set.
+fn link_type_override() -> Option<LinkType> {
+    if env::var("CARGO_FEATURE_STATIC_ONIG").is_ok() {
+        return Some(LinkType::Static);
+    }
+    env::var("RUSTONIG_STATIC_LIBONIG").ok().map(|s| {
+        match &s.to_string().to_lowercase()[..] {
+            "0" | "no" | "false" => LinkType::Dynamic,
+            _ => LinkType::Static,
+        }
+    })
+}
+
+/// Defalt link type for static targets
+#[cfg(any(target_env = "musl", target_env = "msvc"))]
+const DEFAULT_LINK_TYPE: LinkType = LinkType::Static;
+
+/// Defualt link type for dynamic targets
+#[cfg(not(any(target_env = "musl", target_env = "msvc")))]
+const DEFAULT_LINK_TYPE: LinkType = LinkType::Dynamic;
+
+#[cfg(not(target_env = "msvc"))]
+fn compile(link_type: LinkType) {
     use cmake::Config;
 
     // Builds the project in the directory located in `oniguruma`, installing it
     // into $OUT_DIR
     let mut c = Config::new("oniguruma");
 
-    let dst = if static_link {
-            c.define("BUILD_SHARED_LIBS", "OFF")
-        } else {
-            c.define("CMAKE_MACOSX_RPATH", "NO")
-        }
-        .build();
+    let dst = match link_type {
+        LinkType::Static => c.define("BUILD_SHARED_LIBS", "OFF"),
+        LinkType::Dynamic => c.define("CMAKE_MACOSX_RPATH", "NO"),
+    }.build();
 
-    println!("cargo:rustc-link-search=native={}",
-             dst.join("build").to_string_lossy());
-    println!("cargo:rustc-link-lib={}=onig", rustc_link_type(static_link));
+    println!(
+        "cargo:rustc-link-search=native={}",
+        dst.join("build").to_string_lossy()
+    );
+    println!("cargo:rustc-link-lib={}=onig", link_type);
 }
 
-#[cfg(target_env="msvc")]
-pub fn compile(static_link: bool) {
+#[cfg(target_env = "msvc")]
+pub fn compile(link_type: LinkType) {
     use std::process::Command;
 
     let onig_sys_dir = env::current_dir().unwrap();
     let build_dir = env::var("OUT_DIR").unwrap();
-    let lib_name = if static_link { "onig_s" } else { "onig" };
+    let lib_name = match link_type {
+        LinkType::Static => "onig_s",
+        LinkType::Dynamic => "onig",
+    };
 
     let bitness = if cfg!(target_pointer_width = "64") {
         "64"
@@ -62,20 +109,7 @@ pub fn compile(static_link: bool) {
     }
 
     println!("cargo:rustc-link-search=native={}", build_dir);
-    println!("cargo:rustc-link-lib={}={}",
-             rustc_link_type(static_link),
-             lib_name);
-}
-
-#[cfg(not(target_env = "musl"))]
-fn should_static_link() -> bool {
-    env::var("CARGO_FEATURE_STATIC_ONIG").is_ok() ||
-        env::var("RUSTONIG_STATIC_LIBONIG").is_ok()
-}
-
-#[cfg(target_env = "musl")]
-fn should_static_link() -> bool {
-    true
+    println!("cargo:rustc-link-lib={}={}", link_type, lib_name);
 }
 
 pub fn main() {
@@ -83,5 +117,7 @@ pub fn main() {
         return;
     }
 
-    compile(should_static_link());
+    let link_type = link_type_override().unwrap_or(DEFAULT_LINK_TYPE);
+
+    compile(link_type);
 }
