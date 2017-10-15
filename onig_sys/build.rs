@@ -95,8 +95,11 @@ fn compile(link_type: LinkType) {
     };
 
     // Execute the oniguruma NMAKE command for the chosen architecture.
-    let cmd = onig_sys_dir.join(format!("make_win{}.bat", bitness));
-    let r = cmd!("cmd", "/c", &(cmd.to_string_lossy()))
+    let cmd = onig_sys_dir
+        .join(format!("make_win{}.bat", bitness))
+        .to_string_lossy()
+        .into_owned();
+    cmd!("cmd", "/c", cmd)
         .dir(&build_dir)
         .read()
         .unwrap();
