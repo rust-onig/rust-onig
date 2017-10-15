@@ -12,9 +12,9 @@ fn main() {
             (0x3074, 0x3074), // PI
             (0x3077, 0x3077), // PU
             (0x307a, 0x307a), // PE
-            (0x307d, 0x307d),
+            (0x307d, 0x307d), // PO
         ],
-    ); // PO
+    );
 
     // "PA PI PU PE PO a"
     let hay = [
