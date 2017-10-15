@@ -3,6 +3,10 @@ extern crate pkg_config;
 #[cfg(not(target_env = "msvc"))]
 extern crate cmake;
 
+#[cfg(target_env = "msvc")]
+#[macro_use]
+extern crate duct;
+
 use std::env;
 use std::fmt;
 
@@ -76,7 +80,6 @@ fn compile(link_type: LinkType) {
 
 #[cfg(target_env = "msvc")]
 fn compile(link_type: LinkType) {
-    use std::process::Command;
 
     let onig_sys_dir = env::current_dir().unwrap();
     let build_dir = env::var("OUT_DIR").unwrap();
@@ -92,21 +95,11 @@ fn compile(link_type: LinkType) {
     };
 
     // Execute the oniguruma NMAKE command for the chosen architecture.
-    let cmd = format!("make_win{}.bat", bitness);
-    println!("{}", cmd);
-    let r = Command::new("cmd")
-        .args(&["/c", &(onig_sys_dir.join(cmd).to_string_lossy())])
-        .current_dir(&build_dir)
-        .env_remove("MFLAGS")
-        .env_remove("MAKEFLAGS")
-        .output()
-        .expect("error running build");
-
-    if !r.status.success() {
-        let err = String::from_utf8_lossy(&r.stderr);
-        let out = String::from_utf8_lossy(&r.stdout);
-        panic!("Build error:\nSTDERR:{}\nSTDOUT:{}", err, out);
-    }
+    let cmd = onig_sys_dir.join(format!("make_win{}.bat", bitness));
+    let r = cmd!("cmd", "/c", &(cmd.to_string_lossy()))
+        .dir(&build_dir)
+        .read()
+        .unwrap();
 
     println!("cargo:rustc-link-search=native={}", build_dir);
     println!("cargo:rustc-link-lib={}={}", link_type, lib_name);

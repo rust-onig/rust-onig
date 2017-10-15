@@ -23,5 +23,8 @@ libc = "0.2"
 [build-dependencies]
 pkg-config = "0.3"
 
+[target.'cfg(target_env="msvc")'.build-dependencies.duct]
+version = "0.9"
+
 [target.'cfg(not(target_env="msvc"))'.build-dependencies.cmake]
 version = "0.1"
