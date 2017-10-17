@@ -101,6 +101,8 @@ fn compile(link_type: LinkType) {
         .into_owned();
     cmd!("cmd", "/c", cmd)
         .dir(&build_dir)
+        .env_remove("MFLAGS")
+        .env_remove("MAKEFLAGS")
         .read()
         .unwrap();
 
