@@ -49,7 +49,7 @@ impl<'a> Replacer for Dollarified<'a> {
 
 fn test_with(replacement: &str) {
     let re = Regex::new(r"(\w+) (\w+)").unwrap();
-    let hay = "hello world";
+    let hay = "well (hello world) to you!";
     println!(
         "/{}/{}/ -> {}",
         &hay,
@@ -66,4 +66,5 @@ fn main() {
     test_with("$$$");
     test_with("$$$3");
     test_with("$$2$3");
+    test_with("Literal replacement");
 }
