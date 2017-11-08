@@ -721,10 +721,10 @@ extern "C" {
     ///   1. reg:     regex object.
     ///   2. func:    callback function.
     ///
-    ///     ```c
-    ///     func(name, name_end, <number of groups>, <group number's list>,
-    ///          reg, arg);
-    ///     ```
+    /// ```c
+    /// func(name, name_end, <number of groups>, <group number's list>,
+    ///      reg, arg);
+    /// ```
     ///
     ///     if func does not return 0, then iteration is stopped.
     ///   3. arg:     argument for func.
