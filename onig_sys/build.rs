@@ -12,11 +12,11 @@ use std::fmt;
 
 /// # Link Type Enumeration
 ///
-/// Holds the differnet types of linking we support in this
+/// Holds the different types of linking we support in this
 /// script. Used to keep track of what the default link type is and
 /// what override has been specified, if any, in the environment.
 enum LinkType {
-    /// Static linking. This corrresponds to the `static` type in Cargo.
+    /// Static linking. This corresponds to the `static` type in Cargo.
     Static,
     /// Dynamic linking. This corresponds to the `dylib` type in Cargo.
     Dynamic,
@@ -50,11 +50,11 @@ fn link_type_override() -> Option<LinkType> {
     })
 }
 
-/// Defalt link type for static targets
+/// Default link type for static targets
 #[cfg(any(target_env = "musl", target_env = "msvc"))]
 const DEFAULT_LINK_TYPE: LinkType = LinkType::Static;
 
-/// Defualt link type for dynamic targets
+/// Default link type for dynamic targets
 #[cfg(not(any(target_env = "musl", target_env = "msvc")))]
 const DEFAULT_LINK_TYPE: LinkType = LinkType::Dynamic;
 
