@@ -39,24 +39,24 @@ impl fmt::Display for LinkType {
 ///
 /// Retuns the override from the environment, if any is set.
 fn link_type_override() -> Option<LinkType> {
-    if env::var("CARGO_FEATURE_STATIC_ONIG").is_ok() {
-        return Some(LinkType::Static);
-    }
-    env::var("RUSTONIG_STATIC_LIBONIG").ok().map(|s| {
+    let dynamic_env = env::var("RUSTONIG_DYNAMIC_LIBONIG").ok().map(|s| {
+        match &s.to_string().to_lowercase()[..] {
+            "0" | "no" | "false" => LinkType::Static,
+            _ => LinkType::Dynamic,
+        }
+    });
+    let static_env = env::var("RUSTONIG_STATIC_LIBONIG").ok().map(|s| {
         match &s.to_string().to_lowercase()[..] {
             "0" | "no" | "false" => LinkType::Dynamic,
             _ => LinkType::Static,
         }
-    })
+    });
+
+    dynamic_env.or(static_env)
 }
 
-/// Default link type for static targets
-#[cfg(any(target_env = "musl", target_env = "msvc"))]
+/// Default to static linking
 const DEFAULT_LINK_TYPE: LinkType = LinkType::Static;
-
-/// Default link type for dynamic targets
-#[cfg(not(any(target_env = "musl", target_env = "msvc")))]
-const DEFAULT_LINK_TYPE: LinkType = LinkType::Dynamic;
 
 #[cfg(not(target_env = "msvc"))]
 fn compile(link_type: LinkType) {
