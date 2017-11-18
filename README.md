@@ -42,13 +42,13 @@ for (i, pos) in regex.captures("hello").unwrap().iter_pos().enumerate() {
 
 ## Static Linking
 
-By default `rust-onig` will be dynamically lined to `libonig`. If your would rather that static linking is used then the environment variable `RUSTONIG_STATIC_LIBONIG` can be set. On *nix:
+By default `rust-onig` will be statically lined to `libonig`. If your would rather that dynamic linking is used then the environment variables `RUSTONIG_STATIC_LIBONIG` and `RUSTONIG_DYNAMIC_LIBONIG` can be set. On *nix:
 
-    $ RUSTONIG_STATIC_LIBONIG=1 cargo build
+    $ RUSTONIG_DYNAMIC_LIBONING=1 cargo build
 
 Or Windows:
 
-    > set RUSTONIG_STATIC_LIBONIG=1
+    > set RUSTONIG_DYNAMIC_LIBONIG=1
     > cargo build
 
 ## Rust-Onig is Open Source
