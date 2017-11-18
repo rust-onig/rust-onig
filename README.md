@@ -40,7 +40,9 @@ for (i, pos) in regex.captures("hello").unwrap().iter_pos().enumerate() {
 }
 ```
 
-## Static Linking
+## Linking
+
+If a version of Oniguruma can be found by `pkg-config` then that will be used. If not then Oniguruma will be compiled from source and linked to the `onig-sys` crate.
 
 By default `rust-onig` will be statically lined to `libonig`. If your would rather that dynamic linking is used then the environment variables `RUSTONIG_STATIC_LIBONIG` and `RUSTONIG_DYNAMIC_LIBONIG` can be set. On *nix:
 
