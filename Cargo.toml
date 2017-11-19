@@ -1,6 +1,6 @@
 [package]
 name = "onig"
-version = "2.0.2"
+version = "3.0.0"
 authors = [
         "Will Speak <will@willspeak.me>",
         "Ivan Ivashchenko <defuz@me.com>"
@@ -22,5 +22,5 @@ bitflags = "1.0"
 lazy_static = "0.2"
 
 [dependencies.onig_sys]
-version = "66.1.3"
+version = "66.1.4"
 path = "onig_sys"
