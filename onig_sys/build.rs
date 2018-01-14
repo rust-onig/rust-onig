@@ -96,6 +96,7 @@ fn compile(link_type: LinkType) {
 
     // Execute the oniguruma NMAKE command for the chosen architecture.
     let cmd = onig_sys_dir
+        .join("oniguruma")
         .join(format!("make_win{}.bat", bitness))
         .to_string_lossy()
         .into_owned();
