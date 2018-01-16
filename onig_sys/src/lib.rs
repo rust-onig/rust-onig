@@ -327,98 +327,88 @@ extern "C" {
     ///   1 func:     function pointer.    void (*func)(char* warning_message)
     pub fn onig_set_verb_warn_func(func: OnigWarnFunc);
 
-    ///   Create a regex object.
+    /// Create a regex object.
     ///
-    ///   `int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
+    /// ```c
+    /// int onig_new(regex_t** reg, const UChar* pattern, const UChar* pattern_end,
     ///             OnigOptionType option, OnigEncoding enc, OnigSyntaxType* syntax,
-    ///             OnigErrorInfo* err_info)`
+    ///             OnigErrorInfo* err_info)
+    /// ```
     ///
-    ///   normal return: ONIG_NORMAL
+    /// normal return: ONIG_NORMAL
     ///
     /// # Arguments
     ///
-    ///   1. `reg`:         return regex object's address.
-    ///   2. `pattern`:     regex pattern string.
-    ///   3. `pattern_end`: terminate address of pattern. (pattern + pattern length)
-    ///   4. `option`:      compile time options.
+    /// 1. `reg`:         return regex object's address.
+    /// 2. `pattern`:     regex pattern string.
+    /// 3. `pattern_end`: terminate address of pattern. (pattern + pattern length)
+    /// 4. `option`:      compile time options.
+    ///  *  ONIG_OPTION_NONE               no option
+    ///  *  ONIG_OPTION_SINGLELINE         `^` -> `\A`, `$` -> `\Z`
+    ///  *  ONIG_OPTION_MULTILINE          `.` match with newline
+    ///  *  ONIG_OPTION_IGNORECASE         ambiguity match on
+    ///  *  ONIG_OPTION_EXTEND             extended pattern form
+    ///  *  ONIG_OPTION_FIND_LONGEST       find longest match
+    ///  *  ONIG_OPTION_FIND_NOT_EMPTY     ignore empty match
+    ///  *  ONIG_OPTION_NEGATE_SINGLELINE
+    ///       clear ONIG_OPTION_SINGLELINE which is enabled on
+    ///       ONIG_SYNTAX_POSIX_BASIC, ONIG_SYNTAX_POSIX_EXTENDED,
+    ///       ONIG_SYNTAX_PERL, ONIG_SYNTAX_PERL_NG, ONIG_SYNTAX_JAVA
+    ///  *  ONIG_OPTION_DONT_CAPTURE_GROUP only named group captured.
+    ///  *  ONIG_OPTION_CAPTURE_GROUP      named and no-named group captured.
     ///
-    ///     *  ONIG_OPTION_NONE               no option
-    ///     *  ONIG_OPTION_SINGLELINE         '^' -> '\A', '$' -> '\Z'
-    ///     *  ONIG_OPTION_MULTILINE          '.' match with newline
-    ///     *  ONIG_OPTION_IGNORECASE         ambiguity match on
-    ///     *  ONIG_OPTION_EXTEND             extended pattern form
-    ///     *  ONIG_OPTION_FIND_LONGEST       find longest match
-    ///     *  ONIG_OPTION_FIND_NOT_EMPTY     ignore empty match
-    ///     *  ONIG_OPTION_NEGATE_SINGLELINE
-    ///             clear ONIG_OPTION_SINGLELINE which is enabled on
-    ///             ONIG_SYNTAX_POSIX_BASIC, ONIG_SYNTAX_POSIX_EXTENDED,
-    ///             ONIG_SYNTAX_PERL, ONIG_SYNTAX_PERL_NG, ONIG_SYNTAX_JAVA
+    /// 5. `enc`:        character encoding.
+    ///  * ONIG_ENCODING_ASCII         ASCII
+    ///  * ONIG_ENCODING_ISO_8859_1    ISO 8859-1
+    ///  * ONIG_ENCODING_ISO_8859_2    ISO 8859-2
+    ///  * ONIG_ENCODING_ISO_8859_3    ISO 8859-3
+    ///  * ONIG_ENCODING_ISO_8859_4    ISO 8859-4
+    ///  * ONIG_ENCODING_ISO_8859_5    ISO 8859-5
+    ///  * ONIG_ENCODING_ISO_8859_6    ISO 8859-6
+    ///  * ONIG_ENCODING_ISO_8859_7    ISO 8859-7
+    ///  * ONIG_ENCODING_ISO_8859_8    ISO 8859-8
+    ///  * ONIG_ENCODING_ISO_8859_9    ISO 8859-9
+    ///  * ONIG_ENCODING_ISO_8859_10   ISO 8859-10
+    ///  * ONIG_ENCODING_ISO_8859_11   ISO 8859-11
+    ///  * ONIG_ENCODING_ISO_8859_13   ISO 8859-13
+    ///  * ONIG_ENCODING_ISO_8859_14   ISO 8859-14
+    ///  * ONIG_ENCODING_ISO_8859_15   ISO 8859-15
+    ///  * ONIG_ENCODING_ISO_8859_16   ISO 8859-16
+    ///  * ONIG_ENCODING_UTF8          UTF-8
+    ///  * ONIG_ENCODING_UTF16_BE      UTF-16BE
+    ///  * ONIG_ENCODING_UTF16_LE      UTF-16LE
+    ///  * ONIG_ENCODING_UTF32_BE      UTF-32BE
+    ///  * ONIG_ENCODING_UTF32_LE      UTF-32LE
+    ///  * ONIG_ENCODING_EUC_JP        EUC-JP
+    ///  * ONIG_ENCODING_EUC_TW        EUC-TW
+    ///  * ONIG_ENCODING_EUC_KR        EUC-KR
+    ///  * ONIG_ENCODING_EUC_CN        EUC-CN
+    ///  * ONIG_ENCODING_SJIS          Shift_JIS
+    ///  * ONIG_ENCODING_KOI8_R        KOI8-R
+    ///  * ONIG_ENCODING_CP1251        CP1251
+    ///  * ONIG_ENCODING_BIG5          Big5
+    ///  * ONIG_ENCODING_GB18030       GB18030
+    ///  
+    ///  or any OnigEncoding data address defined by user.
     ///
-    ///     *  ONIG_OPTION_DONT_CAPTURE_GROUP only named group captured.
-    ///     *  ONIG_OPTION_CAPTURE_GROUP      named and no-named group captured.
+    /// 6. `syntax`:     address of pattern syntax definition.
+    ///  * ONIG_SYNTAX_ASIS              plain text
+    ///  * ONIG_SYNTAX_POSIX_BASIC       POSIX Basic RE
+    ///  * ONIG_SYNTAX_POSIX_EXTENDED    POSIX Extended RE
+    ///  * ONIG_SYNTAX_EMACS             Emacs
+    ///  * ONIG_SYNTAX_GREP              grep
+    ///  * ONIG_SYNTAX_GNU_REGEX         GNU regex
+    ///  * ONIG_SYNTAX_JAVA              Java (Sun java.util.regex)
+    ///  * ONIG_SYNTAX_PERL              Perl
+    ///  * ONIG_SYNTAX_PERL_NG           Perl + named group
+    ///  * ONIG_SYNTAX_RUBY              Ruby
+    ///  * ONIG_SYNTAX_DEFAULT           default (== Ruby)
+    ///                                  onig_set_default_syntax()
     ///
-    ///   5. `enc`:        character encoding.
+    ///  or any OnigSyntaxType data address defined by user.
     ///
-    ///      * ONIG_ENCODING_ASCII         ASCII
-    ///      * ONIG_ENCODING_ISO_8859_1    ISO 8859-1
-    ///      * ONIG_ENCODING_ISO_8859_2    ISO 8859-2
-    ///      * ONIG_ENCODING_ISO_8859_3    ISO 8859-3
-    ///      * ONIG_ENCODING_ISO_8859_4    ISO 8859-4
-    ///      * ONIG_ENCODING_ISO_8859_5    ISO 8859-5
-    ///      * ONIG_ENCODING_ISO_8859_6    ISO 8859-6
-    ///      * ONIG_ENCODING_ISO_8859_7    ISO 8859-7
-    ///      * ONIG_ENCODING_ISO_8859_8    ISO 8859-8
-    ///      * ONIG_ENCODING_ISO_8859_9    ISO 8859-9
-    ///      * ONIG_ENCODING_ISO_8859_10   ISO 8859-10
-    ///      * ONIG_ENCODING_ISO_8859_11   ISO 8859-11
-    ///      * ONIG_ENCODING_ISO_8859_13   ISO 8859-13
-    ///      * ONIG_ENCODING_ISO_8859_14   ISO 8859-14
-    ///      * ONIG_ENCODING_ISO_8859_15   ISO 8859-15
-    ///      * ONIG_ENCODING_ISO_8859_16   ISO 8859-16
-    ///      * ONIG_ENCODING_UTF8          UTF-8
-    ///      * ONIG_ENCODING_UTF16_BE      UTF-16BE
-    ///      * ONIG_ENCODING_UTF16_LE      UTF-16LE
-    ///      * ONIG_ENCODING_UTF32_BE      UTF-32BE
-    ///      * ONIG_ENCODING_UTF32_LE      UTF-32LE
-    ///      * ONIG_ENCODING_EUC_JP        EUC-JP
-    ///      * ONIG_ENCODING_EUC_TW        EUC-TW
-    ///      * ONIG_ENCODING_EUC_KR        EUC-KR
-    ///      * ONIG_ENCODING_EUC_CN        EUC-CN
-    ///      * ONIG_ENCODING_SJIS          Shift_JIS
-    ///      * ONIG_ENCODING_KOI8_R        KOI8-R
-    ///      * ONIG_ENCODING_CP1251        CP1251
-    ///      * ONIG_ENCODING_BIG5          Big5
-    ///      * ONIG_ENCODING_GB18030       GB18030
-    ///
-    ///
-    ///       or any OnigEncoding data address defined by user.
-    ///
-    ///
-    ///
-    ///   6. `syntax`:     address of pattern syntax definition.
-    ///
-    ///
-    ///      * ONIG_SYNTAX_ASIS              plain text
-    ///      * ONIG_SYNTAX_POSIX_BASIC       POSIX Basic RE
-    ///      * ONIG_SYNTAX_POSIX_EXTENDED    POSIX Extended RE
-    ///      * ONIG_SYNTAX_EMACS             Emacs
-    ///      * ONIG_SYNTAX_GREP              grep
-    ///      * ONIG_SYNTAX_GNU_REGEX         GNU regex
-    ///      * ONIG_SYNTAX_JAVA              Java (Sun java.util.regex)
-    ///      * ONIG_SYNTAX_PERL              Perl
-    ///      * ONIG_SYNTAX_PERL_NG           Perl + named group
-    ///      * ONIG_SYNTAX_RUBY              Ruby
-    ///      * ONIG_SYNTAX_DEFAULT           default (== Ruby)
-    ///                                    onig_set_default_syntax()
-    ///
-    ///
-    ///       or any OnigSyntaxType data address defined by user.
-    ///
-    ///
-    ///
-    ///   7. `err_info`: address for return optional error info.
-    ///
-    ///      Use this value as 3rd argument of onig_error_code_to_str().
+    /// 7. `err_info`: address for return optional error info.
+    ///  Use this value as 3rd argument of onig_error_code_to_str().
     ///
     pub fn onig_new(reg: *mut OnigRegexMut,
                     pattern: *const OnigUChar,
