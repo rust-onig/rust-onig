@@ -896,30 +896,35 @@ extern "C" {
     ///   2 from: source address.
     pub fn onig_copy_encoding(to: *mut OnigEncodingType, from: OnigEncoding);
 
-    ///   Set a variable meta character to the code point value.
-    ///   Except for an escape character, this meta characters specification
-    ///   is not work, if ONIG_SYN_OP_VARIABLE_META_CHARACTERS is not effective
-    ///   by the syntax. (Build-in syntaxes are not effective.)
+    /// Set a variable meta character to the code point value.
     ///
-    ///  `int onig_set_meta_char(OnigSyntaxType* syntax, unsigned int what,
-    ///                          OnigCodePoint code)`
+    /// Except for an escape character, this meta characters
+    /// specification only works, if
+    /// ONIG_SYN_OP_VARIABLE_META_CHARACTERS is enabled by the
+    /// syntax. (Build-in syntaxes are not affected.)
     ///
-    ///   normal return: ONIG_NORMAL
+    /// ```c
+    /// int onig_set_meta_char(OnigSyntaxType* syntax, unsigned int what,
+    ///                        OnigCodePoint code)
+    /// ```
     ///
-    ///   arguments
-    ///   1 syntax: target syntax
-    ///   2 what:   specifies which meta character it is.
+    /// normal return: ONIG_NORMAL
     ///
-    ///   ```c
-    ///   ONIG_META_CHAR_ESCAPE
-    ///   ONIG_META_CHAR_ANYCHAR
-    ///   ONIG_META_CHAR_ANYTIME
-    ///   ONIG_META_CHAR_ZERO_OR_ONE_TIME
-    ///   ONIG_META_CHAR_ONE_OR_MORE_TIME
-    ///   ONIG_META_CHAR_ANYCHAR_ANYTIME
-    ///   ```
+    /// # Arguments
     ///
-    ///   3 code: meta character or `ONIG_INEFFECTIVE_META_CHAR`.
+    /// 1. syntax: target syntax
+    /// 2. what:   specifies which meta character it is.
+    ///
+    /// ```c
+    /// ONIG_META_CHAR_ESCAPE
+    /// ONIG_META_CHAR_ANYCHAR
+    /// ONIG_META_CHAR_ANYTIME
+    /// ONIG_META_CHAR_ZERO_OR_ONE_TIME
+    /// ONIG_META_CHAR_ONE_OR_MORE_TIME
+    /// ONIG_META_CHAR_ANYCHAR_ANYTIME
+    /// ```
+    ///
+    /// 3. code: meta character or `ONIG_INEFFECTIVE_META_CHAR`.
     pub fn onig_set_meta_char(syntax: *mut OnigSyntaxType,
                               what: c_uint,
                               code: OnigCodePoint)
