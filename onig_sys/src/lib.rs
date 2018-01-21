@@ -1,3 +1,4 @@
+
 extern crate libc;
 
 mod constants;
@@ -271,6 +272,7 @@ extern "C" {
     pub static OnigSyntaxPerl: OnigSyntaxType;
     pub static OnigSyntaxPerl_NG: OnigSyntaxType;
     pub static OnigSyntaxRuby: OnigSyntaxType;
+    pub static OnigSyntaxOniguruma: OnigSyntaxType;
 
     pub static mut OnigDefaultSyntax: *const OnigSyntaxType;
 
@@ -402,7 +404,8 @@ extern "C" {
     ///  * ONIG_SYNTAX_PERL              Perl
     ///  * ONIG_SYNTAX_PERL_NG           Perl + named group
     ///  * ONIG_SYNTAX_RUBY              Ruby
-    ///  * ONIG_SYNTAX_DEFAULT           default (== Ruby)
+    ///  * ONIG_SYNTAX_ONIGURUMA         Oniguruma syntax (Ruby based)
+    ///  * ONIG_SYNTAX_DEFAULT           default (== Oniguruma)
     ///                                  onig_set_default_syntax()
     ///
     ///  or any OnigSyntaxType data address defined by user.
