@@ -63,6 +63,11 @@ impl Syntax {
         unsafe { transmute(&onig_sys::OnigSyntaxRuby) }
     }
 
+    /// Oniguruma Syntax
+    pub fn oniguruma() -> &'static Syntax {
+        unsafe { transmute(&onig_sys::OnigSyntaxOniguruma) }
+    }
+
     /// Default syntax (Ruby syntax)
     pub fn default() -> &'static Syntax {
         unsafe { transmute(onig_sys::OnigDefaultSyntax) }
