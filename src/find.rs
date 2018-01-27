@@ -186,6 +186,10 @@ impl Regex {
         }
     }
 
+    /// Scan a Pattern and Observe Captures
+    ///
+    /// The scan function takes a haystack `to_search` and invokes the
+    /// given `callback` for each capture of this expression.
     pub fn scan<'t, CB>(&self, to_search: &'t str, callback: CB)
     where
         CB: Fn(i32, Captures<'t>) -> bool,

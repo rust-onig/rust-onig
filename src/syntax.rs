@@ -2,11 +2,27 @@ use std::mem::transmute;
 use onig_sys;
 use super::{SyntaxOperator, SyntaxBehavior, RegexOptions, MetaCharType};
 
+/// Meta Character State
+///
+/// Defines if a given meta character is enabled or not within a given
+/// syntax. If the character is enabled it also contains the rust
+/// `char` that it is set to.
 pub enum MetaChar {
+    /// The meta character is set to the chosen `char`
     Character(char),
+    /// The meta character is not enabled
     Ineffective,
 }
 
+/// Onig Syntax Wrapper
+///
+/// Each syntax dfines a flavour of regex syntax. This type allows
+/// interaction with the built-in syntaxes through the static accessor
+/// functions (`Syntax::emacs()`, `Syntax::default()` etc.) and the
+/// creation of custom syntaxes.
+/// 
+/// For a demonstration of creating a custom syntax see
+/// `examples/syntax.rs` in the main onig repo.
 #[derive(Debug, Clone, Copy)]
 pub struct Syntax {
     raw: onig_sys::OnigSyntaxType,
@@ -73,6 +89,7 @@ impl Syntax {
         unsafe { transmute(onig_sys::OnigDefaultSyntax) }
     }
 
+    /// Retrieve the operators for this syntax
     pub fn operators(&self) -> SyntaxOperator {
         unsafe {
             let op = onig_sys::onig_get_syntax_op(&self.raw);
@@ -81,6 +98,7 @@ impl Syntax {
         }
     }
 
+    /// Replace the operators for this syntax
     pub fn set_operators(&mut self, operators: SyntaxOperator) {
         let op = operators.bits() as onig_sys::OnigSyntaxOp;
         let op2 = (operators.bits() >> 32) as onig_sys::OnigSyntaxOp2;
@@ -90,20 +108,30 @@ impl Syntax {
         }
     }
 
+    /// Enable Operators for this Syntax
+    ///
+    /// Updates the operators for this syntax to enable the chosen
+    /// ones.
     pub fn enable_operators(&mut self, operators: SyntaxOperator) {
         let operators = self.operators() | operators;
         self.set_operators(operators)
     }
 
+    /// Disable Operators for this Syntax
+    ///
+    /// Updates the operators for this syntax to remove the specified
+    /// operators.
     pub fn disable_operators(&mut self, operators: SyntaxOperator) {
         let operators = self.operators() & !operators;
         self.set_operators(operators)
     }
 
+    /// Retrieves the syntax behaviours
     pub fn behavior(&self) -> SyntaxBehavior {
         SyntaxBehavior::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_behavior(&self.raw) })
     }
 
+    /// Overwrite the syntax behaviour for this syntax.
     pub fn set_behavior(&mut self, behavior: SyntaxBehavior) {
         let behavior = behavior.bits() as onig_sys::OnigSyntaxBehavior;
         unsafe {
@@ -111,20 +139,24 @@ impl Syntax {
         }
     }
 
+    /// Enable a given behaviour for this syntax
     pub fn enable_behavior(&mut self, behavior: SyntaxBehavior) {
         let behavior = self.behavior() | behavior;
         self.set_behavior(behavior)
     }
 
+    /// Disable a given behaviour for this syntax
     pub fn disable_behavior(&mut self, behavior: SyntaxBehavior) {
         let behavior = self.behavior() & !behavior;
         self.set_behavior(behavior)
     }
 
+    /// Retireve the syntax options for this syntax
     pub fn options(&self) -> RegexOptions {
         RegexOptions::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_options(&self.raw) })
     }
 
+    /// Replace the syntax options for this syntax
     pub fn set_options(&mut self, options: RegexOptions) {
         let options = options.bits() as onig_sys::OnigOptionType;
         unsafe {
@@ -132,6 +164,11 @@ impl Syntax {
         }
     }
 
+    /// Set a given meta character's state
+    ///
+    /// Arguments:
+    ///  - `what`: The meta character to update
+    ///  - `meta`: The value to set the meta character to
     pub fn set_meta_char(&mut self, what: MetaCharType, meta: MetaChar) {
         let what = what.bits();
         let code = match meta {

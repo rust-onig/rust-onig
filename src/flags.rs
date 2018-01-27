@@ -55,6 +55,7 @@ bitflags! {
 }
 
 bitflags! {
+    /// Defines the different operators allowed within a regex syntax.
     pub struct SyntaxOperator: u64 {
         /// `.`
         const SYNTAX_OPERATOR_DOT_ANYCHAR
@@ -204,6 +205,7 @@ bitflags! {
 }
 
 bitflags! {
+    /// Defines the behaviour of regex operators.
     pub struct SyntaxBehavior: onig_sys::OnigSyntaxBehavior {
         /// `?, *, +, {n,m}`
         const SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS
@@ -254,23 +256,34 @@ bitflags! {
 }
 
 bitflags! {
+    /// The order in which traverse callbacks are invoked
     pub struct TraverseCallbackAt: libc::c_int {
+        /// Callback before children are wallked
         const CALLBACK_AT_FIRST =
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_FIRST;
+        /// Callback after children are walked
         const CALLBACK_AT_LAST =
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_LAST;
+        /// Callback both before and after children are walked.
         const CALLBACK_AT_BOTH =
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_BOTH;
     }
 }
 
 bitflags! {
+    /// Syntax meta character types
     pub struct MetaCharType: libc::c_uint {
+        /// The escape charater for this syntax
         const META_CHAR_ESCAPE = onig_sys::ONIG_META_CHAR_ESCAPE;
+        /// The any (.) character for this syntax.
         const META_CHAR_ANYCHAR =  onig_sys::ONIG_META_CHAR_ANYCHAR;
+        /// The any number of repeats (*) character for this syntax.
         const META_CHAR_ANYTIME =  onig_sys::ONIG_META_CHAR_ANYTIME;
+        /// The optinoal (?) chracter for this syntax
         const META_CHAR_ZERO_OR_ONE_TIME =  onig_sys::ONIG_META_CHAR_ZERO_OR_ONE_TIME;
+        /// The at least once (+) character for this syntax
         const META_CHAR_ONE_OR_MORE_TIME =  onig_sys::ONIG_META_CHAR_ONE_OR_MORE_TIME;
+        /// The glob character for this syntax (.*)
         const META_CHAR_ANYCHAR_ANYTIME =  onig_sys::ONIG_META_CHAR_ANYCHAR_ANYTIME;
     }
 }
