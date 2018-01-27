@@ -86,6 +86,8 @@
 
 #![cfg_attr(feature = "std-pattern", feature(pattern))]
 
+#![deny(missing_docs)]
+
 #[macro_use]
 extern crate bitflags;
 #[macro_use]
@@ -99,6 +101,7 @@ mod region;
 mod replace;
 mod names;
 mod syntax;
+#[allow(missing_docs)]
 mod tree;
 mod utils;
 mod buffers;
@@ -658,10 +661,12 @@ impl Regex {
         unsafe { onig_sys::onig_get_encoding(self.raw) }
     }
 
+    /// Get the Number of Capture Groups in this Pattern
     pub fn captures_len(&self) -> usize {
         unsafe { onig_sys::onig_number_of_captures(self.raw) as usize }
     }
 
+    /// Get the Size of the Capture Histories for this Pattern
     pub fn capture_histories_len(&self) -> usize {
         unsafe { onig_sys::onig_number_of_capture_histories(self.raw) as usize }
     }

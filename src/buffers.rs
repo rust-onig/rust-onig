@@ -28,9 +28,11 @@ pub trait EncodedChars {
         unsafe { &onig_sys::OnigEncodingUTF8 }
     }
 
+    /// The length of this buffer
     fn len(&self) -> usize;
 }
 
+/// Encoded Charters from a `str` Reference
 impl<T> EncodedChars for T
 where
     T: AsRef<str>,

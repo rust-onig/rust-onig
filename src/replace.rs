@@ -2,18 +2,26 @@ use std::borrow::Cow;
 use super::{Regex, Captures};
 
 /// Replacer describes types that can be used to replace matches in a string.
+///
+/// Implementations are provided for replacement using string literals
+/// and `FnMut` callbacks. If this isn't enough for your replacement
+/// needs a user-supplied `Replacer` implemenation can be
+/// provided. For an example of a custom replacer implementation check
+/// ouf `examples/dollar.rs` in the Onig repo.
 pub trait Replacer {
     /// Returns a possibly owned string that is used to replace the match
     /// corresponding to the `caps` capture group.
     fn reg_replace(&mut self, caps: &Captures) -> Cow<str>;
 }
 
+/// Replacement using Literal Strings
 impl<'t> Replacer for &'t str {
     fn reg_replace(&mut self, _: &Captures) -> Cow<str> {
         (*self).into()
     }
 }
 
+/// Replacement using `FnMut` Callbacks
 impl<F> Replacer for F
 where
     F: FnMut(&Captures) -> String,
