@@ -44,7 +44,7 @@ impl Regex {
             F: FnMut(&str, &[u32]) -> bool,
         {
             let name = unsafe {
-                from_utf8_unchecked(from_raw_parts(name, (name_end as usize - name as usize)))
+                from_utf8_unchecked(from_raw_parts(name, name_end as usize - name as usize))
             };
 
             let groups = unsafe { from_raw_parts(group_nums as *const u32, ngroup_num as usize) };
