@@ -1,6 +1,6 @@
 extern crate onig;
 
-use onig::{Regex, Replacer, Captures};
+use onig::{Captures, Regex, Replacer};
 use std::borrow::Cow;
 
 /// A string, with `$1` refering to the first capture group.
@@ -26,9 +26,9 @@ impl<'a> Replacer for Dollarified<'a> {
                 pattern = &pattern[position + 1..];
 
                 // find the end of the capture reference
-                let ref_end = pattern.find(|c| !char::is_numeric(c)).unwrap_or(
-                    pattern.len(),
-                );
+                let ref_end = pattern
+                    .find(|c| !char::is_numeric(c))
+                    .unwrap_or(pattern.len());
 
                 // push the capture from this capture reference
                 if let Some(cap) = capture_str(caps, &pattern[..ref_end]) {

@@ -4,7 +4,6 @@ extern crate onig_sys;
 use onig::*;
 
 fn main() {
-
     let mut syntax = Syntax::default().clone();
 
     syntax.set_operators(SyntaxOperator::SYNTAX_OPERATOR_VARIABLE_META_CHARACTERS);
@@ -27,8 +26,8 @@ fn main() {
         MetaChar::Character('%'),
     );
 
-    let reg = Regex::with_options("\\_%\\\\__zz", RegexOptions::REGEX_OPTION_NONE, &syntax)
-        .unwrap();
+    let reg =
+        Regex::with_options("\\_%\\\\__zz", RegexOptions::REGEX_OPTION_NONE, &syntax).unwrap();
 
     match reg.captures("a_abcabcabc\\ppzz") {
         Some(caps) => {

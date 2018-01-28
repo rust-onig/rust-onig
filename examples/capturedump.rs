@@ -27,11 +27,9 @@ fn main() {
             for (name, regex) in regexes.iter() {
                 let res = regex.captures(&line);
                 match res {
-                    Some(captures) => {
-                        for (i, mat) in captures.iter().enumerate() {
-                            println!("{} => '{}'", i, mat.unwrap());
-                        }
-                    }
+                    Some(captures) => for (i, mat) in captures.iter().enumerate() {
+                        println!("{} => '{}'", i, mat.unwrap());
+                    },
                     None => println!("{} => did not match", name),
                 }
             }

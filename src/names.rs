@@ -3,9 +3,9 @@ use std::iter::Iterator;
 use std::ptr::null;
 use std::str::from_utf8_unchecked;
 use std::slice::from_raw_parts;
-use libc::{c_int, c_uint, c_void, c_uchar};
+use libc::{c_int, c_uchar, c_uint, c_void};
 
-use onig_sys::{self, OnigUChar, OnigRegex};
+use onig_sys::{self, OnigRegex, OnigUChar};
 
 use super::Regex;
 
@@ -51,7 +51,11 @@ impl Regex {
 
             let callback = unsafe { &mut *(arg as *mut F) };
 
-            if callback(name, groups) { 0 } else { -1 }
+            if callback(name, groups) {
+                0
+            } else {
+                -1
+            }
         }
 
         unsafe {

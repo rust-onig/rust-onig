@@ -1,5 +1,5 @@
 use std::iter::Iterator;
-use super::{Region, Regex, SearchOptions};
+use super::{Regex, Region, SearchOptions};
 
 impl Regex {
     /// Returns the capture groups corresponding to the leftmost-first match
@@ -13,13 +13,11 @@ impl Regex {
             text.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             Some(&mut region),
-        ).map(|pos| {
-                Captures {
-                    text: text,
-                    region: region,
-                    offset: pos,
-                }
-            })
+        ).map(|pos| Captures {
+            text: text,
+            region: region,
+            offset: pos,
+        })
     }
 
     /// Returns an iterator for each successive non-overlapping match in `text`,
@@ -154,10 +152,9 @@ impl Regex {
     where
         F: Fn(i32, i32, &Region) -> bool,
     {
-
         use onig_sys::{onig_scan, OnigRegion};
         use std::mem::transmute;
-        use libc::{c_void, c_int};
+        use libc::{c_int, c_void};
 
         // Find the bounds of the string we're searching
         let start = to_search.as_ptr();
@@ -167,10 +164,13 @@ impl Regex {
         where
             F: Fn(i32, i32, &Region) -> bool,
         {
-
             let region = Region::clone_from_raw(r);
             let callback = unsafe { &*(ud as *mut F) };
-            if callback(i, j, &region) { 0 } else { -1 }
+            if callback(i, j, &region) {
+                0
+            } else {
+                -1
+            }
         }
 
         unsafe {
@@ -194,7 +194,6 @@ impl Regex {
     where
         CB: Fn(i32, Captures<'t>) -> bool,
     {
-
         let mut region = Region::new();
         self.scan_with_region(
             to_search,
@@ -209,7 +208,6 @@ impl Regex {
                 callback(n, captures)
             },
         );
-
     }
 }
 
@@ -529,7 +527,6 @@ mod tests {
         assert_eq!(str1, "ell");
         assert_eq!(str2, "ll");
         assert_eq!(str3, None);
-
     }
 
     #[test]
@@ -540,7 +537,6 @@ mod tests {
         assert_eq!(caps[0], Some("ell"));
         assert_eq!(caps[1], Some("ll"));
         assert_eq!(caps.len(), 2);
-
     }
 
     #[test]
@@ -551,7 +547,6 @@ mod tests {
         assert_eq!(caps[0], Some((1, 4)));
         assert_eq!(caps[1], Some((2, 4)));
         assert_eq!(caps.len(), 2);
-
     }
 
     #[test]

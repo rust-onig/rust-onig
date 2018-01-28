@@ -1,5 +1,5 @@
-use std::str::pattern::{Pattern, Searcher, SearchStep};
-use super::{Regex, FindMatches};
+use std::str::pattern::{Pattern, SearchStep, Searcher};
+use super::{FindMatches, Regex};
 
 /// Regex Searcher Type
 ///
@@ -55,7 +55,6 @@ unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
     /// Returns the indexes of the next `Match` or `Reject` of the
     /// pattern within the haystack.
     fn next(&mut self) -> SearchStep {
-
         // if we have a cached match then return it straight away
         if let Some((start, end)) = self.cached_match {
             self.cached_match = None;
@@ -99,7 +98,7 @@ unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
 #[cfg(test)]
 mod test {
     use Regex;
-    use std::str::pattern::{Pattern, Searcher, SearchStep};
+    use std::str::pattern::{Pattern, SearchStep, Searcher};
 
     #[test]
     pub fn pattern_matches_in_str_returns_all_matches() {

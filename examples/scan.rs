@@ -3,7 +3,6 @@ extern crate onig;
 use onig::*;
 
 fn scan_callback<'t>(n: i32, caps: Captures<'t>) -> bool {
-
     println!("scan: {}", n);
     println!("match at {}", caps.offset());
 

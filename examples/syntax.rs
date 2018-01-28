@@ -3,7 +3,6 @@ extern crate onig;
 use onig::*;
 
 fn exec(syntax: &Syntax, pattern: &str, to_search: &str) {
-
     let reg = Regex::with_options(pattern, RegexOptions::REGEX_OPTION_NONE, syntax).unwrap();
 
     match reg.captures(to_search) {
@@ -21,7 +20,6 @@ fn exec(syntax: &Syntax, pattern: &str, to_search: &str) {
 }
 
 fn main() {
-
     exec(
         Syntax::perl(),
         r"\p{XDigit}\P{XDigit}\p{^XDigit}\P{^XDigit}\p{XDigit}",

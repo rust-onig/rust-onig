@@ -22,8 +22,7 @@ fn main() {
         string.len(),
         SearchOptions::SEARCH_OPTION_NONE,
         Some(&mut region),
-    )
-    {
+    ) {
         println!("match at {} in {:?}", position, string);
 
         r.foreach_name(|name, groups| {

@@ -4,7 +4,6 @@ use std::str;
 use onig::*;
 
 fn main() {
-
     define_user_property(
         "HandakuonHiragana",
         &[
@@ -18,21 +17,7 @@ fn main() {
 
     // "PA PI PU PE PO a"
     let hay = [
-        0xe3,
-        0x81,
-        0xb1,
-        0xe3,
-        0x81,
-        0xb4,
-        0xe3,
-        0x81,
-        0xb7,
-        0xe3,
-        0x81,
-        0xba,
-        0xe3,
-        0x81,
-        0xbd,
+        0xe3, 0x81, 0xb1, 0xe3, 0x81, 0xb4, 0xe3, 0x81, 0xb7, 0xe3, 0x81, 0xba, 0xe3, 0x81, 0xbd,
         'a' as u8,
     ];
     let hay = str::from_utf8(&hay).unwrap();

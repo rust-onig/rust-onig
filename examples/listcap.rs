@@ -3,7 +3,6 @@ extern crate onig;
 use onig::*;
 
 fn ex(hay: &str, pattern: &str, syntax: &Syntax) {
-
     let reg = Regex::with_options(pattern, RegexOptions::REGEX_OPTION_NONE, syntax).unwrap();
 
     println!("number of captures: {}", reg.captures_len());

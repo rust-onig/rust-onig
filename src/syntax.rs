@@ -1,6 +1,6 @@
 use std::mem::transmute;
 use onig_sys;
-use super::{SyntaxOperator, SyntaxBehavior, RegexOptions, MetaCharType};
+use super::{MetaCharType, RegexOptions, SyntaxBehavior, SyntaxOperator};
 
 /// Meta Character State
 ///
@@ -20,7 +20,7 @@ pub enum MetaChar {
 /// interaction with the built-in syntaxes through the static accessor
 /// functions (`Syntax::emacs()`, `Syntax::default()` etc.) and the
 /// creation of custom syntaxes.
-/// 
+///
 /// For a demonstration of creating a custom syntax see
 /// `examples/syntax.rs` in the main onig repo.
 #[derive(Debug, Clone, Copy)]

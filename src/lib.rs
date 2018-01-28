@@ -85,7 +85,6 @@
 //! ```
 
 #![cfg_attr(feature = "std-pattern", feature(pattern))]
-
 #![deny(missing_docs)]
 
 #[macro_use]
@@ -113,13 +112,13 @@ mod pattern;
 pub use flags::*;
 pub use names::CaptureNames;
 pub use region::Region;
-pub use find::{Captures, SubCaptures, SubCapturesPos, FindMatches, FindCaptures, RegexSplits,
-               RegexSplitsN};
-pub use buffers::{EncodedChars, EncodedBytes};
+pub use find::{Captures, FindCaptures, FindMatches, RegexSplits, RegexSplitsN, SubCaptures,
+               SubCapturesPos};
+pub use buffers::{EncodedBytes, EncodedChars};
 pub use replace::Replacer;
 pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
-pub use syntax::{Syntax, MetaChar};
-pub use utils::{version, copyright, define_user_property};
+pub use syntax::{MetaChar, Syntax};
+pub use utils::{copyright, define_user_property, version};
 
 use std::{error, fmt, str};
 use std::sync::Mutex;
@@ -318,7 +317,6 @@ impl Regex {
             par: null(),
             par_end: null(),
         };
-
 
         let err = unsafe {
             // Grab a lock to make sure that `onig_new` isn't called by
@@ -649,7 +647,6 @@ impl Regex {
             Some(&mut region),
         ).and_then(|_| region.pos(0))
     }
-
 
     /// Get the Encoding of the Regex
     ///

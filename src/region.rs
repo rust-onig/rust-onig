@@ -151,7 +151,7 @@ impl Region {
         F: Fn(u32, (usize, usize), u32) -> bool,
     {
         use onig_sys::onig_capture_tree_traverse;
-        use libc::{c_void, c_int};
+        use libc::{c_int, c_void};
 
         extern "C" fn traverse_cb<F>(
             group: c_int,
