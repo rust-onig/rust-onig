@@ -100,7 +100,6 @@ mod region;
 mod replace;
 mod names;
 mod syntax;
-#[allow(missing_docs)]
 mod tree;
 mod utils;
 mod buffers;

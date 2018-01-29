@@ -3,6 +3,11 @@ use std::ops::Index;
 use std::iter::Iterator;
 use onig_sys;
 
+/// Capture Tree Node
+///
+/// Represents a single node in the capture tree. Can be queried for
+/// information about the given capture and any child-captures that
+/// took place.
 #[repr(C)]
 #[derive(Debug)]
 pub struct CaptureTreeNode {
@@ -10,18 +15,23 @@ pub struct CaptureTreeNode {
 }
 
 impl CaptureTreeNode {
+
+    /// The capture group number for this capture
     pub fn group(&self) -> usize {
         self.raw.group as usize
     }
 
+    /// The extent of this capture
     pub fn pos(&self) -> (usize, usize) {
         (self.raw.beg as usize, self.raw.end as usize)
     }
 
+    /// The number of child captures this group contains
     pub fn len(&self) -> usize {
         self.raw.num_childs as usize
     }
 
+    /// An iterator over thie children of this capture group
     pub fn children<'t>(&'t self) -> CaptureTreeNodeIter<'t> {
         CaptureTreeNodeIter { idx: 0, node: self }
     }
@@ -38,6 +48,7 @@ impl Index<usize> for CaptureTreeNode {
     }
 }
 
+/// Caputres iterator
 #[derive(Debug)]
 pub struct CaptureTreeNodeIter<'t> {
     idx: usize,
