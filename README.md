@@ -24,7 +24,7 @@ Add the following extern to your crate root:
 extern crate onig;
 ```
 
-You can can compile simple regular expressions with [`Regex::new`][regex_new], check if the pattern matches an entire `&str`  with [`Regex::is_match`][regex_is_match] and find matches within a `&str` with [`Regex::find`][regex_find]. The `onig` crate also supplies more powerful versions of these methods which expose the wide range of options Oniguruma provides.
+You can compile simple regular expressions with [`Regex::new`][regex_new], check if the pattern matches an entire `&str` with [`Regex::is_match`][regex_is_match] and find matches within a `&str` with [`Regex::find`][regex_find]. The `onig` crate also supplies more powerful versions of these methods which expose the wide range of options Oniguruma provides.
 
 ```rust
 use onig::*;
@@ -44,7 +44,7 @@ for (i, pos) in regex.captures("hello").unwrap().iter_pos().enumerate() {
 
 If a version of Oniguruma can be found by `pkg-config` then that will be used. If not then Oniguruma will be compiled from source and linked to the `onig-sys` crate.
 
-By default `rust-onig` will be statically lined to `libonig`. If your would rather that dynamic linking is used then the environment variables `RUSTONIG_STATIC_LIBONIG` and `RUSTONIG_DYNAMIC_LIBONIG` can be set. On *nix:
+By default `rust-onig` will be statically linked to `libonig`. If you would rather that dynamic linking is used then the environment variables `RUSTONIG_STATIC_LIBONIG` and `RUSTONIG_DYNAMIC_LIBONIG` can be set. On *nix:
 
     $ RUSTONIG_DYNAMIC_LIBONING=1 cargo build
 
