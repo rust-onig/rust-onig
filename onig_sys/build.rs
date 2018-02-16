@@ -75,6 +75,13 @@ fn compile(link_type: LinkType) {
     // into $OUT_DIR
     let mut c = Config::new("oniguruma");
 
+    if env_var_bool("CARGO_FEATURE_PRINT_DEBUG").unwrap_or(false) {
+        c.cflag("-DONIG_DEBUG_PARSE=1");
+        c.cflag("-DONIG_DEBUG_COMPILE=1");
+        c.cflag("-DONIG_DEBUG_SEARCH=1");
+        c.cflag("-DONIG_DEBUG_MATCH=1");
+    }
+
     let dst = match link_type {
         LinkType::Static => c.define("BUILD_SHARED_LIBS", "OFF"),
         LinkType::Dynamic => c.define("CMAKE_MACOSX_RPATH", "NO"),
