@@ -53,6 +53,19 @@ Or Windows:
     > set RUSTONIG_DYNAMIC_LIBONIG=1
     > cargo build
 
+## Debugging
+
+Sometimes it's useful to debug how Oniguruma parses, compiles, optimizes or
+executes a particular pattern.
+
+When activating the `print-debug` feature for this crate, Oniguruma is compiled
+with debugging. Note that it's a compile-time setting, so you also need to make
+`rust-onig` not use the system Oniguruma by using `RUSTONIG_SYSTEM_LIBONIG`.
+
+With all that combined, here's an example command to debug the pattern `a|b`:
+
+    RUSTONIG_SYSTEM_LIBONIG=0 cargo run --features print-debug --example capturedump 'a|b'
+
 ## Rust-Onig is Open Source
 
 The contents of this repository are distributed under the MIT license. See [LICENSE](LICENSE.md) for more details.

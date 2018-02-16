@@ -28,3 +28,7 @@ version = "0.9.2"
 
 [target.'cfg(not(target_env="msvc"))'.build-dependencies.cmake]
 version = "0.1"
+
+[features]
+# Make Oniguruma print debug output for parsing/compiling and executing
+print-debug = []

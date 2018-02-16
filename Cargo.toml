@@ -15,6 +15,8 @@ license = "MIT"
 
 [features]
 std-pattern = []
+# Make Oniguruma print debug output for parsing/compiling and executing
+print-debug = ["onig_sys/print-debug"]
 
 [dependencies]
 libc = "0.2"
