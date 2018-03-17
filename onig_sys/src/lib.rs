@@ -1,4 +1,3 @@
-
 extern crate libc;
 
 mod constants;
@@ -227,6 +226,18 @@ pub struct OnigRegexType {
     pub dmax: OnigDistance, // max-distance of exact or map
 
     pub chain: *const OnigRegexType,
+}
+
+/// Match Parameters Struct
+///
+/// This can be passed to `onig_search_with_param` and
+/// `onig_match_with_param` to control their behavior. Instances can
+/// be created with `onig_new_match_param`. The contents of the struct
+/// should not be modified directly.
+#[repr(C)]
+pub struct OnigMatchParam {
+    /// External Data
+    _external: c_int
 }
 
 extern "C" {
@@ -519,6 +530,26 @@ extern "C" {
     ///   arguments
     ///   1 reg: regex object.
     pub fn onig_free_body(reg: OnigRegexMut);
+
+
+    /// Allocate a OnigMatchParam object and initialize the contents by
+    /// onig_initialize_match_param().
+    pub fn onig_new_match_param() -> *mut OnigMatchParam;
+
+    /// Free memory used by a OnigMatchParam object.
+    ///
+    /// # Arguments
+    ///
+    /// 1 mp: OnigMatchParam object
+    pub fn onig_free_match_param(mp: *mut OnigMatchParam);
+
+    /// Set match-param fields to default values.
+    /// Match-param is used in onig_match_with_param() and onig_search_with_param().
+    ///
+    /// # Arguments
+    ///
+    /// 1 mp: match-param pointer
+    pub fn onig_initialize_match_param(mp: *mut OnigMatchParam);
 
     ///   Search string and return search result and matching region.
     ///
