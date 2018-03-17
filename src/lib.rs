@@ -98,6 +98,7 @@ mod find;
 mod flags;
 mod region;
 mod replace;
+mod match_param;
 mod names;
 mod syntax;
 mod tree;
