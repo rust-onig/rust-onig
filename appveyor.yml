@@ -59,6 +59,16 @@ environment:
 
 ### GNU Toolchains ###
 
+  # Stable 64-bit MINGW
+    - channel: stable
+      target: x86_64-pc-windows-gnu
+      TOOLCHAIN: mingw
+      MINGW_TARGET: x86_64-6.3.0-posix-seh-rt_v5-rev1
+  # Stable 32-bit MINGW
+    - channel: stable
+      target: i686-pc-windows-gnu
+      TOOLCHAIN: mingw
+      MINGW_TARGET: i686-6.3.0-posix-dwarf-rt_v5-rev1
   # Stable 64-bit GNU
     - channel: stable
       target: x86_64-pc-windows-gnu
@@ -128,6 +138,7 @@ install:
 - if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 - if "%TOOLCHAIN%" == "msvc" if "%PLATFORM%" == "x86_64" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
 - if "%TOOLCHAIN%" == "msys" set PATH=C:\msys64\mingw%MSYS_BITS%\bin;C:\msys64\usr\bin;%PATH%
+- if "%TOOLCHAIN%" == "mingw" set PATH=C:\mingw-w64\%MINGW_TARGET%\bin;C:\msys64\usr\bin;%PATH%
 
 ## Build Script ##
 
