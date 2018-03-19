@@ -551,6 +551,17 @@ extern "C" {
     /// 1 mp: match-param pointer
     pub fn onig_initialize_match_param(mp: *mut OnigMatchParam);
 
+    /// Set a maximum number of match-stack depth.
+    /// 0 means unlimited.
+    ///
+    /// # Arguments
+    ///
+    /// 1 mp: match-param pointer
+    /// 2 limit: number of limit
+    ///
+    /// normal return: ONIG_NORMAL
+    pub fn onig_set_match_stack_limit_size_of_match_param(mp: *mut OnigMatchParam, limit: c_uint) -> c_int;
+
     ///   Search string and return search result and matching region.
     ///
     ///   `int onig_search(regex_t* reg, const UChar* str, const UChar* end, const UChar* start,
