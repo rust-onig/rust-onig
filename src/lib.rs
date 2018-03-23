@@ -144,9 +144,17 @@ unsafe impl Send for Regex {}
 unsafe impl Sync for Regex {}
 
 impl Error {
-    fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
+    fn from_code_and_info(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
+        Error::new(code, &info)
+    }
+
+    fn from_code(code: c_int) -> Error {
+        Error::new(code, null())
+    }
+
+    fn new(code: c_int, info: *const onig_sys::OnigErrorInfo) -> Error {
         let buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
-        let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info) };
+        let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
             code: code,
@@ -336,7 +344,7 @@ impl Regex {
         if err == onig_sys::ONIG_NORMAL {
             Ok(Regex { raw: reg })
         } else {
-            Err(Error::new(err, error))
+            Err(Error::from_code_and_info(err, error))
         }
     }
 
@@ -450,7 +458,8 @@ impl Regex {
         } else if r == onig_sys::ONIG_MISMATCH {
             None
         } else {
-            panic!("Onig: Internal error during regex match");
+            let Error { description, .. } = Error::from_code(r);
+            panic!("Onig: Regex match error: {}", description);
         }
     }
 
@@ -575,7 +584,8 @@ impl Regex {
         } else if r == onig_sys::ONIG_MISMATCH {
             None
         } else {
-            panic!("Onig: Internal error during regex search");
+            let Error { description, .. } = Error::from_code(r);
+            panic!("Onig: Regex search error: {}", description);
         }
     }
 
@@ -680,6 +690,7 @@ impl Drop for Regex {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::panic;
 
     #[test]
     fn test_regex_create() {
@@ -768,5 +779,29 @@ mod tests {
     fn test_regex_captures_len() {
         let regex = Regex::new("(he)(l+)(o)").unwrap();
         assert_eq!(regex.captures_len(), 3);
+    }
+
+    #[test]
+    fn test_regex_panic_is_match() {
+        let regex = Regex::new("(a|b|ab)*bc").unwrap();
+        let result = panic::catch_unwind(||
+            regex.is_match("ababababababababababababababababababababababababababababacbc")
+        );
+        let e = result.err().unwrap();
+        let message = e.downcast_ref::<String>().unwrap();
+        assert_eq!(message.as_str(),
+                   "Onig: Regex match error: retry-limit-in-match over");
+    }
+
+    #[test]
+    fn test_regex_panic_find() {
+        let regex = Regex::new("(a|b|ab)*bc").unwrap();
+        let result = panic::catch_unwind(||
+            regex.find("ababababababababababababababababababababababababababababacbc")
+        );
+        let e = result.err().unwrap();
+        let message = e.downcast_ref::<String>().unwrap();
+        assert_eq!(message.as_str(),
+                   "Onig: Regex search error: retry-limit-in-match over");
     }
 }
