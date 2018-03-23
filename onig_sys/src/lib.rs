@@ -562,6 +562,16 @@ extern "C" {
     /// normal return: ONIG_NORMAL
     pub fn onig_set_match_stack_limit_size_of_match_param(mp: *mut OnigMatchParam, limit: c_uint) -> c_int;
 
+    /// Set a retry limit count of a match process.
+    ///
+    /// # Arguments
+    ///
+    /// 1 mp: match-param pointer
+    /// 2 limit: number of limit
+    ///
+    /// normal return: ONIG_NORMAL
+    pub fn onig_set_retry_limit_in_match_of_match_param(mp: *mut OnigMatchParam, limit: c_uint) -> c_int;
+
     ///   Search string and return search result and matching region.
     ///
     ///   `int onig_search(regex_t* reg, const UChar* str, const UChar* end, const UChar* start,
