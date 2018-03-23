@@ -1,7 +1,7 @@
 //! Match Parameters
 //!
 //! Contains the definition for the `MatchParam` struct. This can be
-//! used to control the behavior of searching and matcing.
+//! used to control the behavior of searching and matching.
 
 use onig_sys;
 use libc::c_uint;

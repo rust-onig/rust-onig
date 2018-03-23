@@ -596,6 +596,31 @@ extern "C" {
                        option: OnigOptionType)
                        -> c_int;
 
+    ///   Search string and return search result and matching region.
+    ///
+    ///   `int onig_search_with_param(regex_t* reg, const UChar* str, const UChar* end,
+    ///                               const UChar* start, const UChar* range, OnigRegion* region,
+    ///                               OnigOptionType option, OnigMatchParam* mp)`
+    ///
+    /// # Returns
+    ///
+    ///   normal return: match position offset (i.e.  p - str >= 0)
+    ///   not found:     ONIG_MISMATCH (< 0)
+    ///
+    /// # Arguments
+    ///
+    ///   1-7:  same as onig_search()
+    ///   8. `mp`: match parameters
+    pub fn onig_search_with_param(reg: OnigRegex,
+                                  str: *const OnigUChar,
+                                  end: *const OnigUChar,
+                                  start: *const OnigUChar,
+                                  range: *const OnigUChar,
+                                  region: *mut OnigRegion,
+                                  option: OnigOptionType,
+                                  mp: *const OnigMatchParam)
+                                  -> c_int;
+
     ///   Match string and return result and matching region.
     ///
     ///   `int onig_match(regex_t* reg, const UChar* str, const UChar* end, const UChar* at,
@@ -624,6 +649,30 @@ extern "C" {
                       at: *const OnigUChar,
                       region: *mut OnigRegion,
                       option: OnigOptionType)
+                      -> c_int;
+
+    ///   Match string and return result and matching region.
+    ///
+    ///   `int onig_match_with_param(regex_t* reg, const UChar* str, const UChar* end,
+    ///                              const UChar* at, OnigRegion* region,
+    ///                              OnigOptionType option, OnigMatchParam* mp)`
+    ///
+    /// # Returns
+    ///
+    ///   normal return: match length  (>= 0)
+    ///   not match:     ONIG_MISMATCH ( < 0)
+    ///
+    /// # Arguments
+    ///
+    ///   1-6:  same as onig_match()
+    ///   7. `mp`: match parameters
+    pub fn onig_match_with_param(reg: OnigRegex,
+                      str: *const OnigUChar,
+                      end: *const OnigUChar,
+                      at: *const OnigUChar,
+                      region: *mut OnigRegion,
+                      option: OnigOptionType,
+                      mp: *const OnigMatchParam)
                       -> c_int;
 
     ///   Scan string and callback with matching region.
