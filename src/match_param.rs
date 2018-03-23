@@ -12,10 +12,20 @@ pub struct MatchParam {
 }
 
 impl MatchParam {
-    /// Set the match statck limit
+    /// Set the match stack limit
     pub fn set_match_stack_limit(&mut self, limit: u32) {
         unsafe {
             onig_sys::onig_set_match_stack_limit_size_of_match_param(
+                self.raw,
+                limit as c_uint
+            );
+        }
+    }
+
+    /// Set the retry limit in match
+    pub fn set_retry_limit_in_match(&mut self, limit: u32) {
+        unsafe {
+            onig_sys::onig_set_retry_limit_in_match_of_match_param(
                 self.raw,
                 limit as c_uint
             );
@@ -56,5 +66,11 @@ mod test {
     pub fn set_max_stack_size_limit() {
         let mut mp = MatchParam::default();
         mp.set_match_stack_limit(1000);
+    }
+
+    #[test]
+    pub fn set_retry_limit_in_match() {
+        let mut mp = MatchParam::default();
+        mp.set_retry_limit_in_match(1000);
     }
 }
