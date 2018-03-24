@@ -58,18 +58,18 @@ pub type OnigForeachNameCallback = extern "C" fn(*const OnigUChar,
 /// being traversed. See
 /// [`onig_capture_tree_traverse`](fn.onig_capture_tree_traverse.html)
 /// for more information about parameters and use.
-pub type OnigCaptureTreeTraverseCallback = extern "C" fn(c_int,
-                                                         c_int,
-                                                         c_int,
-                                                         c_int,
-                                                         c_int,
-                                                         *mut c_void)
-                                                         -> c_int;
+pub type OnigCaptureTreeTraverseCallback =
+    extern "C" fn(c_int, c_int, c_int, c_int, c_int, *mut c_void) -> c_int;
 
 /// ```c
 /// int (*scan_callback)(int, int, OnigRegion*, void*)
 /// ```
 pub type OnigScanCallback = extern "C" fn(c_int, c_int, *const OnigRegion, *mut c_void) -> c_int;
+
+/// ```c
+/// typedef int (*OnigCalloutFunc)(OnigCalloutArgs* args, void* user_data);
+/// ```
+pub type OnigCalloutFunc = extern "C" fn (args: *const OnigCalloutArgs, user_data: *const c_void) -> c_int;
 
 #[repr(C)]
 #[derive(Debug, Eq, PartialEq)]
@@ -237,7 +237,17 @@ pub struct OnigRegexType {
 #[repr(C)]
 pub struct OnigMatchParam {
     /// External Data
-    _external: c_int
+    _external: c_int,
+}
+
+/// Callout Args Struct
+///
+/// This is still an experimental API at the moment. The type is
+/// opaque to library users for now.
+#[repr(C)]
+pub struct OnigCalloutArgs {
+    /// External data
+    _external: c_int,
 }
 
 extern "C" {
@@ -570,7 +580,36 @@ extern "C" {
     /// 2 limit: number of limit
     ///
     /// normal return: ONIG_NORMAL
-    pub fn onig_set_retry_limit_in_match_of_match_param(mp: *mut OnigMatchParam, limit: c_uint) -> c_int;
+    pub fn onig_set_retry_limit_in_match_of_match_param(
+        mp: *mut OnigMatchParam,
+        limit: c_uint,
+    ) -> c_int;
+
+    ///  Set a function for callouts of contents in progress.
+    ///  If 0 (NULL) is set, never called in progress.
+    ///
+    ///  arguments
+    ///  1 mp: match-param pointer
+    ///  2 f: function
+    ///
+    ///  normal return: ONIG_NORMAL
+    pub fn onig_set_progress_callout_of_match_param(
+        mp: *mut OnigMatchParam,
+        f: OnigCalloutFunc,
+    ) -> c_int;
+
+    ///  Set a function for callouts of contents in retraction (backtrack).
+    ///  If 0 (NULL) is set, never called in retraction.
+    ///
+    ///  arguments
+    ///  1 mp: match-param pointer
+    ///  2 f: function
+    ///
+    ///  normal return: ONIG_NORMAL
+    pub fn onig_set_retraction_callout_of_match_param(
+        mp: *mut OnigMatchParam,
+        f: OnigCalloutFunc,
+    ) -> c_int;
 
     ///   Search string and return search result and matching region.
     ///
