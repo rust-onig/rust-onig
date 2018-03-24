@@ -30,11 +30,12 @@ extern "C" {
     ///                               const OnigUChar* s,
     ///                               int n);
     /// ```
-    pub fn onigenc_step_back(enc: OnigEncoding,
-                             start: *const OnigUChar,
-                             s: *const OnigUChar,
-                             n: c_int)
-                             -> *const OnigUChar;
+    pub fn onigenc_step_back(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+        n: c_int,
+    ) -> *const OnigUChar;
 
     /// Onigenc Set Default Encoding
     ///
@@ -65,11 +66,12 @@ extern "C" {
     ///     const OnigUChar* start,
     ///     const OnigUChar* s,
     ///     const OnigUChar** prev);
-    pub fn onigenc_get_right_adjust_char_head_with_prev(enc: OnigEncoding,
-                                                        start: *const OnigUChar,
-                                                        s: *const OnigUChar,
-                                                        prev: *mut *const OnigUChar)
-                                                        -> *const OnigUChar;
+    pub fn onigenc_get_right_adjust_char_head_with_prev(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+        prev: *mut *const OnigUChar,
+    ) -> *const OnigUChar;
 
     ///   Return previous character head address.
     ///
@@ -79,10 +81,11 @@ extern "C" {
     ///   1 enc:   character encoding
     ///   2 start: string address
     ///   3 s:     target address of string
-    pub fn onigenc_get_prev_char_head(enc: OnigEncoding,
-                                      start: *const OnigUChar,
-                                      s: *const OnigUChar)
-                                      -> *const OnigUChar;
+    pub fn onigenc_get_prev_char_head(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+    ) -> *const OnigUChar;
 
     ///   Return left-adjusted head address of a character.
     ///
@@ -94,10 +97,11 @@ extern "C" {
     ///   1. enc:   character encoding
     ///   2. start: string address
     ///   3. s:     target address of string
-    pub fn onigenc_get_left_adjust_char_head(enc: OnigEncoding,
-                                             start: *const OnigUChar,
-                                             s: *const OnigUChar)
-                                             -> *const OnigUChar;
+    pub fn onigenc_get_left_adjust_char_head(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+    ) -> *const OnigUChar;
 
     ///   Return right-adjusted head address of a character.
     ///
@@ -109,10 +113,11 @@ extern "C" {
     ///   1. enc:   character encoding
     ///   2. start: string address
     ///   3. s:     target address of string
-    pub fn onigenc_get_right_adjust_char_head(enc: OnigEncoding,
-                                              start: *const OnigUChar,
-                                              s: *const OnigUChar)
-                                              -> *const OnigUChar;
+    pub fn onigenc_get_right_adjust_char_head(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+    ) -> *const OnigUChar;
 
     ///   Return number of characters in the string.
     ///

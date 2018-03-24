@@ -36,30 +36,26 @@ impl fmt::Display for LinkType {
 }
 
 fn env_var_bool(name: &str) -> Option<bool> {
-    env::var(name).ok().map(|s|
-        match &s.to_string().to_lowercase()[..] {
+    env::var(name)
+        .ok()
+        .map(|s| match &s.to_string().to_lowercase()[..] {
             "0" | "no" | "false" => false,
             _ => true,
-        }
-    )
+        })
 }
 
 /// # Link Type Override
 ///
 /// Retuns the override from the environment, if any is set.
 fn link_type_override() -> Option<LinkType> {
-    let dynamic_env = env_var_bool("RUSTONIG_DYNAMIC_LIBONIG").map(|b|
-        match b {
-            true => LinkType::Dynamic,
-            false => LinkType::Static,
-        }
-    );
-    let static_env = env_var_bool("RUSTONIG_STATIC_LIBONIG").map(|b|
-         match b {
-             true => LinkType::Static,
-             false => LinkType::Dynamic,
-         }
-    );
+    let dynamic_env = env_var_bool("RUSTONIG_DYNAMIC_LIBONIG").map(|b| match b {
+        true => LinkType::Dynamic,
+        false => LinkType::Static,
+    });
+    let static_env = env_var_bool("RUSTONIG_STATIC_LIBONIG").map(|b| match b {
+        true => LinkType::Static,
+        false => LinkType::Dynamic,
+    });
 
     dynamic_env.or(static_env)
 }
@@ -96,7 +92,6 @@ fn compile(link_type: LinkType) {
 
 #[cfg(target_env = "msvc")]
 fn compile(link_type: LinkType) {
-
     let onig_sys_dir = env::current_dir().unwrap();
     let build_dir = env::var("OUT_DIR").unwrap();
     let lib_name = match link_type {
@@ -129,9 +124,9 @@ fn compile(link_type: LinkType) {
 
 pub fn main() {
     if env_var_bool("RUSTONIG_SYSTEM_LIBONIG").unwrap_or(true) {
-         if let Ok(_) = pkg_config::find_library("oniguruma") {
-             return;
-         }
+        if let Ok(_) = pkg_config::find_library("oniguruma") {
+            return;
+        }
     }
 
     let link_type = link_type_override().unwrap_or(DEFAULT_LINK_TYPE);
