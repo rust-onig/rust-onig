@@ -7,6 +7,7 @@ extern crate cmake;
 #[macro_use]
 extern crate duct;
 
+use pkg_config::Config;
 use std::env;
 use std::fmt;
 
@@ -124,7 +125,7 @@ fn compile(link_type: LinkType) {
 
 pub fn main() {
     if env_var_bool("RUSTONIG_SYSTEM_LIBONIG").unwrap_or(true) {
-        if let Ok(_) = pkg_config::find_library("oniguruma") {
+        if let Ok(_) = Config::new().atleast_version("6.8.0").probe("oniguruma") {
             return;
         }
     }
