@@ -31,6 +31,11 @@ impl MatchParam {
             );
         }
     }
+
+    /// Get the Raw `OnigMatchParam` Pointer
+    pub fn as_raw(&self) -> *const onig_sys::OnigMatchParam {
+        self.raw
+    }
 }
 
 impl Default for MatchParam {

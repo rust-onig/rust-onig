@@ -508,10 +508,10 @@ impl Regex {
                 offset,
                 match region {
                     Some(region) => transmute(region),
-                    None => 0 as *mut onig_sys::OnigRegion,
+                    None => std::ptr::null_mut(),
                 },
                 options.bits(),
-                transmute(match_param)
+                match_param.as_raw()
             )
         };
 
@@ -697,10 +697,10 @@ impl Regex {
                 range,
                 match region {
                     Some(region) => transmute(region),
-                    None => 0 as *mut onig_sys::OnigRegion,
+                    None => std::ptr::null_mut(),
                 },
                 options.bits(),
-                transmute(match_param)
+                match_param.as_raw()
             )
         };
 
