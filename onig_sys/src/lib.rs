@@ -959,8 +959,8 @@ extern "C" {
     ///      *  end:   capture end position
     ///      *  level: nest level (from 0)
     ///      *  at:    callback position
-    ///          *     ONIG_TRAVERSE_CALLBACK_AT_FIRST
-    ///          *     ONIG_TRAVERSE_CALLBACK_AT_LAST
+    ///          * `ONIG_TRAVERSE_CALLBACK_AT_FIRST`
+    ///          * `ONIG_TRAVERSE_CALLBACK_AT_LAST`
     ///      *  arg:   optional callback argument
     ///
     ///   4. arg;     optional callback argument.
