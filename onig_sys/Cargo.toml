@@ -22,13 +22,11 @@ libc = "0.2"
 
 [build-dependencies]
 pkg-config = "0.3"
-
-[target.'cfg(target_env="msvc")'.build-dependencies.duct]
-version = "0.10"
-
-[target.'cfg(not(target_env="msvc"))'.build-dependencies.cmake]
-version = "0.1"
+cc = "1.0.18"
 
 [features]
+default = ["posix-api"]
 # Make Oniguruma print debug output for parsing/compiling and executing
 print-debug = []
+# include regexec(), which conflicts with libgit2
+posix-api = []

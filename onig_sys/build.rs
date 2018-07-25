@@ -1,21 +1,19 @@
 extern crate pkg_config;
-
-#[cfg(not(target_env = "msvc"))]
-extern crate cmake;
-
-#[cfg(target_env = "msvc")]
-#[macro_use]
-extern crate duct;
+extern crate cc;
 
 use pkg_config::Config;
 use std::env;
+use std::fs;
 use std::fmt;
+use std::path::Path;
+use std::path::PathBuf;
 
 /// # Link Type Enumeration
 ///
 /// Holds the different types of linking we support in this
 /// script. Used to keep track of what the default link type is and
 /// what override has been specified, if any, in the environment.
+#[derive(Eq, PartialEq)]
 enum LinkType {
     /// Static linking. This corresponds to the `static` type in Cargo.
     Static,
@@ -61,76 +59,102 @@ fn link_type_override() -> Option<LinkType> {
     dynamic_env.or(static_env)
 }
 
-/// Default to static linking
-const DEFAULT_LINK_TYPE: LinkType = LinkType::Static;
-
-#[cfg(not(target_env = "msvc"))]
-fn compile(link_type: LinkType) {
-    use cmake::Config;
-
-    // Builds the project in the directory located in `oniguruma`, installing it
-    // into $OUT_DIR
-    let mut c = Config::new("oniguruma");
+fn compile() {
+    let mut cc = cc::Build::new();
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR"));
+    let ref src = Path::new("oniguruma").join("src");
+    let config_h = out_dir.join("config.h");
 
     if env_var_bool("CARGO_FEATURE_PRINT_DEBUG").unwrap_or(false) {
-        c.cflag("-DONIG_DEBUG_PARSE=1");
-        c.cflag("-DONIG_DEBUG_COMPILE=1");
-        c.cflag("-DONIG_DEBUG_SEARCH=1");
-        c.cflag("-DONIG_DEBUG_MATCH=1");
+        cc.define("ONIG_DEBUG_PARSE", Some("1"));
+        cc.define("ONIG_DEBUG_COMPILE", Some("1"));
+        cc.define("ONIG_DEBUG_SEARCH", Some("1"));
+        cc.define("ONIG_DEBUG_MATCH", Some("1"));
     }
 
-    let dst = match link_type {
-        LinkType::Static => c.define("BUILD_SHARED_LIBS", "OFF"),
-        LinkType::Dynamic => c.define("CMAKE_MACOSX_RPATH", "NO"),
-    }.build();
+    if !src.exists() {
+        panic!("Unable to find source files in {}. Is oniguruma submodule checked out?\n\
+                Try git submodule init; git submodule update", src.display());
+    }
 
-    println!(
-        "cargo:rustc-link-search=native={}",
-        dst.join("build").to_string_lossy()
-    );
-    println!("cargo:rustc-link-lib={}=onig", link_type);
-}
-
-#[cfg(target_env = "msvc")]
-fn compile(link_type: LinkType) {
-    let onig_sys_dir = env::current_dir().unwrap();
-    let build_dir = env::var("OUT_DIR").unwrap();
-    let lib_name = match link_type {
-        LinkType::Static => "onig_s",
-        LinkType::Dynamic => "onig",
-    };
-
-    let bitness = if cfg!(target_pointer_width = "64") {
-        "64"
+    let os = env::var("CARGO_CFG_TARGET_OS").unwrap();
+    let bits = env::var("CARGO_CFG_TARGET_POINTER_WIDTH").unwrap();
+    if os == "windows" {
+        fs::copy(src.join(format!("config.h.win{}", bits)), config_h)
+            .expect("Can't copy config.h.win??");
     } else {
-        "32"
-    };
+        let family = env::var("CARGO_CFG_TARGET_FAMILY").unwrap();
+        if family == "unix" {
+            cc.define("HAVE_UNISTD_H", Some("1"));
+            cc.define("HAVE_SYS_TYPES_H", Some("1"));
+            cc.define("HAVE_SYS_TIME_H", Some("1"));
+        }
 
-    // Execute the oniguruma NMAKE command for the chosen architecture.
-    let cmd = onig_sys_dir
-        .join("oniguruma")
-        .join(format!("make_win{}.bat", bitness))
-        .to_string_lossy()
-        .into_owned();
-    cmd!("cmd", "/c", cmd)
-        .dir(&build_dir)
-        .env_remove("MFLAGS")
-        .env_remove("MAKEFLAGS")
-        .read()
-        .unwrap();
+        // Can't use size_of::<c_long>(), because it'd refer to build arch, not target arch.
+        // so instead assume it's a non-exotic target (LP32/LP64).
+        fs::write(config_h, format!("
+            #define HAVE_PROTOTYPES 1
+            #define STDC_HEADERS 1
+            #define HAVE_STRING_H 1
+            #define HAVE_STDARG_H 1
+            #define HAVE_STDLIB_H 1
+            #define HAVE_LIMITS_H 1
+            #define HAVE_INTTYPES_H 1
+            #define SIZEOF_INT 4
+            #define SIZEOF_SHORT 2
+            #define SIZEOF_LONG {}
+        ", if bits == "64" {"8"} else {"4"}
+        )).expect("Can't write config.h to OUT_DIR");
+    }
 
-    println!("cargo:rustc-link-search=native={}", build_dir);
-    println!("cargo:rustc-link-lib={}={}", link_type, lib_name);
+    cc.include(out_dir); // Read config.h from there
+    cc.include(src);
+
+    let files = [
+        "regerror.c", "regparse.c", "regext.c", "regcomp.c",
+        "reggnu.c", "regenc.c", "regsyntax.c", "regtrav.c", "regversion.c",
+        "st.c", "regposerr.c", "onig_init.c",
+        "unicode.c", "ascii.c", "utf8.c", "utf16_be.c", "utf16_le.c",
+        "utf32_be.c", "utf32_le.c", "euc_jp.c", "sjis.c", "iso8859_1.c",
+        "iso8859_2.c", "iso8859_3.c", "iso8859_4.c", "iso8859_5.c",
+        "iso8859_6.c", "iso8859_7.c", "iso8859_8.c", "iso8859_9.c",
+        "iso8859_10.c", "iso8859_11.c", "iso8859_13.c", "iso8859_14.c",
+        "iso8859_15.c", "iso8859_16.c",
+        "euc_tw.c", "euc_kr.c", "big5.c", "gb18030.c", "koi8_r.c",
+        "cp1251.c", "euc_jp_prop.c", "sjis_prop.c",
+        "unicode_unfold_key.c", "unicode_fold1_key.c",
+        "unicode_fold2_key.c", "unicode_fold3_key.c",
+    ];
+    for file in files.iter() {
+        cc.file(src.join(file));
+    }
+
+    if cfg!(feature = "posix-api") {
+        cc.file(src.join("regexec.c"));
+    }
+
+    cc.warnings(false); // not actionable by the end user
+    cc.compile("onig");
 }
 
 pub fn main() {
-    if env_var_bool("RUSTONIG_SYSTEM_LIBONIG").unwrap_or(true) {
-        if let Ok(_) = Config::new().atleast_version("6.8.0").probe("oniguruma") {
-            return;
+    let link_type = link_type_override();
+    let require_pkg_config = env_var_bool("RUSTONIG_SYSTEM_LIBONIG").unwrap_or(false);
+
+    if require_pkg_config || link_type == Some(LinkType::Dynamic) {
+        let mut conf = Config::new();
+        conf.atleast_version("6.8.0");
+        if link_type != Some(LinkType::Static) {
+            conf.statik(true);
+        }
+        match conf.probe("oniguruma") {
+            Ok(_) => return,
+            Err(ref err) if require_pkg_config => {
+                panic!("Unable to find oniguruma in pkg-config, and RUSTONIG_SYSTEM_LIBONIG is set: {}", err);
+            },
+            _ => {},
         }
     }
 
-    let link_type = link_type_override().unwrap_or(DEFAULT_LINK_TYPE);
-
-    compile(link_type);
+    compile();
 }
