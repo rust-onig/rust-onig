@@ -1,6 +1,6 @@
 [package]
 name = "onig"
-version = "4.0.0"
+version = "4.0.1"
 authors = [
         "Will Speak <will@willspeak.me>",
         "Ivan Ivashchenko <defuz@me.com>"
