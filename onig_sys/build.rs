@@ -111,7 +111,7 @@ fn compile() {
     cc.include(src);
 
     let files = [
-        "regerror.c", "regparse.c", "regext.c", "regcomp.c",
+        "regexec.c", "regerror.c", "regparse.c", "regext.c", "regcomp.c",
         "reggnu.c", "regenc.c", "regsyntax.c", "regtrav.c", "regversion.c",
         "st.c", "regposerr.c", "onig_init.c",
         "unicode.c", "ascii.c", "utf8.c", "utf16_be.c", "utf16_le.c",
@@ -130,7 +130,7 @@ fn compile() {
     }
 
     if cfg!(feature = "posix-api") {
-        cc.file(src.join("regexec.c"));
+        cc.file(src.join("regposix.c"));
     }
 
     cc.warnings(false); // not actionable by the end user

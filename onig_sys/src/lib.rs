@@ -1146,3 +1146,11 @@ extern "C" {
     pub fn onig_copyright() -> *const c_char;
 
 }
+
+#[test]
+fn test_is_linked() {
+    unsafe {
+        assert!(!onig_copyright().is_null());
+        assert!(!onig_version().is_null());
+    }
+}
