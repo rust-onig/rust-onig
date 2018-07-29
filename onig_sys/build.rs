@@ -144,7 +144,7 @@ pub fn main() {
     if require_pkg_config || link_type == Some(LinkType::Dynamic) {
         let mut conf = Config::new();
         conf.atleast_version("6.8.0");
-        if link_type != Some(LinkType::Static) {
+        if link_type == Some(LinkType::Static) {
             conf.statik(true);
         }
         match conf.probe("oniguruma") {
