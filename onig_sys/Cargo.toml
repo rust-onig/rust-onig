@@ -25,7 +25,6 @@ pkg-config = "0.3"
 cc = "1.0.18"
 
 [features]
-default = ["posix-api"]
 # Make Oniguruma print debug output for parsing/compiling and executing
 print-debug = []
 # include regexec(), which conflicts with libgit2
