@@ -27,6 +27,6 @@ bitflags = "1.0"
 lazy_static = "1.0"
 
 [dependencies.onig_sys]
-version = "68.0.2"
+version = "68.2.0"
 path = "onig_sys"
 default-features = false
