@@ -3,7 +3,8 @@
 All source code in this repository is distributed under the terms of
 the *MIT License* unless otherwise stated. The Oniguruma source code
 remains the property of the original authors and is re-distributed
-under the original license.
+under the original license, see [COPYING](oniguruma/COPYING) for more
+information.
 
 > The MIT License (MIT)
 > 
