@@ -23,8 +23,8 @@ print-debug = ["onig_sys/print-debug"]
 [dependencies]
 libc = "0.2"
 bitflags = "1.0"
-lazy_static = "1.0"
+lazy_static = "1.1"
 
 [dependencies.onig_sys]
-version = "68.2.0"
+version = "69.0.0"
 path = "onig_sys"
