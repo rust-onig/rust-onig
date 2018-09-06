@@ -1,16 +1,22 @@
 [package]
 name = "onig_sys"
 version = "69.0.0"
-authors = ["Will Speak <will@willspeak.me>", "Ivan Ivashchenko <defuz@me.com>"]
+authors = [
+    "Will Speak <will@willspeak.me>",
+    "Ivan Ivashchenko <defuz@me.com>"
+]
 build = "build.rs"
 links = "onig"
 
-description = """The Onig Sys crate contains raw rust bindings to the
-oniguruma library. This crate exposes a set of unsafe functions which
-can then be used by other crates to create safe wrappers around
-Oniguruma.
+description = """
+The `onig_sys` crate contains raw rust bindings to the
+oniguruma library. This crate exposes a set of unsafe
+functions which can then be used by other crates to
+create safe wrappers around Oniguruma.
 
-You probably don't want to link to this crate directly."""
+You probably don't want to link to this crate directly;
+instead check out the `onig` crate.
+"""
 
 repository = "http://github.com/iwillspeak/rust-onig"
 documentation = "http://rust-onig.github.io/rust-onig/onig_sys/"
