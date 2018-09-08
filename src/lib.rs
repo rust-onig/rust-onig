@@ -98,6 +98,7 @@ mod find;
 mod flags;
 mod region;
 mod replace;
+mod match_param;
 mod names;
 mod syntax;
 mod tree;
@@ -109,6 +110,7 @@ mod pattern;
 
 // re-export the onig types publically
 pub use flags::*;
+pub use match_param::MatchParam;
 pub use names::CaptureNames;
 pub use region::Region;
 pub use find::{Captures, FindCaptures, FindMatches, RegexSplits, RegexSplitsN, SubCaptures,
@@ -143,9 +145,17 @@ unsafe impl Send for Regex {}
 unsafe impl Sync for Regex {}
 
 impl Error {
-    fn new(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
+    fn from_code_and_info(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
+        Error::new(code, &info)
+    }
+
+    fn from_code(code: c_int) -> Error {
+        Error::new(code, null())
+    }
+
+    fn new(code: c_int, info: *const onig_sys::OnigErrorInfo) -> Error {
         let buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
-        let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, &info) };
+        let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
             code: code,
@@ -335,7 +345,7 @@ impl Regex {
         if err == onig_sys::ONIG_NORMAL {
             Ok(Regex { raw: reg })
         } else {
-            Err(Error::new(err, error))
+            Err(Error::from_code_and_info(err, error))
         }
     }
 
@@ -385,7 +395,7 @@ impl Regex {
     /// Match the regex against a string. This method will start at
     /// the offset `at` into the string and try and match the
     /// regex. If the regex matches then the return value is the
-    /// number of characers which matched. If the regex doesn't match
+    /// number of characters which matched. If the regex doesn't match
     /// the return is `None`.
     ///
     /// For more information see [Match vs
@@ -427,29 +437,90 @@ impl Regex {
     where
         T: EncodedChars,
     {
+        let match_param = MatchParam::default();
+        let result = self.match_with_param(chars, at, options, region, match_param);
+
+        match result {
+            Ok(r) => r,
+            Err(e) => panic!("Onig: Regex match error: {}", e.description())
+        }
+    }
+
+    /// Match string with encoding and match param
+    ///
+    /// Match the regex against a string. This method will start at
+    /// the offset `at` into the string and try and match the
+    /// regex. If the regex matches then the return value is the
+    /// number of characters which matched. If the regex doesn't match
+    /// the return is `None`.
+    ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
+    ///
+    /// The contents of `chars` must have the same encoding that was
+    /// used to construct the regex.
+    ///
+    /// # Arguments
+    ///
+    /// * `chars` - The buffer to match against.
+    /// * `at` - The byte index in the passed buffer to start matching
+    /// * `options` - The regex match options.
+    /// * `region` - The region for return group match range info
+    /// * `match_param` - The match parameters
+    ///
+    /// # Returns
+    ///
+    /// `Ok(Some(len))` if the regex matched, with `len` being the number
+    /// of bytes matched. `Ok(None)` if the regex doesn't match. `Err` with an
+    /// `Error` if an error occurred (e.g. retry-limit-in-match exceeded).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use onig::{Regex, EncodedBytes, MatchParam, SearchOptions};
+    ///
+    /// let r = Regex::with_encoding(EncodedBytes::ascii(b".*")).unwrap();
+    /// let res = r.match_with_param(EncodedBytes::ascii(b"world"),
+    ///                              0, SearchOptions::SEARCH_OPTION_NONE,
+    ///                              None, MatchParam::default());
+    /// assert!(res.is_ok()); // matching did not error
+    /// assert!(res.unwrap() == Some(5)); // 5 characters matched
+    /// ```
+    pub fn match_with_param<T>(
+        &self,
+        chars: T,
+        at: usize,
+        options: SearchOptions,
+        region: Option<&mut Region>,
+        match_param: MatchParam,
+    ) -> Result<Option<usize>, Error>
+        where
+            T: EncodedChars,
+    {
         assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
             let offset = chars.start_ptr().offset(at as isize);
             assert!(offset <= chars.limit_ptr());
-            onig_sys::onig_match(
+            onig_sys::onig_match_with_param(
                 self.raw,
                 chars.start_ptr(),
                 chars.limit_ptr(),
                 offset,
                 match region {
                     Some(region) => transmute(region),
-                    None => 0 as *mut onig_sys::OnigRegion,
+                    None => std::ptr::null_mut(),
                 },
                 options.bits(),
+                match_param.as_raw()
             )
         };
 
         if r >= 0 {
-            Some(r as usize)
+            Ok(Some(r as usize))
         } else if r == onig_sys::ONIG_MISMATCH {
-            None
+            Ok(None)
         } else {
-            panic!("Onig: Internal error during regex match");
+            Err(Error::from_code(r))
         }
     }
 
@@ -458,7 +529,7 @@ impl Regex {
     /// Search for matches the regex in a string. This method will return the
     /// index of the first match of the regex within the string, if
     /// there is one. If `from` is less than `to`, then search is performed
-    /// in forward order, otherwice – in backward order.
+    /// in forward order, otherwise – in backward order.
     ///
     /// For more information see [Match vs
     /// Search](index.html#match-vs-search)
@@ -503,7 +574,7 @@ impl Regex {
     /// Search for matches the regex in a string. This method will
     /// return the index of the first match of the regex within the
     /// string, if there is one. If `from` is less than `to`, then
-    /// search is performed in forward order, otherwice – in backward
+    /// search is performed in forward order, otherwise – in backward
     /// order.
     ///
     /// For more information see [Match vs
@@ -548,6 +619,69 @@ impl Regex {
     where
         T: EncodedChars,
     {
+        let match_param = MatchParam::default();
+        let result = self.search_with_param(chars, from, to, options, region, match_param);
+
+        match result {
+            Ok(r) => r,
+            Err(e) => panic!("Onig: Regex search error: {}", e.description)
+        }
+    }
+
+    /// Search pattern in string with encoding and match param
+    ///
+    /// Search for matches the regex in a string. This method will
+    /// return the index of the first match of the regex within the
+    /// string, if there is one. If `from` is less than `to`, then
+    /// search is performed in forward order, otherwise – in backward
+    /// order.
+    ///
+    /// For more information see [Match vs
+    /// Search](index.html#match-vs-search)
+    ///
+    /// The encoding of the buffer passed to search in must match the
+    /// encoding of the regex.
+    ///
+    /// # Arguments
+    ///
+    ///  * `chars` - The character buffer to search in.
+    ///  * `from` - The byte index in the passed slice to start search
+    ///  * `to` - The byte index in the passed slice to finish search
+    ///  * `options` - The options for the search.
+    ///  * `region` - The region for return group match range info
+    ///  * `match_param` - The match parameters
+    ///
+    /// # Returns
+    ///
+    /// `Ok(Some(pos))` if the regex matches, where `pos` is the
+    /// byte-position of the start of the match. `Ok(None)` if the regex
+    /// doesn't match anywhere in `chars`. `Err` with an `Error` if an error
+    /// occurred (e.g. retry-limit-in-match exceeded).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use onig::{Regex, EncodedBytes, MatchParam, SearchOptions};
+    ///
+    /// let r = Regex::with_encoding(EncodedBytes::ascii(b"l{1,2}")).unwrap();
+    /// let res = r.search_with_param(EncodedBytes::ascii(b"hello"),
+    ///                               0, 5, SearchOptions::SEARCH_OPTION_NONE,
+    ///                               None, MatchParam::default());
+    /// assert!(res.is_ok()); // matching did not error
+    /// assert!(res.unwrap() == Some(2)); // match starts at character 3
+    /// ```
+    pub fn search_with_param<T>(
+        &self,
+        chars: T,
+        from: usize,
+        to: usize,
+        options: SearchOptions,
+        region: Option<&mut Region>,
+        match_param: MatchParam,
+    ) -> Result<Option<usize>, Error>
+        where
+            T: EncodedChars,
+    {
         let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
         assert_eq!(self.encoding(), chars.encoding());
         let r = unsafe {
@@ -555,7 +689,7 @@ impl Regex {
             let range = beg.offset(to as isize);
             assert!(start <= end);
             assert!(range <= end);
-            onig_sys::onig_search(
+            onig_sys::onig_search_with_param(
                 self.raw,
                 beg,
                 end,
@@ -563,18 +697,19 @@ impl Regex {
                 range,
                 match region {
                     Some(region) => transmute(region),
-                    None => 0 as *mut onig_sys::OnigRegion,
+                    None => std::ptr::null_mut(),
                 },
                 options.bits(),
+                match_param.as_raw()
             )
         };
 
         if r >= 0 {
-            Some(r as usize)
+            Ok(Some(r as usize))
         } else if r == onig_sys::ONIG_MISMATCH {
-            None
+            Ok(None)
         } else {
-            panic!("Onig: Internal error during regex search");
+            Err(Error::from_code(r))
         }
     }
 
@@ -679,6 +814,7 @@ impl Drop for Regex {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::panic;
 
     #[test]
     fn test_regex_create() {
@@ -767,5 +903,51 @@ mod tests {
     fn test_regex_captures_len() {
         let regex = Regex::new("(he)(l+)(o)").unwrap();
         assert_eq!(regex.captures_len(), 3);
+    }
+
+    #[test]
+    fn test_regex_error_is_match() {
+        let regex = Regex::new("(a|b|ab)*bc").unwrap();
+        let result = regex.match_with_param(
+            "ababababababababababababababababababababababababababababacbc",
+            0, SearchOptions::SEARCH_OPTION_NONE, None, MatchParam::default());
+
+        let e = result.err().unwrap();
+        assert_eq!("retry-limit-in-match over", e.description());
+    }
+
+    #[test]
+    fn test_regex_panic_is_match() {
+        let regex = Regex::new("(a|b|ab)*bc").unwrap();
+        let result = panic::catch_unwind(||
+            regex.is_match("ababababababababababababababababababababababababababababacbc")
+        );
+        let e = result.err().unwrap();
+        let message = e.downcast_ref::<String>().unwrap();
+        assert_eq!(message.as_str(),
+                   "Onig: Regex match error: retry-limit-in-match over");
+    }
+
+    #[test]
+    fn test_regex_error_find() {
+        let regex = Regex::new("(a|b|ab)*bc").unwrap();
+        let s = "ababababababababababababababababababababababababababababacbc";
+        let result = regex.search_with_param(
+            s, 0, s.len(), SearchOptions::SEARCH_OPTION_NONE, None, MatchParam::default());
+
+        let e = result.err().unwrap();
+        assert_eq!("retry-limit-in-match over", e.description());
+    }
+
+    #[test]
+    fn test_regex_panic_find() {
+        let regex = Regex::new("(a|b|ab)*bc").unwrap();
+        let result = panic::catch_unwind(||
+            regex.find("ababababababababababababababababababababababababababababacbc")
+        );
+        let e = result.err().unwrap();
+        let message = e.downcast_ref::<String>().unwrap();
+        assert_eq!(message.as_str(),
+                   "Onig: Regex search error: retry-limit-in-match over");
     }
 }

@@ -15,7 +15,6 @@ pub struct CaptureTreeNode {
 }
 
 impl CaptureTreeNode {
-
     /// The capture group number for this capture
     pub fn group(&self) -> usize {
         self.raw.group as usize

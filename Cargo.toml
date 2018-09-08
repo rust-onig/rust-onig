@@ -1,28 +1,34 @@
 [package]
 name = "onig"
-version = "3.1.1"
+version = "4.2.0"
 authors = [
-        "Will Speak <will@willspeak.me>",
-        "Ivan Ivashchenko <defuz@me.com>"
+    "Will Speak <will@willspeak.me>",
+    "Ivan Ivashchenko <defuz@me.com>"
 ]
 
-description = """Rust-Onig is a set of rust bindings for the
-            oniguruma regular expression library."""
+description = """
+Rust-Onig is a set of Rust bindings for the
+Oniguruma regular expression library. Oniguruma
+is a modern regex library with support for
+multiple character encodings and regex syntaxes.
+"""
 repository = "http://github.com/iwillspeak/rust-onig"
-documentation = "http://rust-onig.github.io/rust-onig/onig/"
+documentation = "https://docs.rs/onig/"
 readme = "README.md"
 license = "MIT"
 
 [features]
 std-pattern = []
+# include regexec()
+posix-api = ["onig_sys/posix-api"]
 # Make Oniguruma print debug output for parsing/compiling and executing
 print-debug = ["onig_sys/print-debug"]
 
 [dependencies]
 libc = "0.2"
 bitflags = "1.0"
-lazy_static = "1.0"
+lazy_static = "1.1"
 
 [dependencies.onig_sys]
-version = "67.1.0"
+version = "69.0.0"
 path = "onig_sys"

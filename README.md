@@ -15,7 +15,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-onig = "3.0"
+onig = "4.2"
 ```
 
 Add the following extern to your crate root:
@@ -68,11 +68,14 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
 ## Rust-Onig is Open Source
 
-The contents of this repository are distributed under the MIT license. See [LICENSE](LICENSE.md) for more details.
+The contents of this repository are distributed under the MIT license. See
+[LICENSE](LICENSE.md) for more details. If you'd like to contribute take a look
+at our open [easy issues][easy_issues].
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
- [onig_crate_doc]: https://docs.rs/onig/3.0.0/onig/
+ [onig_crate_doc]: https://docs.rs/onig/4.2.0/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/examples
- [regex_new]: https://docs.rs/onig/3.0.0/onig/struct.Regex.html#method.new
- [regex_is_match]: https://docs.rs/onig/3.0.0/onig/struct.Regex.html#method.is_match
- [regex_find]: https://docs.rs/onig/3.0.0/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.find
+ [easy_issues]: https://github.com/rust-onig/rust-onig/issues?q=is%3Aopen+is%3Aissue+label%3AE-Easy
