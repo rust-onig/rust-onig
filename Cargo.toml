@@ -16,6 +16,7 @@ repository = "http://github.com/iwillspeak/rust-onig"
 documentation = "https://docs.rs/onig/"
 readme = "README.md"
 license = "MIT"
+exclude = ["/.snooper.yaml", "/.travis.yml", "/Vagrantfile", "/appveyor.yml", "/appveyor_rust_install.ps1"]
 
 [features]
 std-pattern = []
