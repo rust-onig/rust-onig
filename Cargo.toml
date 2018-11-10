@@ -28,7 +28,7 @@ print-debug = ["onig_sys/print-debug"]
 [dependencies]
 libc = "0.2"
 bitflags = "1.0"
-lazy_static = "1.1"
+lazy_static = "1.2"
 
 [dependencies.onig_sys]
 version = "69.0.0"
