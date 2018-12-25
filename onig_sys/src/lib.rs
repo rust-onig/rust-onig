@@ -1,12 +1,10 @@
-extern crate libc;
-
 mod constants;
 mod onigenc;
 
 pub use self::constants::*;
 pub use self::onigenc::*;
 
-use libc::{c_char, c_int, c_uchar, c_uint, c_void};
+use std::os::raw::{c_char, c_int, c_uchar, c_uint, c_void};
 
 pub type OnigCodePoint = c_uint;
 pub type OnigUChar = c_uchar;

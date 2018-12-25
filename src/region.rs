@@ -1,6 +1,6 @@
 use std::ptr::null;
 use std::mem::transmute;
-use libc::c_int;
+use std::os::raw::c_int;
 use onig_sys;
 
 use super::CaptureTreeNode;
@@ -151,7 +151,7 @@ impl Region {
         F: Fn(u32, (usize, usize), u32) -> bool,
     {
         use onig_sys::onig_capture_tree_traverse;
-        use libc::{c_int, c_void};
+        use std::os::raw::{c_int, c_void};
 
         extern "C" fn traverse_cb<F>(
             group: c_int,

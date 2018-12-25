@@ -1,5 +1,5 @@
 use onig_sys;
-use libc;
+use std::os::raw as libc;
 
 bitflags! {
     /// Regex parsing and compilation options.

@@ -154,7 +154,7 @@ impl Regex {
     {
         use onig_sys::{onig_scan, OnigRegion};
         use std::mem::transmute;
-        use libc::{c_int, c_void};
+        use std::os::raw::{c_int, c_void};
 
         // Find the bounds of the string we're searching
         let start = to_search.as_ptr();

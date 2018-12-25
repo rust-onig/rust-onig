@@ -1,4 +1,4 @@
-use libc::{c_int, c_uint};
+use std::os::raw::{c_int, c_uint};
 use super::{OnigCaseFoldType, OnigCtype, OnigDistance, OnigOptionType, OnigSyntaxBehavior,
             OnigSyntaxOp, OnigSyntaxOp2};
 

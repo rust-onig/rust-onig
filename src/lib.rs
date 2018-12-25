@@ -91,7 +91,6 @@
 extern crate bitflags;
 #[macro_use]
 extern crate lazy_static;
-extern crate libc;
 extern crate onig_sys;
 
 mod find;
@@ -125,7 +124,7 @@ use std::{error, fmt, str};
 use std::sync::Mutex;
 use std::mem::transmute;
 use std::ptr::{null, null_mut};
-use libc::c_int;
+use std::os::raw::c_int;
 
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct Error {

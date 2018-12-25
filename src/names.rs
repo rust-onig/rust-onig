@@ -3,7 +3,7 @@ use std::iter::Iterator;
 use std::ptr::null;
 use std::str::from_utf8_unchecked;
 use std::slice::from_raw_parts;
-use libc::{c_int, c_uchar, c_uint, c_void};
+use std::os::raw::{c_int, c_uchar, c_uint, c_void};
 
 use onig_sys::{self, OnigRegex, OnigUChar};
 
@@ -83,7 +83,7 @@ struct NameEntry {
 type StDataT = ::libc::uintptr_t;
 
 #[cfg(not(windows))]
-type StDataT = ::libc::c_ulong;
+type StDataT = ::std::os::raw::c_ulong;
 
 #[repr(C)]
 #[derive(Debug)]

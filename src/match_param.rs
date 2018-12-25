@@ -4,7 +4,7 @@
 //! used to control the behavior of searching and matching.
 
 use onig_sys;
-use libc::c_uint;
+use std::os::raw::c_uint;
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
