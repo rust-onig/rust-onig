@@ -92,6 +92,8 @@ extern crate bitflags;
 #[macro_use]
 extern crate lazy_static;
 extern crate onig_sys;
+#[cfg(windows)]
+extern crate libc;
 
 mod find;
 mod flags;

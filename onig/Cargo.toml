@@ -28,6 +28,9 @@ print-debug = ["onig_sys/print-debug"]
 bitflags = "1.0"
 lazy_static = "1.2"
 
+[target.'cfg(windows)'.dependencies]
+libc = "0.2"
+
 [dependencies.onig_sys]
 version = "69.1.0"
 path = "../onig_sys"

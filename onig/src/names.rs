@@ -79,11 +79,8 @@ struct NameEntry {
     back_refs: *const c_int,
 }
 
-// This is really `uintptr_t`. There isn't a deifnition for that in
-// `os::raw`, but it is just defined as `usize` in `libc`. There's no
-// point importing that whole crate just for the type definition.
 #[cfg(windows)]
-type StDataT = usize;
+type StDataT = ::libc::uintptr_t;
 
 #[cfg(not(windows))]
 type StDataT = ::std::os::raw::c_ulong;
