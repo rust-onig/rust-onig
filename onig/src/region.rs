@@ -1,3 +1,5 @@
+#![allow(clippy::transmute_ptr_to_ref)]
+
 use std::ptr::null;
 use std::mem::transmute;
 use std::os::raw::c_int;
@@ -9,7 +11,7 @@ use super::flags::TraverseCallbackAt;
 /// Represents a set of capture groups found in a search or match.
 #[derive(Debug, Eq, PartialEq)]
 pub struct Region {
-    raw: onig_sys::OnigRegion,
+    pub(crate) raw: onig_sys::OnigRegion,
 }
 
 impl Region {
@@ -44,6 +46,7 @@ impl Region {
     ///
     /// Construct a new region based on an existing raw
     /// `*onig_sys::OnigRegion` pointer by copying.
+    #[allow(clippy::not_unsafe_ptr_arg_deref)]
     pub fn clone_from_raw(ptr: *const onig_sys::OnigRegion) -> Self {
         let mut region = Self::new();
         unsafe {
@@ -83,24 +86,35 @@ impl Region {
         }
     }
 
-    /// Get the size of the region. Returns the number of registers in
-    /// the region.
+    /// Get the size of the region.
+    ///
+    /// Returns the number of registers in the region.
     pub fn len(&self) -> usize {
         self.raw.num_regs as usize
     }
 
-    /// Returns the start and end positions of the Nth capture group. Returns
-    /// `None` if `pos` is not a valid capture group or if the capture group did
-    /// not match anything. The positions returned are always byte indices with
-    /// respect to the original string matched.
+    /// Check if the region is empty.
+    ///
+    /// Returns true if there are no registers in the region.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    /// Returns the start and end positions of the Nth capture group.
+    ///
+    /// Returns `None` if `pos` is not a valid capture group or if the
+    /// capture group did not match anything. The positions returned
+    /// are always byte indices with respect to the original string
+    /// matched.
     pub fn pos(&self, pos: usize) -> Option<(usize, usize)> {
         if pos >= self.len() {
             return None;
         }
+        let pos = pos as isize;
         let (beg, end) = unsafe {
             (
-                *self.raw.beg.offset(pos as isize),
-                *self.raw.end.offset(pos as isize),
+                *self.raw.beg.offset(pos),
+                *self.raw.end.offset(pos),
             )
         };
         if beg != onig_sys::ONIG_REGION_NOTPOS {
@@ -123,7 +137,7 @@ impl Region {
     }
 
     /// Get an iterator over the captures in the region.
-    pub fn iter<'a>(&'a self) -> RegionIter<'a> {
+    pub fn iter(&self) -> RegionIter<'_> {
         RegionIter {
             region: self,
             pos: 0,
@@ -183,6 +197,12 @@ impl Region {
     }
 }
 
+impl Default for Region {
+    fn default() -> Self {
+        Region::new()
+    }
+}
+
 impl Drop for Region {
     fn drop(&mut self) {
         unsafe {
@@ -201,7 +221,7 @@ impl<'a> IntoIterator for &'a Region {
     type Item = (usize, usize);
     type IntoIter = RegionIter<'a>;
     fn into_iter(self) -> Self::IntoIter {
-        return self.iter();
+        self.iter()
     }
 }
 

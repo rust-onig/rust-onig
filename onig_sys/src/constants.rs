@@ -1,3 +1,5 @@
+#![allow(clippy::identity_op)]
+
 use std::os::raw::{c_int, c_uint};
 use super::{OnigCaseFoldType, OnigCtype, OnigDistance, OnigOptionType, OnigSyntaxBehavior,
             OnigSyntaxOp, OnigSyntaxOp2};
@@ -239,8 +241,8 @@ define_consts!(c_int,
     ONIGENC_MBC_CASE_FOLD_MAXLEN   = 18;
     ONIG_NREGION                   = 10;
     ONIG_MAX_BACKREF_NUM           = 1000;
-    ONIG_MAX_REPEAT_NUM            = 100000;
-    ONIG_MAX_MULTI_BYTE_RANGES_NUM = 10000;
+    ONIG_MAX_REPEAT_NUM            = 100_000;
+    ONIG_MAX_MULTI_BYTE_RANGES_NUM = 10_000;
     ONIG_MAX_ERROR_MESSAGE_LEN     = 90;
     ONIG_MAX_CAPTURE_HISTORY_GROUP = 31;
     ONIG_REGION_NOTPOS             = -1;

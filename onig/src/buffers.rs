@@ -30,6 +30,11 @@ pub trait EncodedChars {
 
     /// The length of this buffer
     fn len(&self) -> usize;
+
+    /// Is the buffer empty?
+    fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 /// Encoded Charters from a `str` Reference
@@ -72,8 +77,8 @@ impl<'a> EncodedBytes<'a> {
     /// A new buffer instance
     pub fn from_parts(bytes: &'a [u8], enc: onig_sys::OnigEncoding) -> EncodedBytes<'a> {
         EncodedBytes {
-            bytes: bytes,
-            enc: enc,
+            bytes,
+            enc,
         }
     }
 
@@ -88,7 +93,7 @@ impl<'a> EncodedBytes<'a> {
     /// A new buffer instance
     pub fn ascii(bytes: &'a [u8]) -> EncodedBytes<'a> {
         EncodedBytes {
-            bytes: bytes,
+            bytes,
             enc: unsafe { &onig_sys::OnigEncodingASCII },
         }
     }

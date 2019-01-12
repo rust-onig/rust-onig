@@ -1,3 +1,5 @@
+#![allow(clippy::transmute_ptr_to_ref)]
+
 use std::mem::transmute;
 use std::ops::Index;
 use std::iter::Iterator;
@@ -30,8 +32,13 @@ impl CaptureTreeNode {
         self.raw.num_childs as usize
     }
 
+    /// Does the node have any child captures?
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     /// An iterator over thie children of this capture group
-    pub fn children<'t>(&'t self) -> CaptureTreeNodeIter<'t> {
+    pub fn children(&self) -> CaptureTreeNodeIter<'_> {
         CaptureTreeNodeIter { idx: 0, node: self }
     }
 }
@@ -43,7 +50,7 @@ impl Index<usize> for CaptureTreeNode {
         if index >= self.len() {
             panic!("capture tree node index overflow")
         }
-        unsafe { transmute(*self.raw.childs.offset(index as isize)) }
+        unsafe { transmute(*self.raw.childs.add(index)) }
     }
 }
 

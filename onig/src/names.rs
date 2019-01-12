@@ -17,7 +17,7 @@ impl Regex {
 
     /// Returns the iterator over named groups as a tuple with the group name
     /// and group indexes.
-    pub fn capture_names<'r>(&'r self) -> CaptureNames<'r> {
+    pub fn capture_names(&self) -> CaptureNames<'_> {
         CaptureNames {
             table: unsafe { (*self.raw).name_table as *const StTable },
             bin_idx: -1,

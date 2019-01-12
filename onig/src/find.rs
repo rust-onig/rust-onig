@@ -14,8 +14,8 @@ impl Regex {
             SearchOptions::SEARCH_OPTION_NONE,
             Some(&mut region),
         ).map(|pos| Captures {
-            text: text,
-            region: region,
+            text,
+            region,
             offset: pos,
         })
     }
@@ -46,7 +46,7 @@ impl Regex {
         FindMatches {
             regex: self,
             region: Region::new(),
-            text: text,
+            text,
             last_end: 0,
             skip_next_empty: false,
         }
@@ -79,7 +79,7 @@ impl Regex {
     pub fn captures_iter<'r, 't>(&'r self, text: &'t str) -> FindCaptures<'r, 't> {
         FindCaptures {
             regex: self,
-            text: text,
+            text,
             last_end: 0,
             skip_next_empty: false,
         }
@@ -153,7 +153,6 @@ impl Regex {
         F: Fn(i32, i32, &Region) -> bool,
     {
         use onig_sys::{onig_scan, OnigRegion};
-        use std::mem::transmute;
         use std::os::raw::{c_int, c_void};
 
         // Find the bounds of the string we're searching
@@ -178,7 +177,7 @@ impl Regex {
                 self.raw,
                 start,
                 end,
-                transmute(region),
+                (&mut region.raw) as *mut onig_sys::OnigRegion,
                 options.bits(),
                 scan_cb::<F>,
                 &mut callback as *mut F as *mut c_void,
@@ -348,16 +347,13 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
             return None;
         }
         self.region.clear();
-        let r = self.regex.search_with_options(
+        self.regex.search_with_options(
             self.text,
             self.last_end,
             self.text.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             Some(&mut self.region),
-        );
-        if r.is_none() {
-            return None;
-        }
+        )?;
         let (s, e) = self.region.pos(0).unwrap();
         self.last_end = e;
 
@@ -410,10 +406,7 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
             self.text.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             Some(&mut region),
-        );
-        if r.is_none() {
-            return None;
-        }
+        )?;
         let (s, e) = region.pos(0).unwrap();
 
         // Don't accept empty matches immediately following a match.
@@ -434,8 +427,8 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         }
         Some(Captures {
             text: self.text,
-            region: region,
-            offset: r.unwrap(),
+            region,
+            offset: r,
         })
     }
 }
