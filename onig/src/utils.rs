@@ -49,12 +49,6 @@ mod tests {
     use super::*;
 
     #[test]
-    pub fn utils_get_version_returns_expected_version() {
-        let version = version();
-        assert_eq!(version, "6.9.0");
-    }
-
-    #[test]
     pub fn utils_get_copyright_is_not_emtpy() {
         let copyright = copyright();
         assert!(copyright.len() > 0);
