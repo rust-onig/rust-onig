@@ -74,7 +74,7 @@ at our open [easy issues][easy_issues].
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
  [onig_crate_doc]: https://docs.rs/onig/4.2.0/onig/
- [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/examples
+ [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/onig/examples
  [regex_new]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.new
  [regex_is_match]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.is_match
  [regex_find]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.find

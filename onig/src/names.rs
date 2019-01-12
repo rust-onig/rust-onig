@@ -17,7 +17,7 @@ impl Regex {
 
     /// Returns the iterator over named groups as a tuple with the group name
     /// and group indexes.
-    pub fn capture_names<'r>(&'r self) -> CaptureNames<'r> {
+    pub fn capture_names(&self) -> CaptureNames<'_> {
         CaptureNames {
             table: unsafe { (*self.raw).name_table as *const StTable },
             bin_idx: -1,
@@ -79,8 +79,11 @@ struct NameEntry {
     back_refs: *const c_int,
 }
 
+// This is really `uintptr_t`. There isn't a deifnition for that in
+// `os::raw`, but it is just defined as `usize` in `libc`. There's no
+// point importing that whole crate just for the type definition.
 #[cfg(windows)]
-type StDataT = ::libc::uintptr_t;
+type StDataT = usize;
 
 #[cfg(not(windows))]
 type StDataT = ::std::os::raw::c_ulong;

@@ -1,3 +1,6 @@
+#![allow(clippy::transmute_ptr_to_ptr)]
+#![allow(clippy::transmute_ptr_to_ref)]
+
 use std::mem::transmute;
 use onig_sys;
 use super::{MetaCharType, RegexOptions, SyntaxBehavior, SyntaxOperator};
@@ -7,6 +10,7 @@ use super::{MetaCharType, RegexOptions, SyntaxBehavior, SyntaxOperator};
 /// Defines if a given meta character is enabled or not within a given
 /// syntax. If the character is enabled it also contains the rust
 /// `char` that it is set to.
+#[derive(Copy, Clone)]
 pub enum MetaChar {
     /// The meta character is set to the chosen `char`
     Character(char),
@@ -22,7 +26,7 @@ pub enum MetaChar {
 /// creation of custom syntaxes.
 ///
 /// For a demonstration of creating a custom syntax see
-/// `examples/syntax.rs` in the main onig repo.
+/// `examples/syntax.rs` in the main onig crate.
 #[derive(Debug, Clone, Copy)]
 pub struct Syntax {
     raw: onig_sys::OnigSyntaxType,
@@ -94,7 +98,7 @@ impl Syntax {
         unsafe {
             let op = onig_sys::onig_get_syntax_op(&self.raw);
             let op2 = onig_sys::onig_get_syntax_op2(&self.raw);
-            SyntaxOperator::from_bits_truncate(op as u64 + ((op2 as u64) << 32))
+            SyntaxOperator::from_bits_truncate(u64::from(op) + (u64::from(op2) << 32))
         }
     }
 

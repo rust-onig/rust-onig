@@ -122,7 +122,6 @@ pub use utils::{copyright, define_user_property, version};
 
 use std::{error, fmt, str};
 use std::sync::Mutex;
-use std::mem::transmute;
 use std::ptr::{null, null_mut};
 use std::os::raw::c_int;
 
@@ -144,8 +143,8 @@ unsafe impl Send for Regex {}
 unsafe impl Sync for Regex {}
 
 impl Error {
-    fn from_code_and_info(code: c_int, info: onig_sys::OnigErrorInfo) -> Error {
-        Error::new(code, &info)
+    fn from_code_and_info(code: c_int, info: &onig_sys::OnigErrorInfo) -> Error {
+        Error::new(code, info)
     }
 
     fn from_code(code: c_int) -> Error {
@@ -157,7 +156,7 @@ impl Error {
         let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
-            code: code,
+            code,
             description: description.to_owned(),
         }
     }
@@ -214,7 +213,7 @@ impl Regex {
     /// let r = Regex::new(r#"hello (\w+)"#);
     /// assert!(r.is_ok());
     /// ```
-    pub fn new(pattern: &str) -> Result<Regex, Error> {
+    pub fn new(pattern: &str) -> Result<Self, Error> {
         Regex::with_encoding(pattern)
     }
 
@@ -309,7 +308,7 @@ impl Regex {
         pattern: T,
         option: RegexOptions,
         syntax: &Syntax,
-    ) -> Result<Regex, Error>
+    ) -> Result<Self, Error>
     where
         T: EncodedChars,
     {
@@ -336,7 +335,7 @@ impl Regex {
                 pattern.limit_ptr(),
                 option.bits(),
                 pattern.encoding(),
-                transmute(syntax),
+                syntax as *const Syntax as *const onig_sys::OnigSyntaxType,
                 &mut error,
             )
         };
@@ -344,7 +343,7 @@ impl Regex {
         if err == onig_sys::ONIG_NORMAL {
             Ok(Regex { raw: reg })
         } else {
-            Err(Error::from_code_and_info(err, error))
+            Err(Error::from_code_and_info(err, &error))
         }
     }
 
@@ -498,7 +497,7 @@ impl Regex {
     {
         assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
-            let offset = chars.start_ptr().offset(at as isize);
+            let offset = chars.start_ptr().add(at);
             assert!(offset <= chars.limit_ptr());
             onig_sys::onig_match_with_param(
                 self.raw,
@@ -506,7 +505,7 @@ impl Regex {
                 chars.limit_ptr(),
                 offset,
                 match region {
-                    Some(region) => transmute(region),
+                    Some(region) => region as *mut Region as *mut onig_sys::OnigRegion,
                     None => std::ptr::null_mut(),
                 },
                 options.bits(),
@@ -684,8 +683,8 @@ impl Regex {
         let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
         assert_eq!(self.encoding(), chars.encoding());
         let r = unsafe {
-            let start = beg.offset(from as isize);
-            let range = beg.offset(to as isize);
+            let start = beg.add(from );
+            let range = beg.add(to);
             assert!(start <= end);
             assert!(range <= end);
             onig_sys::onig_search_with_param(
@@ -695,7 +694,7 @@ impl Regex {
                 start,
                 range,
                 match region {
-                    Some(region) => transmute(region),
+                    Some(region) => region as *mut Region as *mut onig_sys::OnigRegion,
                     None => std::ptr::null_mut(),
                 },
                 options.bits(),
