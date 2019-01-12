@@ -7,7 +7,7 @@ Rust bindings for the [Oniguruma regex library][Onig_wiki], a powerful and matur
 
 ## Documentation
 
-Check out the [module documentation][onig_crate_doc] to find out all the features that are available. To see some example usage of this crate take a look a the [examples folder][examples_folder]. The examples can be run from the command line with `cargo run --example <examplename>`.
+Check out the [module documentation][onig_crate_doc] to find out all the features that are available. To see some example usage of this crate take a look a the [examples folder][examples_folder]. The examples can be run from the command line with `cargo run -p onig --example <examplename>`.
 
 ## Getting Started
 
@@ -74,7 +74,7 @@ at our open [easy issues][easy_issues].
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
  [onig_crate_doc]: https://docs.rs/onig/4.2.0/onig/
- [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/examples
+ [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/onig/examples
  [regex_new]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.new
  [regex_is_match]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.is_match
  [regex_find]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.find

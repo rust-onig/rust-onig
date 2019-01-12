@@ -7,7 +7,7 @@ use super::{Captures, Regex};
 /// and `FnMut` callbacks. If this isn't enough for your replacement
 /// needs a user-supplied `Replacer` implemenation can be
 /// provided. For an example of a custom replacer implementation check
-/// ouf `examples/dollar.rs` in the Onig repo.
+/// out `examples/dollar.rs` in the Onig crate.
 pub trait Replacer {
     /// Returns a possibly owned string that is used to replace the match
     /// corresponding to the `caps` capture group.

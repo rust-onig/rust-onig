@@ -22,7 +22,7 @@ pub enum MetaChar {
 /// creation of custom syntaxes.
 ///
 /// For a demonstration of creating a custom syntax see
-/// `examples/syntax.rs` in the main onig repo.
+/// `examples/syntax.rs` in the main onig crate.
 #[derive(Debug, Clone, Copy)]
 pub struct Syntax {
     raw: onig_sys::OnigSyntaxType,
