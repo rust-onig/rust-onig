@@ -141,4 +141,4 @@ build: false
 # perform other testing commands. Rust will automatically be placed in the PATH environment
 # variable.
 test_script:
-- cmd: cargo test --verbose --lib
+- cmd: cargo test --verbose
