@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rust-onig/rust-onig.svg?branch=master)](https://travis-ci.org/rust-onig/rust-onig)
 [![Build status](https://ci.appveyor.com/api/projects/status/7qxdb44xpw4bkjfi/branch/master?svg=true)](https://ci.appveyor.com/project/iwillspeak/rust-onig/branch/master)
+[![dependency status](https://deps.rs/crate/onig/4.3.1/status.svg)](https://deps.rs/crate/onig/4.3.1)
 
 Rust bindings for the [Oniguruma regex library][Onig_wiki], a powerful and mature regular expression library with support for a wide range of character sets and language syntaxes. Oniguruma is written in C. This repository provides two crates: `onig-sys` which provides the raw Rust FFI bindings, and `onig`, which provides a safe Rust wrapper around them.
 
@@ -15,7 +16,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-onig = "4.2"
+onig = "4.3"
 ```
 
 Add the following extern to your crate root:
@@ -73,9 +74,9 @@ The contents of this repository are distributed under the MIT license. See
 at our open [easy issues][easy_issues].
 
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
- [onig_crate_doc]: https://docs.rs/onig/4.2.0/onig/
+ [onig_crate_doc]: https://docs.rs/onig/4.3.1/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/master/onig/examples
- [regex_new]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.new
- [regex_is_match]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.is_match
- [regex_find]: https://docs.rs/onig/4.2.0/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/4.3.1/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/4.3.1/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/4.3.1/onig/struct.Regex.html#method.find
  [easy_issues]: https://github.com/rust-onig/rust-onig/issues?q=is%3Aopen+is%3Aissue+label%3AE-Easy
