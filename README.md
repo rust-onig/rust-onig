@@ -66,6 +66,13 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
     RUSTONIG_SYSTEM_LIBONIG=0 cargo run --features print-debug --example capturedump 'a|b'
 
+## Supported Rust Versions
+
+Rust onig supports Rust 1.27.0 or later. If the minimum supported rust
+version is changed then the minor version number will be
+increased. That is v4.2.x should always compile with the same version
+of the compiler.
+
 ## Rust-Onig is Open Source
 
 The contents of this repository are distributed under the MIT license. See
