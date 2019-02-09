@@ -177,7 +177,7 @@ impl Regex {
                 self.raw,
                 start,
                 end,
-                (&mut region.raw) as *mut onig_sys::OnigRegion,
+                (&mut region.raw) as *mut ::onig_sys::OnigRegion,
                 options.bits(),
                 scan_cb::<F>,
                 &mut callback as *mut F as *mut c_void,

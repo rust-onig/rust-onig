@@ -5,6 +5,7 @@ os:
 - linux
 
 rust:
+- 1.27.0
 - stable
 - beta
 - nightly
@@ -25,20 +26,6 @@ script:
     export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
   fi
 - cargo test --features="$ONIG_FEATURES" --verbose
-- cargo doc --features="$ONIG_FEATURES" --verbose
-
-# Build the docs if we have had a successful master build
-after_success:
-- |
-  if [ "$TRAVIS_PULL_REQUEST" == "false" ] && \
-     [ "$TRAVIS_BRANCH" == "master" ] && \
-     [ "$TRAVIS_OS_NAME" == "linux" ] && \
-     [ "$TRAVIS_RUST_VERSION" == "stable" ]
-  then
-    git clone https://github.com/davisp/ghp-import
-    ./ghp-import/ghp-import -n target/doc
-    git push -fq https://$GH_TOKEN@github.com/rust-onig/rust-onig.git gh-pages
-  fi
 
 # Allow failures in the nightly build. We don't want to fail just
 # because of Rust instability.
