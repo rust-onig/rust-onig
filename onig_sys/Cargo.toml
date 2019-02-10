@@ -25,7 +25,7 @@ license = "MIT"
 
 [build-dependencies]
 pkg-config = "0.3"
-cc = "1.0"
+cc = "=1.0.18" # pinned version to enable windows/rust v1.27.0 compilation (details @ github:rust-onig/rust-onig#99)
 
 [features]
 # Make Oniguruma print debug output for parsing/compiling and executing
