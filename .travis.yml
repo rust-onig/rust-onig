@@ -11,8 +11,9 @@ rust:
 - nightly
 
 branches:
-  only:
-    - master
+  except:
+    - gh-pages
+
 env:
   - ONIG_FEATURES=
 
