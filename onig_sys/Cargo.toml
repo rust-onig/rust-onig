@@ -24,7 +24,7 @@ readme = "../README.md"
 license = "MIT"
 
 [build-dependencies]
-bindgen = "0.50.0"
+bindgen = "0.50"
 pkg-config = "0.3"
 cc = "=1.0.18" # pinned version to enable windows/rust v1.27.0 compilation (details @ github:rust-onig/rust-onig#99)
 
