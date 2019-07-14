@@ -1,6 +1,6 @@
 [package]
 name = "onig_sys"
-version = "69.1.0"
+version = "69.2.0"
 authors = [
     "Will Speak <will@willspeak.me>",
     "Ivan Ivashchenko <defuz@me.com>"
@@ -17,13 +17,14 @@ create safe wrappers around Oniguruma.
 You probably don't want to link to this crate directly;
 instead check out the `onig` crate.
 """
-
+categories = ["external-ffi-bindings"]
 repository = "http://github.com/iwillspeak/rust-onig"
 documentation = "http://rust-onig.github.io/rust-onig/onig_sys/"
 readme = "../README.md"
 license = "MIT"
 
 [build-dependencies]
+bindgen = "0.50.0"
 pkg-config = "0.3"
 cc = "=1.0.18" # pinned version to enable windows/rust v1.27.0 compilation (details @ github:rust-onig/rust-onig#99)
 

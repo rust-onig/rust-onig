@@ -1,5 +1,6 @@
 extern crate pkg_config;
 extern crate cc;
+extern crate bindgen;
 
 use pkg_config::Config;
 use std::env;
@@ -137,7 +138,21 @@ fn compile() {
     cc.compile("onig");
 }
 
+fn bindgen_headers() {
+    let bindings = bindgen::Builder::default()
+        .header("oniguruma/src/oniguruma.h")
+        .generate()
+        .expect("bindgen");
+    let out_path = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR"));
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Couldn't write bindings!");
+}
+
 pub fn main() {
+
+    bindgen_headers();
+    
     let link_type = link_type_override();
     let require_pkg_config = env_var_bool("RUSTONIG_SYSTEM_LIBONIG").unwrap_or(false);
 
