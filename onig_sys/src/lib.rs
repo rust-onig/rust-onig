@@ -1,6 +1,8 @@
 mod constants;
 mod onigenc;
 
+pub mod bindgened;
+
 pub use self::constants::*;
 pub use self::onigenc::*;
 
