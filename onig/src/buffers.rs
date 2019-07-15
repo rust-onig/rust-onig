@@ -25,7 +25,7 @@ pub trait EncodedChars {
 
     /// The encoding of the contents of the buffer
     fn encoding(&self) -> onig_sys::OnigEncoding {
-        unsafe { &onig_sys::OnigEncodingUTF8 }
+        unsafe { &mut onig_sys::OnigEncodingUTF8 }
     }
 
     /// The length of this buffer
@@ -76,10 +76,7 @@ impl<'a> EncodedBytes<'a> {
     ///
     /// A new buffer instance
     pub fn from_parts(bytes: &'a [u8], enc: onig_sys::OnigEncoding) -> EncodedBytes<'a> {
-        EncodedBytes {
-            bytes,
-            enc,
-        }
+        EncodedBytes { bytes, enc }
     }
 
     /// New ASCII Buffer
@@ -94,7 +91,7 @@ impl<'a> EncodedBytes<'a> {
     pub fn ascii(bytes: &'a [u8]) -> EncodedBytes<'a> {
         EncodedBytes {
             bytes,
-            enc: unsafe { &onig_sys::OnigEncodingASCII },
+            enc: unsafe { &mut onig_sys::OnigEncodingASCII },
         }
     }
 }
@@ -128,13 +125,13 @@ pub mod tests {
     pub fn rust_string_encoding_is_utf8() {
         let foo = "foo";
         assert_eq!(
-            unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
+            unsafe { &mut onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
             foo.encoding()
         );
 
         let bar = String::from(".*");
         assert_eq!(
-            unsafe { &onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
+            unsafe { &mut onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
             bar.encoding()
         );
     }
@@ -144,7 +141,7 @@ pub mod tests {
         let fizz = b"fizz";
         let buff = EncodedBytes::ascii(fizz);
         assert_eq!(
-            unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
+            unsafe { &mut onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
             buff.encoding()
         );
     }
@@ -171,9 +168,10 @@ pub mod tests {
     #[test]
     pub fn byte_buffer_create() {
         let buff = b"hello world";
-        let enc_buffer = EncodedBytes::from_parts(buff, unsafe { &onig_sys::OnigEncodingASCII });
+        let enc_buffer =
+            EncodedBytes::from_parts(buff, unsafe { &mut onig_sys::OnigEncodingASCII });
         assert_eq!(
-            unsafe { &onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
+            unsafe { &mut onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
             enc_buffer.encoding()
         );
         assert_eq!(

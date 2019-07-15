@@ -92,41 +92,42 @@
 extern crate bitflags;
 #[macro_use]
 extern crate lazy_static;
-extern crate onig_sys;
 #[cfg(windows)]
 extern crate libc;
+extern crate onig_sys;
 
+mod buffers;
 mod find;
 mod flags;
-mod region;
-mod replace;
 mod match_param;
 mod names;
+mod region;
+mod replace;
 mod syntax;
 mod tree;
 mod utils;
-mod buffers;
 
 #[cfg(feature = "std-pattern")]
 mod pattern;
 
 // re-export the onig types publically
+pub use buffers::{EncodedBytes, EncodedChars};
+pub use find::{
+    Captures, FindCaptures, FindMatches, RegexSplits, RegexSplitsN, SubCaptures, SubCapturesPos,
+};
 pub use flags::*;
 pub use match_param::MatchParam;
 pub use names::CaptureNames;
 pub use region::Region;
-pub use find::{Captures, FindCaptures, FindMatches, RegexSplits, RegexSplitsN, SubCaptures,
-               SubCapturesPos};
-pub use buffers::{EncodedBytes, EncodedChars};
 pub use replace::Replacer;
-pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use syntax::{MetaChar, Syntax};
+pub use tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use utils::{copyright, define_user_property, version};
 
-use std::{error, fmt, str};
-use std::sync::Mutex;
-use std::ptr::{null, null_mut};
 use std::os::raw::c_int;
+use std::ptr::{null, null_mut};
+use std::sync::Mutex;
+use std::{error, fmt, str};
 
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct Error {
@@ -139,7 +140,7 @@ pub struct Error {
 /// search and match operations.
 #[derive(Debug, Eq, PartialEq)]
 pub struct Regex {
-    raw: onig_sys::OnigRegexMut,
+    raw: onig_sys::OnigRegex,
 }
 
 unsafe impl Send for Regex {}
@@ -317,15 +318,15 @@ impl Regex {
     {
         // Convert the rust types to those required for the call to
         // `onig_new`.
-        let mut reg: onig_sys::OnigRegexMut = null_mut();
-        let reg_ptr = &mut reg as *mut onig_sys::OnigRegexMut;
+        let mut reg: onig_sys::OnigRegex = null_mut();
+        let reg_ptr = &mut reg as *mut onig_sys::OnigRegex;
 
         // We can use this later to get an error message to pass back
         // if regex creation fails.
         let mut error = onig_sys::OnigErrorInfo {
-            enc: null(),
-            par: null(),
-            par_end: null(),
+            enc: null_mut(),
+            par: null_mut(),
+            par_end: null_mut(),
         };
 
         let err = unsafe {
@@ -338,12 +339,12 @@ impl Regex {
                 pattern.limit_ptr(),
                 option.bits(),
                 pattern.encoding(),
-                syntax as *const Syntax as *const onig_sys::OnigSyntaxType,
+                syntax as *const Syntax as *mut Syntax as *mut onig_sys::OnigSyntaxType,
                 &mut error,
             )
         };
 
-        if err == onig_sys::ONIG_NORMAL {
+        if err == onig_sys::ONIG_NORMAL as i32 {
             Ok(Regex { raw: reg })
         } else {
             Err(Error::from_code_and_info(err, &error))
@@ -443,7 +444,7 @@ impl Regex {
 
         match result {
             Ok(r) => r,
-            Err(e) => panic!("Onig: Regex match error: {}", e.description())
+            Err(e) => panic!("Onig: Regex match error: {}", e.description()),
         }
     }
 
@@ -495,8 +496,8 @@ impl Regex {
         region: Option<&mut Region>,
         match_param: MatchParam,
     ) -> Result<Option<usize>, Error>
-        where
-            T: EncodedChars,
+    where
+        T: EncodedChars,
     {
         assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
@@ -512,7 +513,7 @@ impl Regex {
                     None => std::ptr::null_mut(),
                 },
                 options.bits(),
-                match_param.as_raw()
+                match_param.as_raw(),
             )
         };
 
@@ -625,7 +626,7 @@ impl Regex {
 
         match result {
             Ok(r) => r,
-            Err(e) => panic!("Onig: Regex search error: {}", e.description)
+            Err(e) => panic!("Onig: Regex search error: {}", e.description),
         }
     }
 
@@ -680,13 +681,13 @@ impl Regex {
         region: Option<&mut Region>,
         match_param: MatchParam,
     ) -> Result<Option<usize>, Error>
-        where
-            T: EncodedChars,
+    where
+        T: EncodedChars,
     {
         let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
         assert_eq!(self.encoding(), chars.encoding());
         let r = unsafe {
-            let start = beg.add(from );
+            let start = beg.add(from);
             let range = beg.add(to);
             assert!(start <= end);
             assert!(range <= end);
@@ -701,7 +702,7 @@ impl Regex {
                     None => std::ptr::null_mut(),
                 },
                 options.bits(),
-                match_param.as_raw()
+                match_param.as_raw(),
             )
         };
 
@@ -780,7 +781,8 @@ impl Regex {
             len,
             SearchOptions::SEARCH_OPTION_NONE,
             Some(&mut region),
-        ).and_then(|_| region.pos(0))
+        )
+        .and_then(|_| region.pos(0))
     }
 
     /// Get the Encoding of the Regex
@@ -911,7 +913,11 @@ mod tests {
         let regex = Regex::new("(a|b|ab)*bc").unwrap();
         let result = regex.match_with_param(
             "ababababababababababababababababababababababababababababacbc",
-            0, SearchOptions::SEARCH_OPTION_NONE, None, MatchParam::default());
+            0,
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+            MatchParam::default(),
+        );
 
         let e = result.err().unwrap();
         assert_eq!("retry-limit-in-match over", e.description());
@@ -920,13 +926,15 @@ mod tests {
     #[test]
     fn test_regex_panic_is_match() {
         let regex = Regex::new("(a|b|ab)*bc").unwrap();
-        let result = panic::catch_unwind(||
+        let result = panic::catch_unwind(|| {
             regex.is_match("ababababababababababababababababababababababababababababacbc")
-        );
+        });
         let e = result.err().unwrap();
         let message = e.downcast_ref::<String>().unwrap();
-        assert_eq!(message.as_str(),
-                   "Onig: Regex match error: retry-limit-in-match over");
+        assert_eq!(
+            message.as_str(),
+            "Onig: Regex match error: retry-limit-in-match over"
+        );
     }
 
     #[test]
@@ -934,7 +942,13 @@ mod tests {
         let regex = Regex::new("(a|b|ab)*bc").unwrap();
         let s = "ababababababababababababababababababababababababababababacbc";
         let result = regex.search_with_param(
-            s, 0, s.len(), SearchOptions::SEARCH_OPTION_NONE, None, MatchParam::default());
+            s,
+            0,
+            s.len(),
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+            MatchParam::default(),
+        );
 
         let e = result.err().unwrap();
         assert_eq!("retry-limit-in-match over", e.description());
@@ -943,12 +957,14 @@ mod tests {
     #[test]
     fn test_regex_panic_find() {
         let regex = Regex::new("(a|b|ab)*bc").unwrap();
-        let result = panic::catch_unwind(||
+        let result = panic::catch_unwind(|| {
             regex.find("ababababababababababababababababababababababababababababacbc")
-        );
+        });
         let e = result.err().unwrap();
         let message = e.downcast_ref::<String>().unwrap();
-        assert_eq!(message.as_str(),
-                   "Onig: Regex search error: retry-limit-in-match over");
+        assert_eq!(
+            message.as_str(),
+            "Onig: Regex search error: retry-limit-in-match over"
+        );
     }
 }

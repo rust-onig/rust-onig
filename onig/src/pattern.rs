@@ -1,5 +1,5 @@
-use std::str::pattern::{Pattern, SearchStep, Searcher};
 use super::{FindMatches, Regex};
+use std::str::pattern::{Pattern, SearchStep, Searcher};
 
 /// Regex Searcher Type
 ///
@@ -97,8 +97,8 @@ unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
 
 #[cfg(test)]
 mod test {
-    use Regex;
     use std::str::pattern::{Pattern, SearchStep, Searcher};
+    use Regex;
 
     #[test]
     pub fn pattern_matches_in_str_returns_all_matches() {

@@ -1,10 +1,10 @@
 extern crate onig;
 
 use onig::*;
+use std::collections::HashMap;
 use std::env;
 use std::io;
 use std::io::prelude::*;
-use std::collections::HashMap;
 
 fn main() {
     let mut regexes = HashMap::new();

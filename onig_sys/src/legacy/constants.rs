@@ -1,8 +1,10 @@
 #![allow(clippy::identity_op)]
 
+use super::{
+    OnigCaseFoldType, OnigCtype, OnigDistance, OnigOptionType, OnigSyntaxBehavior, OnigSyntaxOp,
+    OnigSyntaxOp2,
+};
 use std::os::raw::{c_int, c_uint};
-use super::{OnigCaseFoldType, OnigCtype, OnigDistance, OnigOptionType, OnigSyntaxBehavior,
-            OnigSyntaxOp, OnigSyntaxOp2};
 
 macro_rules! define_consts {
     ($typ:ty, $( $name:ident = $value:expr );* ) => {

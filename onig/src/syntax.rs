@@ -1,9 +1,9 @@
 #![allow(clippy::transmute_ptr_to_ptr)]
 #![allow(clippy::transmute_ptr_to_ref)]
 
-use std::mem::transmute;
-use onig_sys;
 use super::{MetaCharType, RegexOptions, SyntaxBehavior, SyntaxOperator};
+use onig_sys;
+use std::mem::transmute;
 
 /// Meta Character State
 ///
@@ -96,8 +96,8 @@ impl Syntax {
     /// Retrieve the operators for this syntax
     pub fn operators(&self) -> SyntaxOperator {
         unsafe {
-            let op = onig_sys::onig_get_syntax_op(&self.raw);
-            let op2 = onig_sys::onig_get_syntax_op2(&self.raw);
+            let op = onig_sys::onig_get_syntax_op(self.raw_mut());
+            let op2 = onig_sys::onig_get_syntax_op2(self.raw_mut());
             SyntaxOperator::from_bits_truncate(u64::from(op) + (u64::from(op2) << 32))
         }
     }
@@ -132,7 +132,9 @@ impl Syntax {
 
     /// Retrieves the syntax behaviours
     pub fn behavior(&self) -> SyntaxBehavior {
-        SyntaxBehavior::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_behavior(&self.raw) })
+        SyntaxBehavior::from_bits_truncate(unsafe {
+            onig_sys::onig_get_syntax_behavior(self.raw_mut())
+        })
     }
 
     /// Overwrite the syntax behaviour for this syntax.
@@ -157,7 +159,9 @@ impl Syntax {
 
     /// Retireve the syntax options for this syntax
     pub fn options(&self) -> RegexOptions {
-        RegexOptions::from_bits_truncate(unsafe { onig_sys::onig_get_syntax_options(&self.raw) })
+        RegexOptions::from_bits_truncate(unsafe {
+            onig_sys::onig_get_syntax_options(self.raw_mut())
+        })
     }
 
     /// Replace the syntax options for this syntax
@@ -182,5 +186,9 @@ impl Syntax {
         unsafe {
             onig_sys::onig_set_meta_char(&mut self.raw, what, code);
         }
+    }
+
+    fn raw_mut(&self) -> *mut onig_sys::OnigSyntaxType {
+        &self.raw as *const onig_sys::OnigSyntaxType as *mut onig_sys::OnigSyntaxType
     }
 }
