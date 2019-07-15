@@ -1,10 +1,10 @@
 extern crate onig;
 
 use onig::*;
+use std::collections::HashMap;
 use std::env;
 use std::io;
 use std::io::prelude::*;
-use std::collections::HashMap;
 
 fn main() {
     let mut regexes = HashMap::new();
@@ -27,9 +27,11 @@ fn main() {
             for (name, regex) in regexes.iter() {
                 let res = regex.captures(&line);
                 match res {
-                    Some(captures) => for (i, mat) in captures.iter().enumerate() {
-                        println!("{} => '{}'", i, mat.unwrap());
-                    },
+                    Some(captures) => {
+                        for (i, mat) in captures.iter().enumerate() {
+                            println!("{} => '{}'", i, mat.unwrap());
+                        }
+                    }
                     None => println!("{} => did not match", name),
                 }
             }

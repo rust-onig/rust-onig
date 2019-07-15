@@ -1,5 +1,5 @@
-use std::iter::Iterator;
 use super::{Regex, Region, SearchOptions};
+use std::iter::Iterator;
 
 impl Regex {
     /// Returns the capture groups corresponding to the leftmost-first match
@@ -13,7 +13,8 @@ impl Regex {
             text.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             Some(&mut region),
-        ).map(|pos| Captures {
+        )
+        .map(|pos| Captures {
             text,
             region,
             offset: pos,
@@ -159,12 +160,17 @@ impl Regex {
         let start = to_search.as_ptr();
         let end = to_search[to_search.len()..].as_ptr();
 
-        extern "C" fn scan_cb<F>(i: c_int, j: c_int, r: *const OnigRegion, ud: *mut c_void) -> c_int
+        unsafe extern "C" fn scan_cb<F>(
+            i: c_int,
+            j: c_int,
+            r: *mut OnigRegion,
+            ud: *mut c_void,
+        ) -> c_int
         where
             F: Fn(i32, i32, &Region) -> bool,
         {
             let region = Region::clone_from_raw(r);
-            let callback = unsafe { &*(ud as *mut F) };
+            let callback = &*(ud as *mut F);
             if callback(i, j, &region) {
                 0
             } else {
@@ -179,7 +185,7 @@ impl Regex {
                 end,
                 (&mut region.raw) as *mut ::onig_sys::OnigRegion,
                 options.bits(),
-                scan_cb::<F>,
+                Some(scan_cb::<F>),
                 &mut callback as *mut F as *mut c_void,
             )
         }
@@ -583,7 +589,8 @@ mod tests {
         let reg = Regex::new(r"\d+\.(\d+)").unwrap();
         let captures = reg.captures("100 - 3.1415 / 2.0").unwrap();
         assert_eq!(6, captures.offset());
-        let all_caps = reg.captures_iter("1 - 3234.3 * 123.2 - 100")
+        let all_caps = reg
+            .captures_iter("1 - 3234.3 * 123.2 - 100")
             .map(|cap| cap.offset())
             .collect::<Vec<_>>();
         assert_eq!(vec![4, 13], all_caps);

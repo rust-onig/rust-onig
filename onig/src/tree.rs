@@ -1,9 +1,9 @@
 #![allow(clippy::transmute_ptr_to_ref)]
 
+use onig_sys;
+use std::iter::Iterator;
 use std::mem::transmute;
 use std::ops::Index;
-use std::iter::Iterator;
-use onig_sys;
 
 /// Capture Tree Node
 ///
@@ -93,7 +93,8 @@ mod tests {
             "(?@a+(?@b+))|(?@c+(?@d+))",
             RegexOptions::REGEX_OPTION_NONE,
             &syntax,
-        ).unwrap();
+        )
+        .unwrap();
 
         let r = regex.search_with_options(
             "- cd aaabbb -",

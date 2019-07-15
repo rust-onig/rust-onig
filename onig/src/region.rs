@@ -1,15 +1,15 @@
 #![allow(clippy::transmute_ptr_to_ref)]
 
-use std::ptr::null;
+use onig_sys;
 use std::mem::transmute;
 use std::os::raw::{c_int, c_void};
-use onig_sys;
+use std::ptr::null_mut;
 
-use super::CaptureTreeNode;
 use super::flags::TraverseCallbackAt;
+use super::CaptureTreeNode;
 
 /// Represents a set of capture groups found in a search or match.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug)]
 pub struct Region {
     pub(crate) raw: onig_sys::OnigRegion,
 }
@@ -21,9 +21,9 @@ impl Region {
             raw: onig_sys::OnigRegion {
                 allocated: 0,
                 num_regs: 0,
-                beg: null(),
-                end: null(),
-                history_root: null(),
+                beg: null_mut(),
+                end: null_mut(),
+                history_root: null_mut(),
             },
         }
     }
@@ -46,12 +46,9 @@ impl Region {
     ///
     /// Construct a new region based on an existing raw
     /// `*onig_sys::OnigRegion` pointer by copying.
-    #[allow(clippy::not_unsafe_ptr_arg_deref)]
-    pub fn clone_from_raw(ptr: *const onig_sys::OnigRegion) -> Self {
+    pub unsafe fn clone_from_raw(ptr: *mut onig_sys::OnigRegion) -> Self {
         let mut region = Self::new();
-        unsafe {
-            onig_sys::onig_region_copy(&mut region.raw, ptr);
-        }
+        onig_sys::onig_region_copy(&mut region.raw, ptr);
         region
     }
 
@@ -81,7 +78,7 @@ impl Region {
     ///  * `new_capacity` - The new number of groups in the region.
     pub fn reserve(&mut self, new_capacity: usize) {
         let r = unsafe { onig_sys::onig_region_resize(&mut self.raw, new_capacity as c_int) };
-        if r != onig_sys::ONIG_NORMAL {
+        if r != onig_sys::ONIG_NORMAL as i32 {
             panic!("Onig: fail to memory allocation during region resize")
         }
     }
@@ -111,12 +108,7 @@ impl Region {
             return None;
         }
         let pos = pos as isize;
-        let (beg, end) = unsafe {
-            (
-                *self.raw.beg.offset(pos),
-                *self.raw.end.offset(pos),
-            )
-        };
+        let (beg, end) = unsafe { (*self.raw.beg.offset(pos), *self.raw.end.offset(pos)) };
         if beg != onig_sys::ONIG_REGION_NOTPOS {
             Some((beg as usize, end as usize))
         } else {
@@ -128,7 +120,7 @@ impl Region {
     ///
     /// Returns the capture tree for this region, if there is one.
     pub fn tree(&self) -> Option<&CaptureTreeNode> {
-        let tree = unsafe { onig_sys::onig_get_capture_tree(&self.raw) };
+        let tree = unsafe { onig_sys::onig_get_capture_tree(self.raw_mut()) };
         if tree.is_null() {
             None
         } else {
@@ -187,12 +179,19 @@ impl Region {
 
         unsafe {
             onig_capture_tree_traverse(
-                &self.raw,
-                at.bits(), // ONIG_TRAVERSE_CALLBACK_AT_FIRST,
-                traverse_cb::<F>,
+                self.raw_mut(),
+                at.bits() as c_int,
+                Some(traverse_cb::<F>),
                 &mut callback as *mut F as *mut c_void,
             )
         }
+    }
+
+    /// Convert a reference to self to a mutable pointer. This
+    /// shouldn't ever actually be used to mutate the underlying
+    /// region. It's needed to match the bindgened types though.
+    fn raw_mut(&self) -> *mut onig_sys::OnigRegion {
+        &self.raw as *const onig_sys::OnigRegion as *mut onig_sys::OnigRegion
     }
 }
 
@@ -212,7 +211,7 @@ impl Drop for Region {
 
 impl Clone for Region {
     fn clone(&self) -> Self {
-        Self::clone_from_raw(&self.raw)
+        unsafe { Self::clone_from_raw(self.raw_mut()) }
     }
 }
 
@@ -254,8 +253,8 @@ impl<'a> Iterator for RegionIter<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::{Regex, SearchOptions};
+    use super::*;
 
     #[test]
     fn test_region_create() {

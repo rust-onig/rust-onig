@@ -1,5 +1,5 @@
-use std::borrow::Cow;
 use super::{Captures, Regex};
+use std::borrow::Cow;
 
 /// Replacer describes types that can be used to replace matches in a string.
 ///

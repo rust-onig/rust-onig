@@ -26,18 +26,26 @@ pub type OnigRegexMut = *mut OnigRegexType;
 pub type OnigWarnFunc = extern "C" fn(*const c_char);
 
 /// Apply All Case Fold Callback, see OnigEncodingType->apply_all_case_fold
-pub type OnigApplyAllCaseFoldFunc =
-    extern "C" fn(from: OnigCodePoint, to: *const OnigCodePoint, to_len: c_int, arg: *const c_void)
-        -> c_int;
+pub type OnigApplyAllCaseFoldFunc = extern "C" fn(
+    from: OnigCodePoint,
+    to: *const OnigCodePoint,
+    to_len: c_int,
+    arg: *const c_void,
+) -> c_int;
 
 /// Foreach Callback
 ///
 /// This callback will be invoked for each name when calling
 /// [`onig_foreach_name`](fn.onig_foreach_name.html). The
 /// final argument to that function is passed back to this callback.
-pub type OnigForeachNameCallback =
-    extern "C" fn(*const OnigUChar, *const OnigUChar, c_int, *const c_int, OnigRegex, *mut c_void)
-        -> c_int;
+pub type OnigForeachNameCallback = extern "C" fn(
+    *const OnigUChar,
+    *const OnigUChar,
+    c_int,
+    *const c_int,
+    OnigRegex,
+    *mut c_void,
+) -> c_int;
 
 /// Capture Tree Callback
 ///
@@ -60,7 +68,8 @@ pub type OnigScanCallback = extern "C" fn(c_int, c_int, *const OnigRegion, *mut 
 /// ```c
 /// typedef int (*OnigCalloutFunc)(OnigCalloutArgs* args, void* user_data);
 /// ```
-pub type OnigCalloutFunc = extern "C" fn (args: *const OnigCalloutArgs, user_data: *const c_void) -> c_int;
+pub type OnigCalloutFunc =
+    extern "C" fn(args: *const OnigCalloutArgs, user_data: *const c_void) -> c_int;
 
 #[repr(C)]
 #[derive(Debug, Eq, PartialEq)]
@@ -138,9 +147,11 @@ pub struct OnigEncodingType {
         end: *const OnigUChar,
         to: *const OnigUChar,
     ) -> c_int,
-    pub apply_all_case_fold:
-        extern "C" fn(flag: OnigCaseFoldType, f: OnigApplyAllCaseFoldFunc, arg: *const c_void)
-            -> c_int,
+    pub apply_all_case_fold: extern "C" fn(
+        flag: OnigCaseFoldType,
+        f: OnigApplyAllCaseFoldFunc,
+        arg: *const c_void,
+    ) -> c_int,
     pub get_case_fold_codes_by_str: extern "C" fn(
         flag: OnigCaseFoldType,
         p: *const OnigUChar,

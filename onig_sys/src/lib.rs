@@ -1,7 +1,13 @@
-mod legacy;
 pub mod bindgened;
+pub mod legacy;
 
-pub use self::legacy::*;
+pub use self::bindgened::*;
+
+// backfill types from the old hand-written bindings:
+
+pub type OnigSyntaxBehavior = ::std::os::raw::c_uint;
+pub type OnigSyntaxOp = ::std::os::raw::c_uint;
+pub type OnigSyntaxOp2 = ::std::os::raw::c_uint;
 
 #[test]
 fn test_is_linked() {

@@ -1,6 +1,6 @@
-use std::mem;
-use std::ffi::{CStr, CString};
 use onig_sys;
+use std::ffi::{CStr, CString};
+use std::mem;
 
 /// Get Version
 ///
@@ -33,8 +33,9 @@ pub fn define_user_property(name: &str, ranges: &[CodePointRange]) -> i32 {
         raw_ranges.push(end);
     }
     let name = CString::new(name).unwrap();
-    let r =
-        unsafe { onig_sys::onig_unicode_define_user_property(name.as_ptr(), raw_ranges.as_ptr()) };
+    let r = unsafe {
+        onig_sys::onig_unicode_define_user_property(name.as_ptr(), raw_ranges.as_mut_ptr())
+    };
 
     // Deliberately leak the memory here as Onig expects to be able to
     // hang on to the pointer we just gave it. I'm not happy about it

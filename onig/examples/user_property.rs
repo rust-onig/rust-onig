@@ -1,7 +1,7 @@
 extern crate onig;
 
-use std::str;
 use onig::*;
+use std::str;
 
 fn main() {
     define_user_property(

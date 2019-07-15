@@ -4,7 +4,7 @@
 //! used to control the behavior of searching and matching.
 
 use onig_sys;
-use std::os::raw::c_uint;
+use std::os::raw::{c_uint, c_ulong};
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
@@ -15,25 +15,19 @@ impl MatchParam {
     /// Set the match stack limit
     pub fn set_match_stack_limit(&mut self, limit: u32) {
         unsafe {
-            onig_sys::onig_set_match_stack_limit_size_of_match_param(
-                self.raw,
-                limit as c_uint
-            );
+            onig_sys::onig_set_match_stack_limit_size_of_match_param(self.raw, limit as c_uint);
         }
     }
 
     /// Set the retry limit in match
     pub fn set_retry_limit_in_match(&mut self, limit: u32) {
         unsafe {
-            onig_sys::onig_set_retry_limit_in_match_of_match_param(
-                self.raw,
-                limit as c_uint
-            );
+            onig_sys::onig_set_retry_limit_in_match_of_match_param(self.raw, limit as c_ulong);
         }
     }
 
     /// Get the Raw `OnigMatchParam` Pointer
-    pub fn as_raw(&self) -> *const onig_sys::OnigMatchParam {
+    pub fn as_raw(&self) -> *mut onig_sys::OnigMatchParam {
         self.raw
     }
 }

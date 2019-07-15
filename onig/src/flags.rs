@@ -257,7 +257,7 @@ bitflags! {
 
 bitflags! {
     /// The order in which traverse callbacks are invoked
-    pub struct TraverseCallbackAt: libc::c_int {
+    pub struct TraverseCallbackAt: libc::c_uint {
         /// Callback before children are wallked
         const CALLBACK_AT_FIRST =
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_FIRST;
