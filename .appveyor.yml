@@ -135,6 +135,7 @@ install:
   - if /i "%ABI%"=="gnu" rustup show
   - if /i "%ABI%"=="gnu" rustc -vV
   - ps: $env:TOOLCHAIN = $(rustup show active-toolchain)
+  - set TOOLCHAIN=%TOOLCHAIN: (default)=%
   # ** copy libs from gcc toolchain to rust toolchain (more specifically, "crt2.o" and "dllcrt2.o" are needed)
   - if defined MSYS_MINGWDIR copy /y "%MSYS_MINGWDIR%\%ARCH%-w64-mingw32\lib\*.o" "%USERPROFILE%\.rustup\toolchains\%TOOLCHAIN%\lib\rustlib\%TARGET%\lib" >NUL
   ## (end of workaround)
