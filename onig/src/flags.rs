@@ -1,5 +1,5 @@
 use onig_sys;
-use std::os::raw as libc;
+use std::os::raw::c_uint;
 
 bitflags! {
     /// Regex parsing and compilation options.
@@ -257,7 +257,7 @@ bitflags! {
 
 bitflags! {
     /// The order in which traverse callbacks are invoked
-    pub struct TraverseCallbackAt: libc::c_uint {
+    pub struct TraverseCallbackAt: c_uint {
         /// Callback before children are wallked
         const CALLBACK_AT_FIRST =
             onig_sys::ONIG_TRAVERSE_CALLBACK_AT_FIRST;
@@ -272,7 +272,7 @@ bitflags! {
 
 bitflags! {
     /// Syntax meta character types
-    pub struct MetaCharType: libc::c_uint {
+    pub struct MetaCharType: c_uint {
         /// The escape charater for this syntax
         const META_CHAR_ESCAPE = onig_sys::ONIG_META_CHAR_ESCAPE;
         /// The any (.) character for this syntax.
