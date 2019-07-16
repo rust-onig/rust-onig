@@ -95,7 +95,7 @@ install:
   - appveyor DownloadFile "https://win.rustup.rs/" -FileName "%CI_TEMP_DIR%\rustup-init.exe"
   - call "%CI_TEMP_DIR%\rustup-init.exe" -y --default-toolchain %CHANNEL% --default-host %TARGET% --no-modify-path >NUL
   - set "PATH=%PATH%;%USERPROFILE%\.cargo\bin"
-  - ps: $env:TOOLCHAIN = $(rustup show active-toolchain)
+  - ps: $env:TOOLCHAIN = ($(rustup show active-toolchain) -split ' ')[0]
   # * set RUST_BACKTRACE for enhanced error messages
   - set RUST_BACKTRACE=1
   # * show versions
@@ -134,8 +134,7 @@ install:
   - if /i "%ABI%"=="gnu" rustup target add %TARGET%
   - if /i "%ABI%"=="gnu" rustup show
   - if /i "%ABI%"=="gnu" rustc -vV
-  - ps: $env:TOOLCHAIN = $(rustup show active-toolchain)
-  - set TOOLCHAIN=%TOOLCHAIN: (default)=%
+  - ps: $env:TOOLCHAIN = ($(rustup show active-toolchain) -split ' ')[0]
   # ** copy libs from gcc toolchain to rust toolchain (more specifically, "crt2.o" and "dllcrt2.o" are needed)
   - if defined MSYS_MINGWDIR copy /y "%MSYS_MINGWDIR%\%ARCH%-w64-mingw32\lib\*.o" "%USERPROFILE%\.rustup\toolchains\%TOOLCHAIN%\lib\rustlib\%TARGET%\lib" >NUL
   ## (end of workaround)
