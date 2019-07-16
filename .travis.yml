@@ -5,7 +5,7 @@ os:
 - linux
 
 rust:
-- 1.27.0
+- 1.31.1
 - stable
 - beta
 - nightly
