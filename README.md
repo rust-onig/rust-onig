@@ -69,7 +69,7 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
 ## Supported Rust Versions
 
-Rust onig supports Rust 1.27.0 or later. If the minimum supported rust
+Rust onig supports Rust 1.31.1 or later. If the minimum supported rust
 version is changed then the minor version number will be
 increased. That is v4.2.x should always compile with the same version
 of the compiler.
