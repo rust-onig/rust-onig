@@ -4,7 +4,7 @@ branches:
   except:
     - gh-pages
 
-os: Visual Studio 2017
+os: Visual Studio 2015
 
 matrix:
   allow_failures:
@@ -121,6 +121,7 @@ install:
   - if /i "%ARCH%" == "x86_64" appveyor-retry appveyor DownloadFile http://releases.llvm.org/8.0.0/LLVM-8.0.0-win64.exe -FileName llvm-installer.exe
   - if /i "%ARCH%" == "i686" appveyor-retry appveyor DownloadFile http://releases.llvm.org/8.0.0/LLVM-8.0.0-win32.exe -FileName llvm-installer.exe
   - 7z x llvm-installer.exe -oc:\llvm-binary
+  - set LIBCLANG_PATH=C:\llvm-binary\lib
   - set PATH=C:\llvm-binary\bin;%PATH%
   - where clang
   - clang --version
