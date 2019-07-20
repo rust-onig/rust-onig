@@ -4,12 +4,11 @@ branches:
   except:
     - gh-pages
 
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 matrix:
   allow_failures:
   - CHANNEL: nightly
-#   - ABI: gnu
 
 environment:
   global:
@@ -26,12 +25,6 @@ environment:
   - CHANNEL: stable
     ARCH: x86_64
     ABI: msvc
-#   - CHANNEL: beta
-#     ARCH: i686
-#     ABI: msvc
-#   - CHANNEL: beta
-#     ARCH: x86_64
-#     ABI: msvc
   - CHANNEL: nightly
     ARCH: i686
     ABI: msvc
@@ -45,18 +38,6 @@ environment:
   - CHANNEL: stable
     ARCH: x86_64
     ABI: gnu
-#   - CHANNEL: beta
-#     ARCH: i686
-#     ABI: gnu
-#   - CHANNEL: beta
-#     ARCH: x86_64
-#     ABI: gnu
-#   - CHANNEL: nightly
-#     ARCH: i686
-#     ABI: gnu
-#   - CHANNEL: nightly
-#     ARCH: x86_64
-#     ABI: gnu
   # * FEATURES = "std-pattern"
   - CHANNEL: stable
     ARCH: i686
@@ -66,16 +47,6 @@ environment:
     ARCH: x86_64
     ABI: gnu
     FEATURES: std-pattern
-#   # * specific gnu compilers
-#   - CHANNEL: stable
-#     ARCH: i686
-#     ABI: gnu
-#     MINGW_URL: https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-win32/dwarf/i686-4.9.2-release-win32-dwarf-rt_v4-rev4.7z/download
-#     MINGW_ARCHIVE: i686-4.9.2-release-win32-dwarf-rt_v4-rev4.7z
-#   - CHANNEL: stable
-#     ARCH: x86_64
-#     ABI: gnu
-#     MINGW_URL: https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/7.3.0/threads-posix/seh/x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z/download#mingw-w64-x86_64-7.3.0-posix-seh.7z
 
 install:
   # force branch checkout (if knowable), then reset to the specific commit ## (can be needed for accurate code coverage info)
@@ -146,9 +117,13 @@ install:
   - if /i "%ABI%" == "msvc" if /i "%ARCH%" == "x86_64" call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
   - if /i "%ABI%" == "msvc" if /i "%ARCH%" == "x86_64" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64
 
-# artifacts:
-#   - path: target\%TARGET%\debug\...
-#     name: ...
+  # Download LLVM
+  - if /i "%ARCH%" == "x86_64" appveyor-retry appveyor DownloadFile http://releases.llvm.org/8.0.0/LLVM-8.0.0-win64.exe -FileName llvm-installer.exe
+  - if /i "%ARCH%" == "i686" appveyor-retry appveyor DownloadFile http://releases.llvm.org/8.0.0/LLVM-8.0.0-win32.exe -FileName llvm-installer.exe
+  - 7z x llvm-installer.exe -oc:\llvm-binary
+  - set PATH=C:\llvm-binary\bin;%PATH%
+  - where clang
+  - clang --version
 
 build_script:
   - set BUILD_CMD=cargo +%TOOLCHAIN% build --target=%TARGET% --features "%FEATURES%" --no-default-features
