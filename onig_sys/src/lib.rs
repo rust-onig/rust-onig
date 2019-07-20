@@ -1,5 +1,4 @@
 pub mod bindgened;
-pub mod legacy;
 
 pub use self::bindgened::*;
 
