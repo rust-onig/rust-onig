@@ -22,7 +22,7 @@ impl MatchParam {
     /// Set the retry limit in match
     pub fn set_retry_limit_in_match(&mut self, limit: u32) {
         unsafe {
-            onig_sys::onig_set_retry_limit_in_match_of_match_param(self.raw, limit as c_ulong);
+            onig_sys::onig_set_retry_limit_in_match_of_match_param(self.raw, c_ulong::from(limit));
         }
     }
 
