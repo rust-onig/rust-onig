@@ -10,9 +10,10 @@ fn main() {
 
     println!("has {} group names:", r.capture_names_len());
 
-    for (name, indices) in r.capture_names() {
+    r.foreach_name(|name, indices| {
         println!("- {}: {:?}", name, indices);
-    }
+        true
+    });
 
     let mut region = Region::new();
 

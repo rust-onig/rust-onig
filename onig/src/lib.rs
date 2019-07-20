@@ -117,7 +117,6 @@ pub use find::{
 };
 pub use flags::*;
 pub use match_param::MatchParam;
-pub use names::CaptureNames;
 pub use region::Region;
 pub use replace::Replacer;
 pub use syntax::{MetaChar, Syntax};
