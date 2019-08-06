@@ -188,6 +188,7 @@ fn compile() {
 fn bindgen_headers(path: &str) {
     let bindings = bindgen::Builder::default()
         .header(path)
+        .derive_eq(true)
         .generate()
         .expect("bindgen");
     let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");

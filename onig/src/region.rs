@@ -9,7 +9,7 @@ use super::flags::TraverseCallbackAt;
 use super::CaptureTreeNode;
 
 /// Represents a set of capture groups found in a search or match.
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct Region {
     pub(crate) raw: onig_sys::OnigRegion,
 }
