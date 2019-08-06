@@ -61,6 +61,8 @@ fn link_type_override() -> Option<LinkType> {
 }
 
 fn compile() {
+    bindgen_headers("oniguruma/src/oniguruma.h");
+
     let mut cc = cc::Build::new();
     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR"));
     let ref src = Path::new("oniguruma").join("src");
@@ -183,20 +185,19 @@ fn compile() {
     cc.compile("onig");
 }
 
-fn bindgen_headers() {
+fn bindgen_headers(path: &str) {
     let bindings = bindgen::Builder::default()
-        .header("oniguruma/src/oniguruma.h")
+        .header(path)
         .generate()
         .expect("bindgen");
-    let out_path = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR"));
+    let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
+    let out_path = Path::new(&out_dir);
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 }
 
 pub fn main() {
-    bindgen_headers();
-
     let link_type = link_type_override();
     let require_pkg_config = env_var_bool("RUSTONIG_SYSTEM_LIBONIG").unwrap_or(false);
 
@@ -207,7 +208,16 @@ pub fn main() {
             conf.statik(true);
         }
         match conf.probe("oniguruma") {
-            Ok(_) => return,
+            Ok(lib) => {
+                for path in lib.include_paths {
+                    let header = path.join("oniguruma.h");
+                    if header.exists() {
+                        bindgen_headers(&header.display().to_string());
+                        break;
+                    }
+                }
+                return
+            },
             Err(ref err) if require_pkg_config => {
                 panic!("Unable to find oniguruma in pkg-config, and RUSTONIG_SYSTEM_LIBONIG is set: {}", err);
             }
