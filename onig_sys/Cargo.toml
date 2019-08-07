@@ -24,8 +24,8 @@ readme = "../README.md"
 license = "MIT"
 
 [build-dependencies]
-bindgen = { version="0.51", features=[] }
-pkg-config = "^0.3.16"
+bindgen = { version = "0.50", optional = true, default-features = false }
+pkg-config = "0.3"
 cc = "1.0"
 
 [features]
@@ -33,3 +33,5 @@ cc = "1.0"
 print-debug = []
 # include regexec(), which conflicts with libgit2
 posix-api = []
+# generate bindings with bindgen
+generate = ["bindgen"]

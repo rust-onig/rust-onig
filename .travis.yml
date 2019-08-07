@@ -15,7 +15,7 @@ branches:
     - gh-pages
 
 env:
-  - ONIG_FEATURES=
+  - ONIG_FEATURES=generate
 
 script:
 - cargo build --features="$ONIG_FEATURES" --verbose
@@ -27,6 +27,7 @@ script:
     export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
   fi
 - cargo test --features="$ONIG_FEATURES" --verbose
+- cargo test --no-default-features --verbose
 
 # Allow failures in the nightly build. We don't want to fail just
 # because of Rust instability.

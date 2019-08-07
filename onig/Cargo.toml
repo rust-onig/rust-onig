@@ -23,6 +23,8 @@ std-pattern = []
 posix-api = ["onig_sys/posix-api"]
 # Make Oniguruma print debug output for parsing/compiling and executing
 print-debug = ["onig_sys/print-debug"]
+# generate headers with bindgen
+generate = ["onig_sys/generate"]
 
 [dependencies]
 bitflags = "1.0"
