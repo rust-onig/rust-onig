@@ -54,6 +54,15 @@ Or Windows:
     > set RUSTONIG_DYNAMIC_LIBONIG=1
     > cargo build
 
+## Build errors caused by libclang/llvm
+
+By default `onig` uses `bindgen` to generate bindings for libonig. If you plan to only use the bundled version of libonig, you can make compilation faster and more reliable by disabling the default `generate` feature:
+
+```toml
+[dependencies]
+onig = { version = "5", default-features = false }
+```
+
 ## Debugging
 
 Sometimes it's useful to debug how Oniguruma parses, compiles, optimizes or

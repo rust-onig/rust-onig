@@ -18,6 +18,7 @@ readme = "../README.md"
 license = "MIT"
 
 [features]
+default-features = ["generate"]
 std-pattern = []
 # include regexec()
 posix-api = ["onig_sys/posix-api"]
@@ -36,3 +37,4 @@ libc = "0.2"
 [dependencies.onig_sys]
 version = "69.2.0"
 path = "../onig_sys"
+default-features = false
