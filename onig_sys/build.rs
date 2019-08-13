@@ -83,18 +83,26 @@ fn compile() {
         );
     }
 
-    let os = env::var("CARGO_CFG_TARGET_OS").unwrap();
-    let bits = env::var("CARGO_CFG_TARGET_POINTER_WIDTH").unwrap();
-    if os == "windows" {
-        fs::copy(src.join(format!("config.h.win{}", bits)), config_h)
+    let arch = env::var("CARGO_CFG_TARGET_ARCH");
+    let os = env::var("CARGO_CFG_TARGET_OS");
+    let bits = env::var("CARGO_CFG_TARGET_POINTER_WIDTH");
+    if let Ok("windows") = os.as_ref().map(String::as_str) {
+        fs::copy(src.join(format!("config.h.win{}", bits.unwrap())), config_h)
             .expect("Can't copy config.h.win??");
     } else {
-        let family = env::var("CARGO_CFG_TARGET_FAMILY").unwrap();
-        if family == "unix" {
+        if let Ok("unix") = env::var("CARGO_CFG_TARGET_FAMILY")
+            .as_ref()
+            .map(String::as_str)
+        {
             cc.define("HAVE_UNISTD_H", Some("1"));
             cc.define("HAVE_SYS_TYPES_H", Some("1"));
             cc.define("HAVE_SYS_TIME_H", Some("1"));
         }
+        let sizeof_long = if let Ok("64") = bits.as_ref().map(String::as_str) {
+            "8"
+        } else {
+            "4"
+        };
 
         // Can't use size_of::<c_long>(), because it'd refer to build arch, not target arch.
         // so instead assume it's a non-exotic target (LP32/LP64).
@@ -113,10 +121,19 @@ fn compile() {
             #define SIZEOF_SHORT 2
             #define SIZEOF_LONG {}
         ",
-                if bits == "64" { "8" } else { "4" }
+                sizeof_long
             ),
         )
         .expect("Can't write config.h to OUT_DIR");
+    }
+    if let Ok("wasm32") | Ok("wasm64") = arch.as_ref().map(String::as_str) {
+        cc.define("ONIG_DISABLE_DIRECT_THREADING", Some("1"));
+        if let Ok("unknown") = os.as_ref().map(String::as_str) {
+            cc.define(
+                "ONIG_EXTERN",
+                Some(r#"__attribute__((visibility("default")))"#),
+            );
+        }
     }
 
     cc.include(out_dir); // Read config.h from there
@@ -186,11 +203,12 @@ fn compile() {
 }
 
 fn bindgen_headers(path: &str) {
-    let bindings = bindgen::Builder::default()
-        .header(path)
-        .derive_eq(true)
-        .generate()
-        .expect("bindgen");
+    let arch = env::var("CARGO_CFG_TARGET_ARCH");
+    let mut bindgen = bindgen::Builder::default().header(path).derive_eq(true);
+    if let Ok("wasm32") | Ok("wasm64") = arch.as_ref().map(String::as_str) {
+        bindgen = bindgen.clang_arg("-fvisibility=default");
+    }
+    let bindings = bindgen.generate().expect("bindgen");
     let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
     let out_path = Path::new(&out_dir);
     bindings
@@ -217,8 +235,8 @@ pub fn main() {
                         break;
                     }
                 }
-                return
-            },
+                return;
+            }
             Err(ref err) if require_pkg_config => {
                 panic!("Unable to find oniguruma in pkg-config, and RUSTONIG_SYSTEM_LIBONIG is set: {}", err);
             }
