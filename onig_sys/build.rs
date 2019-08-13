@@ -84,14 +84,15 @@ fn compile() {
         );
     }
 
-    let os = env::var("CARGO_CFG_TARGET_OS").unwrap();
+    let arch = env::var("CARGO_CFG_TARGET_ARCH");
+    let os = env::var("CARGO_CFG_TARGET_OS");
     let bits = env::var("CARGO_CFG_TARGET_POINTER_WIDTH").unwrap();
-    if os == "windows" {
+    if let Ok("windows") = os.as_ref().map(String::as_str) {
         fs::copy(src.join(format!("config.h.win{}", bits)), config_h)
             .expect("Can't copy config.h.win??");
     } else {
-        let family = env::var("CARGO_CFG_TARGET_FAMILY").unwrap();
-        if family == "unix" {
+        let family = env::var("CARGO_CFG_TARGET_FAMILY");
+        if let Ok("unix") = family.as_ref().map(String::as_str) {
             cc.define("HAVE_UNISTD_H", Some("1"));
             cc.define("HAVE_SYS_TYPES_H", Some("1"));
             cc.define("HAVE_SYS_TIME_H", Some("1"));
@@ -118,6 +119,15 @@ fn compile() {
             ),
         )
         .expect("Can't write config.h to OUT_DIR");
+    }
+    if let Ok("wasm32") = arch.as_ref().map(String::as_str) {
+        cc.define("ONIG_DISABLE_DIRECT_THREADING", Some("1"));
+        if let Ok("unknown") = os.as_ref().map(String::as_str) {
+            cc.define(
+                "ONIG_EXTERN",
+                Some(r#"__attribute__((visibility("default")))"#),
+            );
+        }
     }
 
     cc.include(out_dir); // Read config.h from there
@@ -186,21 +196,25 @@ fn compile() {
     cc.compile("onig");
 }
 
-fn bindgen_headers(_path: &str) {
-    #[cfg(feature = "generate")]
-    {
-        let bindings = bindgen::Builder::default()
-            .header(_path)
-            .derive_eq(true)
-            .layout_tests(false)
-            .generate()
-            .expect("bindgen");
-        let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
-        let out_path = Path::new(&out_dir);
-        bindings
-            .write_to_file(out_path.join("bindings.rs"))
-            .expect("Couldn't write bindings!");
+#[cfg(not(feature = "generate"))]
+fn bindgen_headers(_path: &str) {}
+
+#[cfg(feature = "generate")]
+fn bindgen_headers(path: &str) {
+    let arch = env::var("CARGO_CFG_TARGET_ARCH");
+    let mut bindgen = bindgen::Builder::default()
+        .header(path)
+        .derive_eq(true)
+        .layout_tests(false);
+    if let Ok("wasm32") = arch.as_ref().map(String::as_str) {
+        bindgen = bindgen.clang_arg("-fvisibility=default");
     }
+    let bindings = bindgen.generate().expect("bindgen");
+    let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
+    let out_path = Path::new(&out_dir);
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Couldn't write bindings!");
 }
 
 pub fn main() {
@@ -211,7 +225,11 @@ pub fn main() {
         let mut conf = Config::new();
         // dynamically-generated headers can work with an older version
         // pre-generated headers are for the latest
-        conf.atleast_version(if cfg!(feature = "generate") {"6.8.0"} else {"6.9.3"});
+        conf.atleast_version(if cfg!(feature = "generate") {
+            "6.8.0"
+        } else {
+            "6.9.3"
+        });
         if link_type == Some(LinkType::Static) {
             conf.statik(true);
         }
@@ -221,13 +239,16 @@ pub fn main() {
                     let header = path.join("oniguruma.h");
                     if header.exists() {
                         bindgen_headers(&header.display().to_string());
-                        return
+                        return;
                     }
                 }
                 if require_pkg_config {
-                    panic!("Unable to find oniguruma.h in include paths from pkg-config: {:?}", lib.include_paths);
+                    panic!(
+                        "Unable to find oniguruma.h in include paths from pkg-config: {:?}",
+                        lib.include_paths
+                    );
                 }
-            },
+            }
             Err(ref err) if require_pkg_config => {
                 panic!("Unable to find oniguruma in pkg-config, and RUSTONIG_SYSTEM_LIBONIG is set: {}", err);
             }
