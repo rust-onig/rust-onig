@@ -23,6 +23,9 @@ documentation = "http://rust-onig.github.io/rust-onig/onig_sys/"
 readme = "../README.md"
 license = "MIT"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [build-dependencies]
 bindgen = { version="0.50", features=[] }
 pkg-config = "0.3"
