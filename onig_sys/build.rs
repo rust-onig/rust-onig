@@ -134,7 +134,6 @@ fn compile() {
         "regtrav.c",
         "regversion.c",
         "st.c",
-        "regposerr.c",
         "onig_init.c",
         "unicode.c",
         "ascii.c",
@@ -179,6 +178,7 @@ fn compile() {
 
     if cfg!(feature = "posix-api") {
         cc.file(src.join("regposix.c"));
+        cc.file(src.join("regposerr.c"));
     }
 
     cc.warnings(false); // not actionable by the end user
