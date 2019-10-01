@@ -25,7 +25,7 @@ license = "MIT"
 
 [build-dependencies]
 bindgen = { version="0.51", features=[] }
-pkg-config = "0.3"
+pkg-config = "^0.3.16"
 cc = "1.0"
 
 [features]
