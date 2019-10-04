@@ -217,14 +217,16 @@ pub fn main() {
         }
         match conf.probe("oniguruma") {
             Ok(lib) => {
-                for path in lib.include_paths {
+                for path in &lib.include_paths {
                     let header = path.join("oniguruma.h");
                     if header.exists() {
                         bindgen_headers(&header.display().to_string());
-                        break;
+                        return
                     }
                 }
-                return
+                if require_pkg_config {
+                    panic!("Unable to find oniguruma.h in include paths from pkg-config: {:?}", lib.include_paths);
+                }
             },
             Err(ref err) if require_pkg_config => {
                 panic!("Unable to find oniguruma in pkg-config, and RUSTONIG_SYSTEM_LIBONIG is set: {}", err);
