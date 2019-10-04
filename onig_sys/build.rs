@@ -217,8 +217,16 @@ pub fn main() {
                         return
                     }
                 }
+                let c_search_paths = [Path::new("/usr/include")];
+                for path in &c_search_paths {
+                    let header = path.join("oniguruma.h");
+                    if header.exists() {
+                        bindgen_headers(&header.display().to_string());
+                        return;
+                    }
+                }
                 if require_pkg_config {
-                    panic!("Unable to find oniguruma.h in include paths from pkg-config: {:?}", lib.include_paths);
+                    panic!("Unable to find oniguruma.h in /usr/include and include paths from pkg-config: {:?}", lib.include_paths);
                 }
             },
             Err(ref err) if require_pkg_config => {
