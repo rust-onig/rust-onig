@@ -29,7 +29,7 @@ pkg-config = "0.3"
 cc = "1.0"
 
 [features]
-default-features = ["generate"]
+default = ["generate"]
 # Make Oniguruma print debug output for parsing/compiling and executing
 print-debug = []
 # include regexec(), which conflicts with libgit2
