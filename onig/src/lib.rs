@@ -63,7 +63,7 @@
 //!
 //! The simplest step-up from the basic search API `Regex::find` is
 //! getting the captures relating to a match with the
-//! `Regex::capturess` method. To find capture information for all
+//! `Regex::captures` method. To find capture information for all
 //! matches within a string `Regex::find_iter` and
 //! `Regex::captures_iter` can be used. The former exposes the start
 //! and end of the match as `Regex::find` does, the latter exposes the
