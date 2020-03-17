@@ -18,7 +18,7 @@ env:
   - ONIG_FEATURES=generate
 
 script:
-- cargo build --features="$ONIG_FEATURES" --verbose
+- (cd onig && cargo build --features="$ONIG_FEATURES" --verbose)
 - |
   if [ "$TRAVIS_OS_NAME" == "linux" ]
   then
@@ -26,8 +26,10 @@ script:
     echo "adding $p to linker path"
     export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
   fi
-- cargo test --features="$ONIG_FEATURES" --verbose
-- cargo test --no-default-features --verbose
+- (cd onig && cargo test --features="$ONIG_FEATURES" --verbose)
+- (cd onig_sys && cargo test --features="$ONIG_FEATURES" --verbose)
+- (cd onig && cargo test --no-default-features --verbose)
+- (cd onig_sys && cargo test --no-default-features --verbose)
 
 # Allow failures in the nightly build. We don't want to fail just
 # because of Rust instability.
