@@ -17,6 +17,13 @@ branches:
 env:
   - ONIG_FEATURES=generate
 
+install: |
+  if [ "$TRAVIS_OS_NAME" == "linux" ]
+  then
+    echo installing libclang
+    sudo apt-get install libclang-dev
+  fi
+
 script:
 - (cd onig && cargo build --no-default-features --verbose)
 - |
@@ -41,20 +48,14 @@ matrix:
     - rust: stable
       os: osx
       env: RUSTONIG_STATIC_LIBONIG=1
+      compiler: clang
     - rust: stable
       os: linux
       env: RUSTONIG_STATIC_LIBONIG=1
-      addons:
-        apt:
-          packages:
-            - libclang-dev
     - rust: nightly
       os: linux
       env: ONIG_FEATURES=std-pattern
-      addons:
-        apt:
-          packages:
-            - libclang-dev
     - rust: nightly
       os: osx
       env: ONIG_FEATURES=std-pattern
+      compiler: clang
