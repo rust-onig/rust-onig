@@ -20,8 +20,8 @@ env:
 install: |
   if [ "$TRAVIS_OS_NAME" == "linux" ]
   then
-    echo installing libclang
-    sudo apt-get install libclang-dev
+    echo installing libclang from apt
+    sudo apt-get install llvm-dev libclang-dev clang
   else
     echo installing llvm from brew
     brew install llvm
