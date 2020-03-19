@@ -22,6 +22,9 @@ install: |
   then
     echo installing libclang
     sudo apt-get install libclang-dev
+  else
+    echo installing llvm from brew
+    brew install llvm
   fi
 
 script:
