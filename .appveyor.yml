@@ -128,8 +128,10 @@ install:
 
 build_script:
   - set BUILD_CMD=cargo +%TOOLCHAIN% build --target=%TARGET% --features "%FEATURES%" --no-default-features
-  - echo [ %BUILD_CMD% ] & %BUILD_CMD%
+  - cd onig & echo [ %BUILD_CMD% ] & %BUILD_CMD%
+  - cd onig_sys & echo [ %BUILD_CMD% ] & %BUILD_CMD%
 
 test_script:
   - set TEST_CMD=cargo +%TOOLCHAIN% test --target=%TARGET% --no-fail-fast --features "%FEATURES%" --no-default-features
-  - echo [ %TEST_CMD% ] & %TEST_CMD%
+  - cd onig & echo [ %TEST_CMD% ] & %TEST_CMD%
+  - cd onig_sys & echo [ %TEST_CMD% ] & %TEST_CMD%
