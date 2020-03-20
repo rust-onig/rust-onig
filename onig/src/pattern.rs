@@ -125,17 +125,17 @@ mod test {
     pub fn pattern_trim_matches_removes_matches() {
         {
             let pattern = Regex::new("a+").unwrap();
-            let trimmed = "aaaaworld".trim_left_matches(&pattern);
+            let trimmed = "aaaaworld".trim_start_matches(&pattern);
             assert_eq!(trimmed, "world");
         }
         {
             let pattern = Regex::new("[ab]").unwrap();
-            let trimmed = "aabbbababtbaest".trim_left_matches(&pattern);
+            let trimmed = "aabbbababtbaest".trim_start_matches(&pattern);
             assert_eq!(trimmed, "tbaest");
         }
         {
             let pattern = Regex::new(r#"[ \t]"#).unwrap();
-            let trimmed = "   \t".trim_left_matches(&pattern);
+            let trimmed = "   \t".trim_start_matches(&pattern);
             assert_eq!(trimmed, "");
         }
     }
