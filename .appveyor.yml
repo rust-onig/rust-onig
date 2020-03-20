@@ -25,10 +25,10 @@ environment:
   - CHANNEL: stable
     ARCH: x86_64
     ABI: msvc
-  - CHANNEL: nightly
+  - CHANNEL: beta
     ARCH: i686
     ABI: msvc
-  - CHANNEL: nightly
+  - CHANNEL: beta
     ARCH: x86_64
     ABI: msvc
   # "gnu" ABI
@@ -39,11 +39,11 @@ environment:
     ARCH: x86_64
     ABI: gnu
   # * FEATURES = "std-pattern"
-  - CHANNEL: beta
+  - CHANNEL: nightly
     ARCH: i686
     ABI: msvc
     FEATURES: std-pattern
-  - CHANNEL: beta
+  - CHANNEL: nightly
     ARCH: x86_64
     ABI: gnu
     FEATURES: std-pattern
