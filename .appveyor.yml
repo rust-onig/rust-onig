@@ -39,11 +39,11 @@ environment:
     ARCH: x86_64
     ABI: gnu
   # * FEATURES = "std-pattern"
-  - CHANNEL: stable
+  - CHANNEL: beta
     ARCH: i686
     ABI: msvc
     FEATURES: std-pattern
-  - CHANNEL: stable
+  - CHANNEL: beta
     ARCH: x86_64
     ABI: gnu
     FEATURES: std-pattern
