@@ -73,9 +73,6 @@ install:
   - rustc -vV
   - cargo -vV
 
-  # finalize FEATURES
-  - if /i "%CHANNEL%"=="nightly" set "FEATURES=nightly %FEATURES%"
-
   # "gnu" ABI setup
   # * use the system MinGW/MSYS if we can
   - if /i "%ABI%"=="gnu" set MSYS_BINDIR=C:\msys64\usr\bin
