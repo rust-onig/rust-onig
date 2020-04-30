@@ -125,10 +125,12 @@ install:
 
 build_script:
   - set BUILD_CMD=cargo +%TOOLCHAIN% build --target=%TARGET% --features "%FEATURES%" --no-default-features
+  - set BUILD_CMD_SYS=cargo +%TOOLCHAIN% build --target=%TARGET% --no-default-features
   - cd %APPVEYOR_BUILD_FOLDER%\onig & echo [ %BUILD_CMD% ] & %BUILD_CMD%
-  - cd %APPVEYOR_BUILD_FOLDER%\onig_sys & echo [ %BUILD_CMD% ] & %BUILD_CMD%
+  - cd %APPVEYOR_BUILD_FOLDER%\onig_sys & echo [ %BUILD_CMD% ] & %BUILD_CMD_SYS%
 
 test_script:
   - set TEST_CMD=cargo +%TOOLCHAIN% test --target=%TARGET% --no-fail-fast --features "%FEATURES%" --no-default-features
+  - set TEST_CMD_SYS=cargo +%TOOLCHAIN% build --target=%TARGET% --no-default-features
   - cd %APPVEYOR_BUILD_FOLDER%\onig & echo [ %TEST_CMD% ] & %TEST_CMD%
-  - cd %APPVEYOR_BUILD_FOLDER%\onig_sys & echo [ %TEST_CMD% ] & %TEST_CMD%
+  - cd %APPVEYOR_BUILD_FOLDER%\onig_sys & echo [ %TEST_CMD% ] & %TEST_CMD_SYS%
