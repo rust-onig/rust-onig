@@ -96,3 +96,5 @@ at our open [easy issues][easy_issues].
  [regex_is_match]: https://docs.rs/onig/4.3.2/onig/struct.Regex.html#method.is_match
  [regex_find]: https://docs.rs/onig/4.3.2/onig/struct.Regex.html#method.find
  [easy_issues]: https://github.com/rust-onig/rust-onig/issues?q=is%3Aopen+is%3Aissue+label%3AE-Easy
+
+
