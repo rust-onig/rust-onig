@@ -1,0 +1,115 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  tests-no-default-features:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        rust: [1.34.0, stable, nightly]
+
+    steps:
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
+      - name: Build onig
+        run: cd onig && cargo build --no-default-features --verbose
+
+      - name: Test onig
+        run: cd onig && cargo test --no-default-features --verbose
+
+      - name: Test onig-sys
+        run: cd onig_sys && cargo test --no-default-features --verbose
+
+  tests-static-libonig:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+
+    steps:
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: stable
+
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
+      - name: Build onig
+        run: RUSTONIG_STATIC_LIBONIG=1 cd onig && cargo build --no-default-features --verbose
+
+      - name: Test onig
+        run: RUSTONIG_STATIC_LIBONIG=1 cd onig && cargo test --no-default-features --verbose
+
+      - name: Test onig-sys
+        run: RUSTONIG_STATIC_LIBONIG=1 cd onig_sys && cargo test --no-default-features --verbose
+
+  tests-std-patterns:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+
+    steps:
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: nightly
+
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
+      - name: Build onig
+        run: cd onig && cargo build --features="std-pattern" --verbose
+
+      - name: Test onig
+        run: cd onig && cargo test --features="std-pattern" --verbose
+
+
+  tests-generate:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        rust: [1.34.0, stable, nightly]
+
+    steps:
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
+      - name: install LLVM on Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install llvm-dev libclang-dev clang
+
+      - name: install LLVM on Mac
+        if: matrix.os == 'macOS-latest'
+        run: brew install llvm
+
+      - name: Build onig
+        run: cd onig && cargo build --features="generate" --verbose
+
+      - name: Test onig
+        run: cd onig && cargo test --features="generate" --verbose
+
+      - name: Test onig-sys
+        run: cd onig_sys && cargo test --features="generate" --verbose
