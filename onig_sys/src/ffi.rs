@@ -2,8 +2,8 @@
 
 pub const ONIGURUMA_VERSION_MAJOR: u32 = 6;
 pub const ONIGURUMA_VERSION_MINOR: u32 = 9;
-pub const ONIGURUMA_VERSION_TEENY: u32 = 3;
-pub const ONIGURUMA_VERSION_INT: u32 = 60903;
+pub const ONIGURUMA_VERSION_TEENY: u32 = 5;
+pub const ONIGURUMA_VERSION_INT: u32 = 60905;
 pub const ONIGENC_CASE_FOLD_TURKISH_AZERI: u32 = 1048576;
 pub const INTERNAL_ONIGENC_CASE_FOLD_MULTI_CHAR: u32 = 1073741824;
 pub const ONIGENC_CASE_FOLD_MIN: u32 = 1073741824;
@@ -112,6 +112,8 @@ pub const ONIG_SYN_DIFFERENT_LEN_ALT_LOOK_BEHIND: u32 = 64;
 pub const ONIG_SYN_CAPTURE_ONLY_NAMED_GROUP: u32 = 128;
 pub const ONIG_SYN_ALLOW_MULTIPLEX_DEFINITION_NAME: u32 = 256;
 pub const ONIG_SYN_FIXED_INTERVAL_IS_GREEDY_ONLY: u32 = 512;
+pub const ONIG_SYN_ISOLATED_OPTION_CONTINUE_BRANCH: u32 = 1024;
+pub const ONIG_SYN_VARIABLE_LEN_LOOK_BEHIND: u32 = 2048;
 pub const ONIG_SYN_NOT_NEWLINE_IN_NEGATIVE_CC: u32 = 1048576;
 pub const ONIG_SYN_BACKSLASH_ESCAPE_IN_CC: u32 = 2097152;
 pub const ONIG_SYN_ALLOW_EMPTY_RANGE_IN_CC: u32 = 4194304;
@@ -139,6 +141,7 @@ pub const ONIGERR_UNEXPECTED_BYTECODE: i32 = -14;
 pub const ONIGERR_MATCH_STACK_LIMIT_OVER: i32 = -15;
 pub const ONIGERR_PARSE_DEPTH_LIMIT_OVER: i32 = -16;
 pub const ONIGERR_RETRY_LIMIT_IN_MATCH_OVER: i32 = -17;
+pub const ONIGERR_RETRY_LIMIT_IN_SEARCH_OVER: i32 = -18;
 pub const ONIGERR_DEFAULT_ENCODING_IS_NOT_SETTED: i32 = -21;
 pub const ONIGERR_SPECIFIED_ENCODING_CANT_CONVERT_TO_WIDE_CHAR: i32 = -22;
 pub const ONIGERR_FAIL_TO_INITIALIZE: i32 = -23;
@@ -239,31 +242,84 @@ pub struct OnigMetaCharTableType {
     pub one_or_more_time: OnigCodePoint,
     pub anychar_anytime: OnigCodePoint,
 }
-pub type OnigApplyAllCaseFoldFunc =
-    ::std::option::Option<unsafe extern "C" fn(from: OnigCodePoint, to: *mut OnigCodePoint, to_len: ::std::os::raw::c_int, arg: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int>;
+pub type OnigApplyAllCaseFoldFunc = ::std::option::Option<
+    unsafe extern "C" fn(
+        from: OnigCodePoint,
+        to: *mut OnigCodePoint,
+        to_len: ::std::os::raw::c_int,
+        arg: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int,
+>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct OnigEncodingTypeST {
-    pub mbc_enc_len: ::std::option::Option<unsafe extern "C" fn(p: *const OnigUChar) -> ::std::os::raw::c_int>,
+    pub mbc_enc_len:
+        ::std::option::Option<unsafe extern "C" fn(p: *const OnigUChar) -> ::std::os::raw::c_int>,
     pub name: *const ::std::os::raw::c_char,
     pub max_enc_len: ::std::os::raw::c_int,
     pub min_enc_len: ::std::os::raw::c_int,
-    pub is_mbc_newline: ::std::option::Option<unsafe extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int>,
-    pub mbc_to_code: ::std::option::Option<unsafe extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> OnigCodePoint>,
-    pub code_to_mbclen: ::std::option::Option<unsafe extern "C" fn(code: OnigCodePoint) -> ::std::os::raw::c_int>,
-    pub code_to_mbc: ::std::option::Option<unsafe extern "C" fn(code: OnigCodePoint, buf: *mut OnigUChar) -> ::std::os::raw::c_int>,
-    pub mbc_case_fold: ::std::option::Option<unsafe extern "C" fn(flag: OnigCaseFoldType, pp: *mut *const OnigUChar, end: *const OnigUChar, to: *mut OnigUChar) -> ::std::os::raw::c_int>,
-    pub apply_all_case_fold: ::std::option::Option<unsafe extern "C" fn(flag: OnigCaseFoldType, f: OnigApplyAllCaseFoldFunc, arg: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int>,
-    pub get_case_fold_codes_by_str:
-        ::std::option::Option<unsafe extern "C" fn(flag: OnigCaseFoldType, p: *const OnigUChar, end: *const OnigUChar, acs: *mut OnigCaseFoldCodeItem) -> ::std::os::raw::c_int>,
-    pub property_name_to_ctype: ::std::option::Option<unsafe extern "C" fn(enc: *mut OnigEncodingTypeST, p: *mut OnigUChar, end: *mut OnigUChar) -> ::std::os::raw::c_int>,
-    pub is_code_ctype: ::std::option::Option<unsafe extern "C" fn(code: OnigCodePoint, ctype: OnigCtype) -> ::std::os::raw::c_int>,
-    pub get_ctype_code_range: ::std::option::Option<unsafe extern "C" fn(ctype: OnigCtype, sb_out: *mut OnigCodePoint, ranges: *mut *const OnigCodePoint) -> ::std::os::raw::c_int>,
-    pub left_adjust_char_head: ::std::option::Option<unsafe extern "C" fn(start: *const OnigUChar, p: *const OnigUChar) -> *mut OnigUChar>,
-    pub is_allowed_reverse_match: ::std::option::Option<unsafe extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int>,
+    pub is_mbc_newline: ::std::option::Option<
+        unsafe extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int,
+    >,
+    pub mbc_to_code: ::std::option::Option<
+        unsafe extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> OnigCodePoint,
+    >,
+    pub code_to_mbclen:
+        ::std::option::Option<unsafe extern "C" fn(code: OnigCodePoint) -> ::std::os::raw::c_int>,
+    pub code_to_mbc: ::std::option::Option<
+        unsafe extern "C" fn(code: OnigCodePoint, buf: *mut OnigUChar) -> ::std::os::raw::c_int,
+    >,
+    pub mbc_case_fold: ::std::option::Option<
+        unsafe extern "C" fn(
+            flag: OnigCaseFoldType,
+            pp: *mut *const OnigUChar,
+            end: *const OnigUChar,
+            to: *mut OnigUChar,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub apply_all_case_fold: ::std::option::Option<
+        unsafe extern "C" fn(
+            flag: OnigCaseFoldType,
+            f: OnigApplyAllCaseFoldFunc,
+            arg: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub get_case_fold_codes_by_str: ::std::option::Option<
+        unsafe extern "C" fn(
+            flag: OnigCaseFoldType,
+            p: *const OnigUChar,
+            end: *const OnigUChar,
+            acs: *mut OnigCaseFoldCodeItem,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub property_name_to_ctype: ::std::option::Option<
+        unsafe extern "C" fn(
+            enc: *mut OnigEncodingTypeST,
+            p: *mut OnigUChar,
+            end: *mut OnigUChar,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub is_code_ctype: ::std::option::Option<
+        unsafe extern "C" fn(code: OnigCodePoint, ctype: OnigCtype) -> ::std::os::raw::c_int,
+    >,
+    pub get_ctype_code_range: ::std::option::Option<
+        unsafe extern "C" fn(
+            ctype: OnigCtype,
+            sb_out: *mut OnigCodePoint,
+            ranges: *mut *const OnigCodePoint,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub left_adjust_char_head: ::std::option::Option<
+        unsafe extern "C" fn(start: *const OnigUChar, p: *const OnigUChar) -> *mut OnigUChar,
+    >,
+    pub is_allowed_reverse_match: ::std::option::Option<
+        unsafe extern "C" fn(p: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int,
+    >,
     pub init: ::std::option::Option<unsafe extern "C" fn() -> ::std::os::raw::c_int>,
     pub is_initialized: ::std::option::Option<unsafe extern "C" fn() -> ::std::os::raw::c_int>,
-    pub is_valid_mbc_string: ::std::option::Option<unsafe extern "C" fn(s: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int>,
+    pub is_valid_mbc_string: ::std::option::Option<
+        unsafe extern "C" fn(s: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int,
+    >,
     pub flag: ::std::os::raw::c_uint,
     pub sb_range: OnigCodePoint,
     pub index: ::std::os::raw::c_int,
@@ -380,7 +436,12 @@ pub const OnigEncCtype_ONIGENC_CTYPE_ALNUM: OnigEncCtype = 13;
 pub const OnigEncCtype_ONIGENC_CTYPE_ASCII: OnigEncCtype = 14;
 pub type OnigEncCtype = u32;
 extern "C" {
-    pub fn onigenc_step_back(enc: OnigEncoding, start: *const OnigUChar, s: *const OnigUChar, n: ::std::os::raw::c_int) -> *mut OnigUChar;
+    pub fn onigenc_step_back(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+        n: ::std::os::raw::c_int,
+    ) -> *mut OnigUChar;
 }
 extern "C" {
     pub fn onigenc_init() -> ::std::os::raw::c_int;
@@ -398,31 +459,63 @@ extern "C" {
     pub fn onigenc_set_default_caseconv_table(table: *const OnigUChar);
 }
 extern "C" {
-    pub fn onigenc_get_right_adjust_char_head_with_prev(enc: OnigEncoding, start: *const OnigUChar, s: *const OnigUChar, prev: *mut *const OnigUChar) -> *mut OnigUChar;
+    pub fn onigenc_get_right_adjust_char_head_with_prev(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+        prev: *mut *const OnigUChar,
+    ) -> *mut OnigUChar;
 }
 extern "C" {
-    pub fn onigenc_get_prev_char_head(enc: OnigEncoding, start: *const OnigUChar, s: *const OnigUChar) -> *mut OnigUChar;
+    pub fn onigenc_get_prev_char_head(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+    ) -> *mut OnigUChar;
 }
 extern "C" {
-    pub fn onigenc_get_left_adjust_char_head(enc: OnigEncoding, start: *const OnigUChar, s: *const OnigUChar) -> *mut OnigUChar;
+    pub fn onigenc_get_left_adjust_char_head(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+    ) -> *mut OnigUChar;
 }
 extern "C" {
-    pub fn onigenc_get_right_adjust_char_head(enc: OnigEncoding, start: *const OnigUChar, s: *const OnigUChar) -> *mut OnigUChar;
+    pub fn onigenc_get_right_adjust_char_head(
+        enc: OnigEncoding,
+        start: *const OnigUChar,
+        s: *const OnigUChar,
+    ) -> *mut OnigUChar;
 }
 extern "C" {
-    pub fn onigenc_strlen(enc: OnigEncoding, p: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int;
+    pub fn onigenc_strlen(
+        enc: OnigEncoding,
+        p: *const OnigUChar,
+        end: *const OnigUChar,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onigenc_strlen_null(enc: OnigEncoding, p: *const OnigUChar) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onigenc_str_bytelen_null(enc: OnigEncoding, p: *const OnigUChar) -> ::std::os::raw::c_int;
+    pub fn onigenc_str_bytelen_null(
+        enc: OnigEncoding,
+        p: *const OnigUChar,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onigenc_is_valid_mbc_string(enc: OnigEncoding, s: *const OnigUChar, end: *const OnigUChar) -> ::std::os::raw::c_int;
+    pub fn onigenc_is_valid_mbc_string(
+        enc: OnigEncoding,
+        s: *const OnigUChar,
+        end: *const OnigUChar,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onigenc_strdup(enc: OnigEncoding, s: *const OnigUChar, end: *const OnigUChar) -> *mut OnigUChar;
+    pub fn onigenc_strdup(
+        enc: OnigEncoding,
+        s: *const OnigUChar,
+        end: *const OnigUChar,
+    ) -> *mut OnigUChar;
 }
 pub type OnigOptionType = ::std::os::raw::c_uint;
 #[repr(C)]
@@ -504,7 +597,8 @@ pub struct OnigRepeatRange {
     pub lower: ::std::os::raw::c_int,
     pub upper: ::std::os::raw::c_int,
 }
-pub type OnigWarnFunc = ::std::option::Option<unsafe extern "C" fn(s: *const ::std::os::raw::c_char)>;
+pub type OnigWarnFunc =
+    ::std::option::Option<unsafe extern "C" fn(s: *const ::std::os::raw::c_char)>;
 extern "C" {
     pub fn onig_null_warn(s: *const ::std::os::raw::c_char);
 }
@@ -516,6 +610,16 @@ pub struct re_pattern_buffer {
 pub type OnigRegexType = re_pattern_buffer;
 pub type OnigRegex = *mut OnigRegexType;
 pub type regex_t = OnigRegexType;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct OnigRegSetStruct {
+    _unused: [u8; 0],
+}
+pub type OnigRegSet = OnigRegSetStruct;
+pub const OnigRegSetLead_ONIG_REGSET_POSITION_LEAD: OnigRegSetLead = 0;
+pub const OnigRegSetLead_ONIG_REGSET_REGEX_LEAD: OnigRegSetLead = 1;
+pub const OnigRegSetLead_ONIG_REGSET_PRIORITY_TO_REGEX_ORDER: OnigRegSetLead = 2;
+pub type OnigRegSetLead = u32;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct OnigCompileInfo {
@@ -543,7 +647,12 @@ pub struct OnigCalloutArgsStruct {
     _unused: [u8; 0],
 }
 pub type OnigCalloutArgs = OnigCalloutArgsStruct;
-pub type OnigCalloutFunc = ::std::option::Option<unsafe extern "C" fn(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int>;
+pub type OnigCalloutFunc = ::std::option::Option<
+    unsafe extern "C" fn(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int,
+>;
 pub const OnigCalloutResult_ONIG_CALLOUT_FAIL: OnigCalloutResult = 1;
 pub const OnigCalloutResult_ONIG_CALLOUT_SUCCESS: OnigCalloutResult = 0;
 pub type OnigCalloutResult = u32;
@@ -577,13 +686,20 @@ pub struct OnigMatchParamStruct {
 }
 pub type OnigMatchParam = OnigMatchParamStruct;
 extern "C" {
-    pub fn onig_initialize(encodings: *mut OnigEncoding, number_of_encodings: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_initialize(
+        encodings: *mut OnigEncoding,
+        number_of_encodings: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_init() -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_error_code_to_str(s: *mut OnigUChar, err_code: ::std::os::raw::c_int, ...) -> ::std::os::raw::c_int;
+    pub fn onig_error_code_to_str(
+        s: *mut OnigUChar,
+        err_code: ::std::os::raw::c_int,
+        ...
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_is_error_code_needs_param(code: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
@@ -606,7 +722,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_reg_init(reg: OnigRegex, option: OnigOptionType, case_fold_flag: OnigCaseFoldType, enc: OnigEncoding, syntax: *mut OnigSyntaxType) -> ::std::os::raw::c_int;
+    pub fn onig_reg_init(
+        reg: OnigRegex,
+        option: OnigOptionType,
+        case_fold_flag: OnigCaseFoldType,
+        enc: OnigEncoding,
+        syntax: *mut OnigSyntaxType,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_new_without_alloc(
@@ -620,7 +742,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_new_deluxe(reg: *mut OnigRegex, pattern: *const OnigUChar, pattern_end: *const OnigUChar, ci: *mut OnigCompileInfo, einfo: *mut OnigErrorInfo) -> ::std::os::raw::c_int;
+    pub fn onig_new_deluxe(
+        reg: *mut OnigRegex,
+        pattern: *const OnigUChar,
+        pattern_end: *const OnigUChar,
+        ci: *mut OnigCompileInfo,
+        einfo: *mut OnigErrorInfo,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_free(arg1: OnigRegex);
@@ -636,7 +764,12 @@ extern "C" {
         region: *mut OnigRegion,
         option: OnigOptionType,
         scan_callback: ::std::option::Option<
-            unsafe extern "C" fn(arg1: ::std::os::raw::c_int, arg2: ::std::os::raw::c_int, arg3: *mut OnigRegion, arg4: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
+            unsafe extern "C" fn(
+                arg1: ::std::os::raw::c_int,
+                arg2: ::std::os::raw::c_int,
+                arg3: *mut OnigRegion,
+                arg4: *mut ::std::os::raw::c_void,
+            ) -> ::std::os::raw::c_int,
         >,
         callback_arg: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int;
@@ -665,7 +798,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_match(arg1: OnigRegex, str: *const OnigUChar, end: *const OnigUChar, at: *const OnigUChar, region: *mut OnigRegion, option: OnigOptionType) -> ::std::os::raw::c_int;
+    pub fn onig_match(
+        arg1: OnigRegex,
+        str: *const OnigUChar,
+        end: *const OnigUChar,
+        at: *const OnigUChar,
+        region: *mut OnigRegion,
+        option: OnigOptionType,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_match_with_param(
@@ -676,6 +816,63 @@ extern "C" {
         region: *mut OnigRegion,
         option: OnigOptionType,
         mp: *mut OnigMatchParam,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_regset_new(
+        rset: *mut *mut OnigRegSet,
+        n: ::std::os::raw::c_int,
+        regs: *mut *mut regex_t,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_regset_add(set: *mut OnigRegSet, reg: *mut regex_t) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_regset_replace(
+        set: *mut OnigRegSet,
+        at: ::std::os::raw::c_int,
+        reg: *mut regex_t,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_regset_free(set: *mut OnigRegSet);
+}
+extern "C" {
+    pub fn onig_regset_number_of_regex(set: *mut OnigRegSet) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_regset_get_regex(set: *mut OnigRegSet, at: ::std::os::raw::c_int) -> *mut regex_t;
+}
+extern "C" {
+    pub fn onig_regset_get_region(
+        set: *mut OnigRegSet,
+        at: ::std::os::raw::c_int,
+    ) -> *mut OnigRegion;
+}
+extern "C" {
+    pub fn onig_regset_search(
+        set: *mut OnigRegSet,
+        str: *const OnigUChar,
+        end: *const OnigUChar,
+        start: *const OnigUChar,
+        range: *const OnigUChar,
+        lead: OnigRegSetLead,
+        option: OnigOptionType,
+        rmatch_pos: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_regset_search_with_param(
+        set: *mut OnigRegSet,
+        str: *const OnigUChar,
+        end: *const OnigUChar,
+        start: *const OnigUChar,
+        range: *const OnigUChar,
+        lead: OnigRegSetLead,
+        option: OnigOptionType,
+        mps: *mut *mut OnigMatchParam,
+        rmatch_pos: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -694,16 +891,34 @@ extern "C" {
     pub fn onig_region_clear(region: *mut OnigRegion);
 }
 extern "C" {
-    pub fn onig_region_resize(region: *mut OnigRegion, n: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_region_resize(
+        region: *mut OnigRegion,
+        n: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_region_set(region: *mut OnigRegion, at: ::std::os::raw::c_int, beg: ::std::os::raw::c_int, end: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_region_set(
+        region: *mut OnigRegion,
+        at: ::std::os::raw::c_int,
+        beg: ::std::os::raw::c_int,
+        end: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_name_to_group_numbers(reg: OnigRegex, name: *const OnigUChar, name_end: *const OnigUChar, nums: *mut *mut ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_name_to_group_numbers(
+        reg: OnigRegex,
+        name: *const OnigUChar,
+        name_end: *const OnigUChar,
+        nums: *mut *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_name_to_backref_number(reg: OnigRegex, name: *const OnigUChar, name_end: *const OnigUChar, region: *mut OnigRegion) -> ::std::os::raw::c_int;
+    pub fn onig_name_to_backref_number(
+        reg: OnigRegex,
+        name: *const OnigUChar,
+        name_end: *const OnigUChar,
+        region: *mut OnigRegion,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_foreach_name(
@@ -796,7 +1011,11 @@ extern "C" {
     pub fn onig_set_syntax_options(syntax: *mut OnigSyntaxType, options: OnigOptionType);
 }
 extern "C" {
-    pub fn onig_set_meta_char(syntax: *mut OnigSyntaxType, what: ::std::os::raw::c_uint, code: OnigCodePoint) -> ::std::os::raw::c_int;
+    pub fn onig_set_meta_char(
+        syntax: *mut OnigSyntaxType,
+        what: ::std::os::raw::c_uint,
+        code: OnigCodePoint,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_copy_encoding(to: OnigEncoding, from: OnigEncoding);
@@ -805,7 +1024,9 @@ extern "C" {
     pub fn onig_get_default_case_fold_flag() -> OnigCaseFoldType;
 }
 extern "C" {
-    pub fn onig_set_default_case_fold_flag(case_fold_flag: OnigCaseFoldType) -> ::std::os::raw::c_int;
+    pub fn onig_set_default_case_fold_flag(
+        case_fold_flag: OnigCaseFoldType,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_get_match_stack_limit_size() -> ::std::os::raw::c_uint;
@@ -820,6 +1041,12 @@ extern "C" {
     pub fn onig_set_retry_limit_in_match(n: ::std::os::raw::c_ulong) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn onig_get_retry_limit_in_search() -> ::std::os::raw::c_ulong;
+}
+extern "C" {
+    pub fn onig_set_retry_limit_in_search(n: ::std::os::raw::c_ulong) -> ::std::os::raw::c_int;
+}
+extern "C" {
     pub fn onig_get_parse_depth_limit() -> ::std::os::raw::c_uint;
 }
 extern "C" {
@@ -829,7 +1056,18 @@ extern "C" {
     pub fn onig_set_parse_depth_limit(depth: ::std::os::raw::c_uint) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_unicode_define_user_property(name: *const ::std::os::raw::c_char, ranges: *mut OnigCodePoint) -> ::std::os::raw::c_int;
+    pub fn onig_get_subexp_call_max_nest_level() -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_set_subexp_call_max_nest_level(
+        level: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_unicode_define_user_property(
+        name: *const ::std::os::raw::c_char,
+        ranges: *mut OnigCodePoint,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_end() -> ::std::os::raw::c_int;
@@ -853,19 +1091,40 @@ extern "C" {
     pub fn onig_initialize_match_param(mp: *mut OnigMatchParam) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_set_match_stack_limit_size_of_match_param(param: *mut OnigMatchParam, limit: ::std::os::raw::c_uint) -> ::std::os::raw::c_int;
+    pub fn onig_set_match_stack_limit_size_of_match_param(
+        param: *mut OnigMatchParam,
+        limit: ::std::os::raw::c_uint,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_set_retry_limit_in_match_of_match_param(param: *mut OnigMatchParam, limit: ::std::os::raw::c_ulong) -> ::std::os::raw::c_int;
+    pub fn onig_set_retry_limit_in_match_of_match_param(
+        param: *mut OnigMatchParam,
+        limit: ::std::os::raw::c_ulong,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_set_progress_callout_of_match_param(param: *mut OnigMatchParam, f: OnigCalloutFunc) -> ::std::os::raw::c_int;
+    pub fn onig_set_retry_limit_in_search_of_match_param(
+        param: *mut OnigMatchParam,
+        limit: ::std::os::raw::c_ulong,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_set_retraction_callout_of_match_param(param: *mut OnigMatchParam, f: OnigCalloutFunc) -> ::std::os::raw::c_int;
+    pub fn onig_set_progress_callout_of_match_param(
+        param: *mut OnigMatchParam,
+        f: OnigCalloutFunc,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_set_callout_user_data_of_match_param(param: *mut OnigMatchParam, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_set_retraction_callout_of_match_param(
+        param: *mut OnigMatchParam,
+        f: OnigCalloutFunc,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn onig_set_callout_user_data_of_match_param(
+        param: *mut OnigMatchParam,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_get_progress_callout() -> OnigCalloutFunc;
@@ -898,7 +1157,11 @@ extern "C" {
     pub fn onig_get_callout_name_by_name_id(id: ::std::os::raw::c_int) -> *mut OnigUChar;
 }
 extern "C" {
-    pub fn onig_get_callout_num_by_tag(reg: OnigRegex, tag: *const OnigUChar, tag_end: *const OnigUChar) -> ::std::os::raw::c_int;
+    pub fn onig_get_callout_num_by_tag(
+        reg: OnigRegex,
+        tag: *const OnigUChar,
+        tag_end: *const OnigUChar,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_get_callout_data_by_tag(
@@ -923,7 +1186,9 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_callout_num_by_callout_args(args: *mut OnigCalloutArgs) -> ::std::os::raw::c_int;
+    pub fn onig_get_callout_num_by_callout_args(
+        args: *mut OnigCalloutArgs,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_get_callout_in_by_callout_args(args: *mut OnigCalloutArgs) -> OnigCalloutIn;
@@ -941,10 +1206,17 @@ extern "C" {
     pub fn onig_get_args_num_by_callout_args(args: *mut OnigCalloutArgs) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_passed_args_num_by_callout_args(args: *mut OnigCalloutArgs) -> ::std::os::raw::c_int;
+    pub fn onig_get_passed_args_num_by_callout_args(
+        args: *mut OnigCalloutArgs,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_arg_by_callout_args(args: *mut OnigCalloutArgs, index: ::std::os::raw::c_int, type_: *mut OnigType, val: *mut OnigValue) -> ::std::os::raw::c_int;
+    pub fn onig_get_arg_by_callout_args(
+        args: *mut OnigCalloutArgs,
+        index: ::std::os::raw::c_int,
+        type_: *mut OnigType,
+        val: *mut OnigValue,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_get_string_by_callout_args(args: *mut OnigCalloutArgs) -> *const OnigUChar;
@@ -965,16 +1237,27 @@ extern "C" {
     pub fn onig_get_regex_by_callout_args(args: *mut OnigCalloutArgs) -> OnigRegex;
 }
 extern "C" {
-    pub fn onig_get_retry_counter_by_callout_args(args: *mut OnigCalloutArgs) -> ::std::os::raw::c_ulong;
+    pub fn onig_get_retry_counter_by_callout_args(
+        args: *mut OnigCalloutArgs,
+    ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
-    pub fn onig_callout_tag_is_exist_at_callout_num(reg: OnigRegex, callout_num: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_callout_tag_is_exist_at_callout_num(
+        reg: OnigRegex,
+        callout_num: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_callout_tag_start(reg: OnigRegex, callout_num: ::std::os::raw::c_int) -> *const OnigUChar;
+    pub fn onig_get_callout_tag_start(
+        reg: OnigRegex,
+        callout_num: ::std::os::raw::c_int,
+    ) -> *const OnigUChar;
 }
 extern "C" {
-    pub fn onig_get_callout_tag_end(reg: OnigRegex, callout_num: ::std::os::raw::c_int) -> *const OnigUChar;
+    pub fn onig_get_callout_tag_end(
+        reg: OnigRegex,
+        callout_num: ::std::os::raw::c_int,
+    ) -> *const OnigUChar;
 }
 extern "C" {
     pub fn onig_get_callout_data_dont_clear_old(
@@ -987,7 +1270,12 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_callout_data_by_callout_args_self_dont_clear_old(args: *mut OnigCalloutArgs, slot: ::std::os::raw::c_int, type_: *mut OnigType, val: *mut OnigValue) -> ::std::os::raw::c_int;
+    pub fn onig_get_callout_data_by_callout_args_self_dont_clear_old(
+        args: *mut OnigCalloutArgs,
+        slot: ::std::os::raw::c_int,
+        type_: *mut OnigType,
+        val: *mut OnigValue,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_get_callout_data(
@@ -1009,7 +1297,12 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_callout_data_by_callout_args_self(args: *mut OnigCalloutArgs, slot: ::std::os::raw::c_int, type_: *mut OnigType, val: *mut OnigValue) -> ::std::os::raw::c_int;
+    pub fn onig_get_callout_data_by_callout_args_self(
+        args: *mut OnigCalloutArgs,
+        slot: ::std::os::raw::c_int,
+        type_: *mut OnigType,
+        val: *mut OnigValue,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_set_callout_data(
@@ -1031,35 +1324,72 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_set_callout_data_by_callout_args_self(args: *mut OnigCalloutArgs, slot: ::std::os::raw::c_int, type_: OnigType, val: *mut OnigValue) -> ::std::os::raw::c_int;
+    pub fn onig_set_callout_data_by_callout_args_self(
+        args: *mut OnigCalloutArgs,
+        slot: ::std::os::raw::c_int,
+        type_: OnigType,
+        val: *mut OnigValue,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_capture_range_in_callout(args: *mut OnigCalloutArgs, mem_num: ::std::os::raw::c_int, begin: *mut ::std::os::raw::c_int, end: *mut ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_get_capture_range_in_callout(
+        args: *mut OnigCalloutArgs,
+        mem_num: ::std::os::raw::c_int,
+        begin: *mut ::std::os::raw::c_int,
+        end: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_get_used_stack_size_in_callout(args: *mut OnigCalloutArgs, used_num: *mut ::std::os::raw::c_int, used_bytes: *mut ::std::os::raw::c_int) -> ::std::os::raw::c_int;
+    pub fn onig_get_used_stack_size_in_callout(
+        args: *mut OnigCalloutArgs,
+        used_num: *mut ::std::os::raw::c_int,
+        used_bytes: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_fail(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_fail(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_mismatch(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_mismatch(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_error(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_error(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_count(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_count(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_total_count(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_total_count(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_max(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_max(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_builtin_cmp(args: *mut OnigCalloutArgs, user_data: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_builtin_cmp(
+        args: *mut OnigCalloutArgs,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn onig_setup_builtin_monitors_by_ascii_encoded_name(fp: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn onig_setup_builtin_monitors_by_ascii_encoded_name(
+        fp: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
 }

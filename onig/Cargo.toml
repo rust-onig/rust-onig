@@ -35,6 +35,6 @@ lazy_static = "1.2"
 libc = "0.2"
 
 [dependencies.onig_sys]
-version = "70.0.0"
+version = "69.5.0"
 path = "../onig_sys"
 default-features = false
