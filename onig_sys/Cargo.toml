@@ -24,12 +24,15 @@ readme = "../README.md"
 license = "MIT"
 
 [build-dependencies]
-bindgen = { version = "0.53", features = [] }
+bindgen = { version = "0.53", optional = true, features = [ "runtime" ] }
 pkg-config = "^0.3.16"
 cc = "1.0"
 
 [features]
+default = ["generate"]
 # Make Oniguruma print debug output for parsing/compiling and executing
 print-debug = []
 # include regexec(), which conflicts with libgit2
 posix-api = []
+# generate bindings with bindgen
+generate = ["bindgen"]

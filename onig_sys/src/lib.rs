@@ -1,6 +1,18 @@
-pub mod bindgened;
+#[cfg(feature = "generate")]
+mod bindgened;
 
-pub use self::bindgened::*;
+#[cfg(feature = "generate")]
+pub use bindgened::*;
+
+#[cfg(not(feature = "generate"))]
+#[allow(non_upper_case_globals)]
+#[allow(non_camel_case_types)]
+#[allow(non_snake_case)]
+#[allow(clippy::all)]
+mod ffi;
+
+#[cfg(not(feature = "generate"))]
+pub use self::ffi::*;
 
 // backfill types from the old hand-written bindings:
 

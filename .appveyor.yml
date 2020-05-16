@@ -15,7 +15,7 @@ environment:
     FEATURES: ""
   matrix:
   # minimum version
-  - CHANNEL: 1.33.0
+  - CHANNEL: 1.34.0
     ARCH: i686
     ABI: msvc
   # "msvc" ABI
@@ -25,10 +25,10 @@ environment:
   - CHANNEL: stable
     ARCH: x86_64
     ABI: msvc
-  - CHANNEL: nightly
+  - CHANNEL: beta
     ARCH: i686
     ABI: msvc
-  - CHANNEL: nightly
+  - CHANNEL: beta
     ARCH: x86_64
     ABI: msvc
   # "gnu" ABI
@@ -39,11 +39,11 @@ environment:
     ARCH: x86_64
     ABI: gnu
   # * FEATURES = "std-pattern"
-  - CHANNEL: stable
+  - CHANNEL: nightly
     ARCH: i686
     ABI: msvc
     FEATURES: std-pattern
-  - CHANNEL: stable
+  - CHANNEL: nightly
     ARCH: x86_64
     ABI: gnu
     FEATURES: std-pattern
@@ -72,9 +72,6 @@ install:
   # * show versions
   - rustc -vV
   - cargo -vV
-
-  # finalize FEATURES
-  - if /i "%CHANNEL%"=="nightly" set "FEATURES=nightly %FEATURES%"
 
   # "gnu" ABI setup
   # * use the system MinGW/MSYS if we can
@@ -128,8 +125,12 @@ install:
 
 build_script:
   - set BUILD_CMD=cargo +%TOOLCHAIN% build --target=%TARGET% --features "%FEATURES%" --no-default-features
-  - echo [ %BUILD_CMD% ] & %BUILD_CMD%
+  - set BUILD_CMD_SYS=cargo +%TOOLCHAIN% build --target=%TARGET% --no-default-features
+  - cd %APPVEYOR_BUILD_FOLDER%\onig & echo [ %BUILD_CMD% ] & %BUILD_CMD%
+  - cd %APPVEYOR_BUILD_FOLDER%\onig_sys & echo [ %BUILD_CMD% ] & %BUILD_CMD_SYS%
 
 test_script:
   - set TEST_CMD=cargo +%TOOLCHAIN% test --target=%TARGET% --no-fail-fast --features "%FEATURES%" --no-default-features
-  - echo [ %TEST_CMD% ] & %TEST_CMD%
+  - set TEST_CMD_SYS=cargo +%TOOLCHAIN% build --target=%TARGET% --no-default-features
+  - cd %APPVEYOR_BUILD_FOLDER%\onig & echo [ %TEST_CMD% ] & %TEST_CMD%
+  - cd %APPVEYOR_BUILD_FOLDER%\onig_sys & echo [ %TEST_CMD% ] & %TEST_CMD_SYS%

@@ -1,3 +1,4 @@
+#[cfg(feature = "generate")]
 extern crate bindgen;
 extern crate cc;
 extern crate pkg_config;
@@ -185,17 +186,21 @@ fn compile() {
     cc.compile("onig");
 }
 
-fn bindgen_headers(path: &str) {
-    let bindings = bindgen::Builder::default()
-        .header(path)
-        .derive_eq(true)
-        .generate()
-        .expect("bindgen");
-    let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
-    let out_path = Path::new(&out_dir);
-    bindings
-        .write_to_file(out_path.join("bindings.rs"))
-        .expect("Couldn't write bindings!");
+fn bindgen_headers(_path: &str) {
+    #[cfg(feature = "generate")]
+    {
+        let bindings = bindgen::Builder::default()
+            .header(_path)
+            .derive_eq(true)
+            .layout_tests(false)
+            .generate()
+            .expect("bindgen");
+        let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
+        let out_path = Path::new(&out_dir);
+        bindings
+            .write_to_file(out_path.join("bindings.rs"))
+            .expect("Couldn't write bindings!");
+    }
 }
 
 pub fn main() {
@@ -204,20 +209,24 @@ pub fn main() {
 
     if require_pkg_config || link_type == Some(LinkType::Dynamic) {
         let mut conf = Config::new();
-        conf.atleast_version("6.8.0");
+        // dynamically-generated headers can work with an older version
+        // pre-generated headers are for the latest
+        conf.atleast_version(if cfg!(feature = "generate") {"6.8.0"} else {"6.9.3"});
         if link_type == Some(LinkType::Static) {
             conf.statik(true);
         }
         match conf.probe("oniguruma") {
             Ok(lib) => {
-                for path in lib.include_paths {
+                for path in &lib.include_paths {
                     let header = path.join("oniguruma.h");
                     if header.exists() {
                         bindgen_headers(&header.display().to_string());
-                        break;
+                        return
                     }
                 }
-                return
+                if require_pkg_config {
+                    panic!("Unable to find oniguruma.h in include paths from pkg-config: {:?}", lib.include_paths);
+                }
             },
             Err(ref err) if require_pkg_config => {
                 panic!("Unable to find oniguruma in pkg-config, and RUSTONIG_SYSTEM_LIBONIG is set: {}", err);

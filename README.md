@@ -54,6 +54,15 @@ Or Windows:
     > set RUSTONIG_DYNAMIC_LIBONIG=1
     > cargo build
 
+## Build errors caused by libclang/llvm
+
+By default `onig` uses `bindgen` to generate bindings for libonig. If you plan to only use the bundled version of libonig, you can make compilation faster and more reliable by disabling the default `generate` feature:
+
+```toml
+[dependencies]
+onig = { version = "5", default-features = false }
+```
+
 ## Debugging
 
 Sometimes it's useful to debug how Oniguruma parses, compiles, optimizes or
@@ -69,10 +78,10 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
 ## Supported Rust Versions
 
-Rust Onig supports Rust 1.33.0 or later on Windows and 1.32.0 or later
-for Linux and macOS. If the minimum supported rust version is changed
-then the minor version number will be increased. That is v4.2.x should
-always compile with the same version of the compiler.
+Rust Onig supports Rust 1.34.0 or later for Windows, Linux, and
+macOS. If the minimum supported rust version is changed then the minor
+version number will be increased. That is v4.2.x should always compile
+with the same version of the compiler.
 
 ## Rust-Onig is Open Source
 
@@ -87,3 +96,5 @@ at our open [easy issues][easy_issues].
  [regex_is_match]: https://docs.rs/onig/4.3.2/onig/struct.Regex.html#method.is_match
  [regex_find]: https://docs.rs/onig/4.3.2/onig/struct.Regex.html#method.find
  [easy_issues]: https://github.com/rust-onig/rust-onig/issues?q=is%3Aopen+is%3Aissue+label%3AE-Easy
+
+

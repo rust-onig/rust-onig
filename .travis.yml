@@ -5,7 +5,7 @@ os:
 - linux
 
 rust:
-- 1.32.0
+- 1.34.0
 - stable
 - beta
 - nightly
@@ -15,10 +15,20 @@ branches:
     - gh-pages
 
 env:
-  - ONIG_FEATURES=
+  - ONIG_FEATURES=generate
+
+install: |
+  if [ "$TRAVIS_OS_NAME" == "linux" ]
+  then
+    echo installing libclang from apt
+    sudo apt-get install llvm-dev libclang-dev clang
+  else
+    echo installing llvm from brew
+    brew install llvm
+  fi
 
 script:
-- cargo build --features="$ONIG_FEATURES" --verbose
+- (cd onig && cargo build --no-default-features --verbose)
 - |
   if [ "$TRAVIS_OS_NAME" == "linux" ]
   then
@@ -26,7 +36,11 @@ script:
     echo "adding $p to linker path"
     export LD_LIBRARY_PATH="${p}:${LD_LIBRARY_PATH}"
   fi
-- cargo test --features="$ONIG_FEATURES" --verbose
+- (cd onig && cargo test --no-default-features --verbose)
+- (cd onig_sys && cargo test --no-default-features --verbose)
+- (cd onig && cargo build --features="$ONIG_FEATURES" --verbose)
+- (cd onig && cargo test --features="$ONIG_FEATURES" --verbose)
+- (cd onig_sys && cargo test --features="$ONIG_FEATURES" --verbose)
 
 # Allow failures in the nightly build. We don't want to fail just
 # because of Rust instability.
@@ -37,6 +51,7 @@ matrix:
     - rust: stable
       os: osx
       env: RUSTONIG_STATIC_LIBONIG=1
+      compiler: clang
     - rust: stable
       os: linux
       env: RUSTONIG_STATIC_LIBONIG=1
@@ -46,3 +61,4 @@ matrix:
     - rust: nightly
       os: osx
       env: ONIG_FEATURES=std-pattern
+      compiler: clang
