@@ -16,10 +16,10 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-onig = "4.3"
+onig = "6"
 ```
 
-Add the following extern to your crate root:
+Add the following extern to your crate root if you are not using edition 2018:
 
 ```rust
 extern crate onig;
@@ -60,7 +60,7 @@ By default `onig` uses `bindgen` to generate bindings for libonig. If you plan t
 
 ```toml
 [dependencies]
-onig = { version = "5", default-features = false }
+onig = { version = "6", default-features = false }
 ```
 
 ## Debugging
