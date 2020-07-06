@@ -189,10 +189,18 @@ fn compile() {
 fn bindgen_headers(_path: &str) {
     #[cfg(feature = "generate")]
     {
+        let arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+        let os = env::var("CARGO_CFG_TARGET_OS").unwrap();
         let bindings = bindgen::Builder::default()
             .header(_path)
             .derive_eq(true)
             .layout_tests(false)
+            .clang_arg(
+            if arch == "aarch64" && os == "ios" {
+                "--target=arm64-apple-ios"
+            } else {
+                ""
+            })
             .generate()
             .expect("bindgen");
         let out_dir = env::var_os("OUT_DIR").expect("OUT_DIR");
