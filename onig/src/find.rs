@@ -49,7 +49,7 @@ impl Regex {
             region: Region::new(),
             text,
             last_end: 0,
-            skip_next_empty: false,
+            last_match_end: None,
         }
     }
 
@@ -82,7 +82,7 @@ impl Regex {
             regex: self,
             text,
             last_end: 0,
-            skip_next_empty: false,
+            last_match_end: None,
         }
     }
 
@@ -342,7 +342,7 @@ pub struct FindMatches<'r, 't> {
     region: Region,
     text: &'t str,
     last_end: usize,
-    skip_next_empty: bool,
+    last_match_end: Option<usize>,
 }
 
 impl<'r, 't> Iterator for FindMatches<'r, 't> {
@@ -361,22 +361,19 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
             Some(&mut self.region),
         )?;
         let (s, e) = self.region.pos(0).unwrap();
-        self.last_end = e;
 
-        // Don't accept empty matches immediately following a match.
+        // Don't accept empty matches immediately following the last match.
         // i.e., no infinite loops please.
-        if e == s {
+        if e == s && self.last_match_end.map_or(false, |l| l == e) {
             self.last_end += self.text[self.last_end..]
                 .chars()
                 .next()
                 .map(|c| c.len_utf8())
                 .unwrap_or(1);
-            if self.skip_next_empty {
-                self.skip_next_empty = false;
-                return self.next();
-            }
+            return self.next();
         } else {
-            self.skip_next_empty = true;
+            self.last_end = e;
+            self.last_match_end = Some(e);
         }
 
         Some((s, e))
@@ -394,7 +391,7 @@ pub struct FindCaptures<'r, 't> {
     regex: &'r Regex,
     text: &'t str,
     last_end: usize,
-    skip_next_empty: bool,
+    last_match_end: Option<usize>,
 }
 
 impl<'r, 't> Iterator for FindCaptures<'r, 't> {
@@ -415,21 +412,18 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
         )?;
         let (s, e) = region.pos(0).unwrap();
 
-        // Don't accept empty matches immediately following a match.
+        // Don't accept empty matches immediately following the last match.
         // i.e., no infinite loops please.
-        if e == s {
+        if e == s && self.last_match_end.map_or(false, |l| l == e) {
             self.last_end += self.text[self.last_end..]
                 .chars()
                 .next()
                 .map(|c| c.len_utf8())
                 .unwrap_or(1);
-            if self.skip_next_empty {
-                self.skip_next_empty = false;
-                return self.next();
-            }
+            return self.next();
         } else {
             self.last_end = e;
-            self.skip_next_empty = true;
+            self.last_match_end = Some(e);
         }
         Some(Captures {
             text: self.text,
@@ -567,6 +561,13 @@ mod tests {
         let re = Regex::new(r"\d*").unwrap();
         let ms = re.find_iter("a1bbb2").collect::<Vec<_>>();
         assert_eq!(ms, vec![(0, 0), (1, 2), (3, 3), (4, 4), (5, 6)]);
+    }
+
+    #[test]
+    fn test_find_iter_empty_after_match() {
+        let re = Regex::new(r"b|(?=,)").unwrap();
+        let ms = re.find_iter("ba,").collect::<Vec<_>>();
+        assert_eq!(ms, vec![(0, 1), (2, 2)]);
     }
 
     #[test]
