@@ -78,9 +78,9 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
 ## Supported Rust Versions
 
-Rust Onig supports Rust 1.34.0 or later for Windows, Linux, and
+Rust Onig supports Rust 1.40.0 or later for Windows, Linux, and
 macOS. If the minimum supported rust version is changed then the minor
-version number will be increased. That is v4.2.x should always compile
+version number will be increased. That is v6.1.x should always compile
 with the same version of the compiler.
 
 ## Rust-Onig is Open Source
