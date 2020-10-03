@@ -100,6 +100,7 @@ mod replace;
 mod syntax;
 mod tree;
 mod utils;
+mod callout;
 
 #[cfg(feature = "std-pattern")]
 mod pattern;

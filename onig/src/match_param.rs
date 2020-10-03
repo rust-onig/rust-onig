@@ -4,6 +4,7 @@
 //! used to control the behavior of searching and matching.
 
 use std::os::raw::{c_uint, c_ulong};
+use std::mem::transmute;
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
@@ -28,6 +29,13 @@ impl MatchParam {
     /// Get the Raw `OnigMatchParam` Pointer
     pub fn as_raw(&self) -> *mut onig_sys::OnigMatchParam {
         self.raw
+    }
+
+    /// Add callout data to the match param.
+    pub fn add_callout(&mut self, data: usize) {
+        unsafe {
+            onig_sys::onig_set_callout_user_data_of_match_param(self.raw, transmute(data));
+        }
     }
 }
 
