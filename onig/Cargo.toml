@@ -18,7 +18,7 @@ readme = "../README.md"
 license = "MIT"
 
 [features]
-default = ["generate"]
+default = ["generate", "onig_sys"]
 std-pattern = []
 # include regexec()
 posix-api = ["onig_sys/posix-api"]
@@ -34,7 +34,12 @@ lazy_static = "1.2"
 [target.'cfg(windows)'.dependencies]
 libc = "0.2"
 
+[dependencies.onigmo-sys]
+optional = true
+version = "0.1.0"
+
 [dependencies.onig_sys]
+optional = true
 version = "69.5.1"
 path = "../onig_sys"
 default-features = false
