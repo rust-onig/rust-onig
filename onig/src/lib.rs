@@ -128,9 +128,15 @@ use std::ptr::{null, null_mut};
 use std::sync::Mutex;
 use std::{error, fmt, str};
 
+#[derive(Debug)]
+enum ErrorData {
+    OnigError(c_int),
+    Custom
+}
+
 /// This struture represents an error from the underlying Oniguruma libray.
 pub struct Error {
-    code: c_int,
+    data: ErrorData,
     description: String,
 }
 
@@ -146,27 +152,37 @@ unsafe impl Send for Regex {}
 unsafe impl Sync for Regex {}
 
 impl Error {
-    fn from_code_and_info(code: c_int, info: &onig_sys::OnigErrorInfo) -> Error {
+    fn from_code_and_info(code: c_int, info: &onig_sys::OnigErrorInfo) -> Self {
         Error::new(code, info)
     }
 
-    fn from_code(code: c_int) -> Error {
+    fn from_code(code: c_int) -> Self {
         Error::new(code, null())
     }
 
-    fn new(code: c_int, info: *const onig_sys::OnigErrorInfo) -> Error {
+    fn custom<T: Into<String>>(message: T) -> Self {
+        Error {
+            data: ErrorData::Custom,
+            description: message.into(),
+        }
+    }
+
+    fn new(code: c_int, info: *const onig_sys::OnigErrorInfo) -> Self {
         let buff = &mut [0; onig_sys::ONIG_MAX_ERROR_MESSAGE_LEN as usize];
         let len = unsafe { onig_sys::onig_error_code_to_str(buff.as_mut_ptr(), code, info) };
         let description = str::from_utf8(&buff[..len as usize]).unwrap();
         Error {
-            code,
+            data: ErrorData::OnigError(code),
             description: description.to_owned(),
         }
     }
 
     /// Return Oniguruma engine error code.
     pub fn code(&self) -> i32 {
-        self.code
+        match self.data {
+            ErrorData::OnigError(code) => code,
+            _ => -1
+        }
     }
 
     /// Return error description provided by Oniguruma engine.
@@ -189,7 +205,7 @@ impl fmt::Display for Error {
 
 impl fmt::Debug for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Error({}, {})", self.code, self.description())
+        write!(f, "Error({:?}, {})", self.data, self.description())
     }
 }
 
@@ -501,7 +517,10 @@ impl Regex {
         assert_eq!(chars.encoding(), self.encoding());
         let r = unsafe {
             let offset = chars.start_ptr().add(at);
-            assert!(offset <= chars.limit_ptr());
+            if offset > chars.limit_ptr() {
+                return Err(Error::custom(
+                    format!("Offset {} is too large", at)));
+            }
             onig_sys::onig_match_with_param(
                 self.raw,
                 chars.start_ptr(),
@@ -688,8 +707,12 @@ impl Regex {
         let r = unsafe {
             let start = beg.add(from);
             let range = beg.add(to);
-            assert!(start <= end);
-            assert!(range <= end);
+            if start > end {
+                return Err(Error::custom("Start of match should be before end"));
+            }
+            if range > end {
+                return Err(Error::custom("Limit of match should be before end"));
+            }
             onig_sys::onig_search_with_param(
                 self.raw,
                 beg,
