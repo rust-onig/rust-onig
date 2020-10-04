@@ -1016,6 +1016,21 @@ mod tests {
     }
 
     #[test]
+    fn test_search_with_invalid_range_panic() {
+        let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
+            .expect("regex");
+        let string = "Ruby";
+        let is_match = panic::catch_unwind(|| regex.search_with_encoding(
+            string,
+            5,
+            string.len(),
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+        ));
+        assert!(is_match.is_err());
+    }
+
+    #[test]
     fn test_match_with_invalid_range() {
         let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
             .expect("regex");
@@ -1027,6 +1042,20 @@ mod tests {
             None,
             MatchParam::default(),
         );
+        assert!(is_match.is_err());
+    }
+
+    #[test]
+    fn test_match_with_invalid_range_panic() {
+        let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
+            .expect("regex");
+        let string = "Ruby";
+        let is_match = panic::catch_unwind(|| regex.match_with_encoding(
+            string,
+            5,
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+        ));
         assert!(is_match.is_err());
     }
 }
