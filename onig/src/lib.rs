@@ -131,7 +131,7 @@ use std::{error, fmt, str};
 #[derive(Debug)]
 enum ErrorData {
     OnigError(c_int),
-    Custom
+    Custom,
 }
 
 /// This struture represents an error from the underlying Oniguruma libray.
@@ -181,7 +181,7 @@ impl Error {
     pub fn code(&self) -> i32 {
         match self.data {
             ErrorData::OnigError(code) => code,
-            _ => -1
+            _ => -1,
         }
     }
 
@@ -518,8 +518,7 @@ impl Regex {
         let r = unsafe {
             let offset = chars.start_ptr().add(at);
             if offset > chars.limit_ptr() {
-                return Err(Error::custom(
-                    format!("Offset {} is too large", at)));
+                return Err(Error::custom(format!("Offset {} is too large", at)));
             }
             onig_sys::onig_match_with_param(
                 self.raw,
@@ -988,5 +987,46 @@ mod tests {
             message.as_str(),
             "Onig: Regex search error: retry-limit-in-match over"
         );
+    }
+
+    #[test]
+    fn test_search_with_invalid_range() {
+        let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
+            .expect("regex");
+        let string = "Ruby";
+        let is_match = regex.search_with_param(
+            string,
+            5,
+            string.len(),
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+            MatchParam::default(),
+        );
+        assert!(is_match.is_err());
+
+        let is_match = regex.search_with_param(
+            string,
+            2,
+            string.len() + 1,
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+            MatchParam::default(),
+        );
+        assert!(is_match.is_err());
+    }
+
+    #[test]
+    fn test_match_with_invalid_range() {
+        let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
+            .expect("regex");
+        let string = "Ruby";
+        let is_match = regex.match_with_param(
+            string,
+            5,
+            SearchOptions::SEARCH_OPTION_NONE,
+            None,
+            MatchParam::default(),
+        );
+        assert!(is_match.is_err());
     }
 }
