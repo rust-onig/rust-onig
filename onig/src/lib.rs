@@ -514,7 +514,9 @@ impl Regex {
     where
         T: EncodedChars,
     {
-        assert_eq!(chars.encoding(), self.encoding());
+        if chars.encoding() != self.encoding() {
+            return Err(Error::custom(format!("Regex encoding does not match haystack encoding ({0:?}, {1:?})", chars.encoding(), self.encoding())));
+        }
         let r = unsafe {
             let offset = chars.start_ptr().add(at);
             if offset > chars.limit_ptr() {
@@ -643,7 +645,7 @@ impl Regex {
 
         match result {
             Ok(r) => r,
-            Err(e) => panic!("Onig: Regex search error: {}", e.description),
+            Err(e) => panic!("Onig: Regex search error: {}", e.description()),
         }
     }
 
@@ -702,7 +704,9 @@ impl Regex {
         T: EncodedChars,
     {
         let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
-        assert_eq!(self.encoding(), chars.encoding());
+        if chars.encoding() != self.encoding() {
+            return Err(Error::custom(format!("Regex encoding does not match haystack encoding ({0:?}, {1:?})", chars.encoding(), self.encoding())));
+        }
         let r = unsafe {
             let start = beg.add(from);
             let range = beg.add(to);
