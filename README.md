@@ -1,5 +1,9 @@
 # Rust Onig
 
+[![Cargo](https://img.shields.io/crates/v/onig.svg)](
+https://crates.io/crates/onig)
+[![Documentation](https://docs.rs/onig/badge.svg)](
+https://docs.rs/onig)
 ![CI](https://github.com/rust-onig/rust-onig/workflows/CI/badge.svg)
 [![Build status](https://ci.appveyor.com/api/projects/status/7qxdb44xpw4bkjfi/branch/master?svg=true)](https://ci.appveyor.com/project/iwillspeak/rust-onig/branch/master)
 [![dependency status](https://deps.rs/crate/onig/6.1.0/status.svg)](https://deps.rs/crate/onig/6.1.0)
