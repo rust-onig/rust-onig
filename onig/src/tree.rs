@@ -54,7 +54,7 @@ impl Index<usize> for CaptureTreeNode {
     }
 }
 
-/// Caputres iterator
+/// Captures iterator
 #[derive(Debug)]
 pub struct CaptureTreeNodeIter<'t> {
     idx: usize,
