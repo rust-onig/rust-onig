@@ -10,6 +10,7 @@ use super::CaptureTreeNode;
 
 /// Represents a set of capture groups found in a search or match.
 #[derive(Debug, Eq, PartialEq)]
+#[repr(transparent)]
 pub struct Region {
     pub(crate) raw: onig_sys::OnigRegion,
 }

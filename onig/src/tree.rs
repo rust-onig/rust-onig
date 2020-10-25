@@ -10,8 +10,8 @@ use std::ops::Index;
 /// Represents a single node in the capture tree. Can be queried for
 /// information about the given capture and any child-captures that
 /// took place.
-#[repr(C)]
 #[derive(Debug)]
+#[repr(transparent)]
 pub struct CaptureTreeNode {
     raw: onig_sys::OnigCaptureTreeNode,
 }
