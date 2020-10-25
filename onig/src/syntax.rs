@@ -28,6 +28,7 @@ pub enum MetaChar {
 /// For a demonstration of creating a custom syntax see
 /// `examples/syntax.rs` in the main onig crate.
 #[derive(Debug, Clone, Copy)]
+#[repr(transparent)]
 pub struct Syntax {
     raw: onig_sys::OnigSyntaxType,
 }
