@@ -4,3 +4,4 @@ target/
 .vagrant/
 *.orig
 .idea/
+*.log
