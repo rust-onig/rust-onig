@@ -113,7 +113,9 @@ fn compile() {
             #define HAVE_INTTYPES_H 1
             #define SIZEOF_INT 4
             #define SIZEOF_SHORT 2
-            #define SIZEOF_LONG {}
+            #define SIZEOF_LONG {0}
+            #define SIZEOF_VOIDP {0}
+            #define SIZEOF_LONG_LONG 8
         ",
                 if bits == "64" { "8" } else { "4" }
             ),
