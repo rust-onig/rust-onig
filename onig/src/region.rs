@@ -1,6 +1,7 @@
 #![allow(clippy::transmute_ptr_to_ref)]
 
 use onig_sys;
+use std::iter::FusedIterator;
 use std::mem::transmute;
 use std::os::raw::{c_int, c_void};
 use std::ptr::null_mut;
@@ -251,6 +252,10 @@ impl<'a> Iterator for RegionIter<'a> {
         self.region.len()
     }
 }
+
+impl<'a> FusedIterator for RegionIter<'a> {}
+
+impl<'a> ExactSizeIterator for RegionIter<'a> {}
 
 #[cfg(test)]
 mod tests {

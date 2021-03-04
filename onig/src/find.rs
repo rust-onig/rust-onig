@@ -1,5 +1,5 @@
 use super::{Regex, Region, SearchOptions};
-use std::iter::Iterator;
+use std::iter::FusedIterator;
 
 impl Regex {
     /// Returns the capture groups corresponding to the leftmost-first match
@@ -299,7 +299,15 @@ impl<'t> Iterator for SubCaptures<'t> {
         let size = self.caps.len();
         (size, Some(size))
     }
+
+    fn count(self) -> usize {
+        self.caps.len()
+    }
 }
+
+impl<'t> FusedIterator for SubCaptures<'t> {}
+
+impl<'t> ExactSizeIterator for SubCaptures<'t> {}
 
 /// An iterator over capture group positions for a particular match of
 /// a regular expression.
@@ -327,7 +335,15 @@ impl<'t> Iterator for SubCapturesPos<'t> {
         let size = self.caps.len();
         (size, Some(size))
     }
+
+    fn count(self) -> usize {
+        self.caps.len()
+    }
 }
+
+impl<'t> FusedIterator for SubCapturesPos<'t> {}
+
+impl<'t> ExactSizeIterator for SubCapturesPos<'t> {}
 
 /// An iterator over all non-overlapping matches for a particular string.
 ///
@@ -379,6 +395,8 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
         Some((s, e))
     }
 }
+
+impl<'r, 't> FusedIterator for FindMatches<'r, 't> {}
 
 /// An iterator that yields all non-overlapping capture groups matching a
 /// particular regular expression.
@@ -433,6 +451,8 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
     }
 }
 
+impl<'r, 't> FusedIterator for FindCaptures<'r, 't> {}
+
 /// Yields all substrings delimited by a regular expression match.
 ///
 /// `'r` is the lifetime of the compiled expression and `'t` is the lifetime
@@ -466,6 +486,8 @@ impl<'r, 't> Iterator for RegexSplits<'r, 't> {
     }
 }
 
+impl<'r, 't> FusedIterator for RegexSplits<'r, 't> {}
+
 /// Yields at most `N` substrings delimited by a regular expression match.
 ///
 /// The last substring will be whatever remains after splitting.
@@ -497,6 +519,8 @@ impl<'r, 't> Iterator for RegexSplitsN<'r, 't> {
         (0, Some(self.n))
     }
 }
+
+impl<'r, 't> FusedIterator for RegexSplitsN<'r, 't> {}
 
 #[cfg(test)]
 mod tests {

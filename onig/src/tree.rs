@@ -1,7 +1,7 @@
 #![allow(clippy::transmute_ptr_to_ref)]
 
 use onig_sys;
-use std::iter::Iterator;
+use std::iter::FusedIterator;
 use std::mem::transmute;
 use std::ops::Index;
 
@@ -77,7 +77,15 @@ impl<'t> Iterator for CaptureTreeNodeIter<'t> {
         let size = self.node.len();
         (size, Some(size))
     }
+
+    fn count(self) -> usize {
+        self.node.len()
+    }
 }
+
+impl<'t> FusedIterator for CaptureTreeNodeIter<'t> {}
+
+impl<'t> ExactSizeIterator for CaptureTreeNodeIter<'t> {}
 
 #[cfg(test)]
 mod tests {
