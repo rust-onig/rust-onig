@@ -642,9 +642,9 @@ pub struct OnigCompileInfo {
 }
 pub type OnigCallbackEachMatchFunc = ::std::option::Option<
 	unsafe extern "C" fn(
-	    str: const *OnigUChar,
-	    end: const *OnigUChar,
-	    match_start: const *OnigUChar,
+	    str: *const OnigUChar,
+	    end: *const OnigUChar,
+	    match_start: *const OnigUChar,
 	    region: *mut OnigRegion,
 	    user_data: *mut ::std::os::raw::c_void,
 	) -> ::std::os::raw::c_int,
