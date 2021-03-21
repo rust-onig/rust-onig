@@ -34,6 +34,10 @@ pub struct Syntax {
 }
 
 impl Syntax {
+    /// Python syntax
+    pub fn python() -> &'static Syntax {
+        unsafe { transmute(&onig_sys::OnigSyntaxPython) }
+    }
     /// Plain text syntax
     pub fn asis() -> &'static Syntax {
         unsafe { transmute(&onig_sys::OnigSyntaxASIS) }
