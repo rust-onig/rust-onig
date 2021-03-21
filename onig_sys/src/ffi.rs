@@ -31,13 +31,18 @@ pub const ONIG_OPTION_NOTBOL: u32 = 512;
 pub const ONIG_OPTION_NOTEOL: u32 = 1024;
 pub const ONIG_OPTION_POSIX_REGION: u32 = 2048;
 pub const ONIG_OPTION_CHECK_VALIDITY_OF_STRING: u32 = 4096;
+pub const ONIG_OPTION_IGNORECASE_IS_ASCII: u32 = 32768;
 pub const ONIG_OPTION_WORD_IS_ASCII: u32 = 65536;
 pub const ONIG_OPTION_DIGIT_IS_ASCII: u32 = 131072;
 pub const ONIG_OPTION_SPACE_IS_ASCII: u32 = 262144;
 pub const ONIG_OPTION_POSIX_IS_ASCII: u32 = 524288;
 pub const ONIG_OPTION_TEXT_SEGMENT_EXTENDED_GRAPHEME_CLUSTER: u32 = 1048576;
 pub const ONIG_OPTION_TEXT_SEGMENT_WORD: u32 = 2097152;
-pub const ONIG_OPTION_MAXBIT: u32 = 2097152;
+pub const ONIG_OPTION_NOT_BEGIN_STRING: u32 = 4194304;
+pub const ONIG_OPTION_NOT_END_STRING: u32 = 8388608;
+pub const ONIG_OPTION_NOT_BEGIN_POSITION: u32 = 16777216;
+pub const ONIG_OPTION_CALLBACK_EACH_MATCH: u32 = 33554432;
+pub const ONIG_OPTION_MAXBIT: u32 = 33554432;
 pub const ONIG_SYN_OP_VARIABLE_META_CHARACTERS: u32 = 1;
 pub const ONIG_SYN_OP_DOT_ANYCHAR: u32 = 2;
 pub const ONIG_SYN_OP_ASTERISK_ZERO_INF: u32 = 4;
@@ -101,6 +106,7 @@ pub const ONIG_SYN_OP2_QMARK_PERL_SUBEXP_CALL: u32 = 134217728;
 pub const ONIG_SYN_OP2_QMARK_BRACE_CALLOUT_CONTENTS: u32 = 268435456;
 pub const ONIG_SYN_OP2_ASTERISK_CALLOUT_NAME: u32 = 536870912;
 pub const ONIG_SYN_OP2_OPTION_ONIGURUMA: u32 = 1073741824;
+pub const ONIG_SYN_OP2_QMARK_CAPITAL_P_NAME: u32 = 2147483648;
 pub const ONIG_SYN_CONTEXT_INDEP_ANCHORS: u32 = 2147483648;
 pub const ONIG_SYN_CONTEXT_INDEP_REPEAT_OPS: u32 = 1;
 pub const ONIG_SYN_CONTEXT_INVALID_REPEAT_OPS: u32 = 2;
@@ -527,6 +533,10 @@ pub struct OnigSyntaxType {
     pub options: OnigOptionType,
     pub meta_char_table: OnigMetaCharTableType,
 }
+
+extern "C" {
+    pub static mut OnigSyntaxPython: OnigSyntaxType;
+}
 extern "C" {
     pub static mut OnigSyntaxASIS: OnigSyntaxType;
 }
@@ -630,6 +640,15 @@ pub struct OnigCompileInfo {
     pub option: OnigOptionType,
     pub case_fold_flag: OnigCaseFoldType,
 }
+pub type OnigCallbackEachMatchFunc = ::std::option::Option<
+	unsafe extern "C" fn(
+	    str: const *OnigUChar,
+	    end: const *OnigUChar,
+	    match_start: const *OnigUChar,
+	    region: *mut OnigRegion,
+	    user_data: *mut ::std::os::raw::c_void,
+	) -> ::std::os::raw::c_int,
+    >;
 pub const OnigCalloutIn_ONIG_CALLOUT_IN_PROGRESS: OnigCalloutIn = 1;
 pub const OnigCalloutIn_ONIG_CALLOUT_IN_RETRACTION: OnigCalloutIn = 2;
 pub type OnigCalloutIn = u32;
@@ -1077,6 +1096,12 @@ extern "C" {
 }
 extern "C" {
     pub fn onig_copyright() -> *const ::std::os::raw::c_char;
+}
+extern "C" {
+    pub fn onig_get_callback_each_match() -> OnigCallbackEachMatchFunc;
+}
+extern "C" {
+    pub fn onig_set_callback_each_match(f: OnigCallbackEachMatchFunc) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn onig_new_match_param() -> *mut OnigMatchParam;
