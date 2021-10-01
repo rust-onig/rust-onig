@@ -519,7 +519,11 @@ impl Regex {
         T: EncodedChars,
     {
         if chars.encoding() != self.encoding() {
-            return Err(Error::custom(format!("Regex encoding does not match haystack encoding ({0:?}, {1:?})", chars.encoding(), self.encoding())));
+            return Err(Error::custom(format!(
+                "Regex encoding does not match haystack encoding ({0:?}, {1:?})",
+                chars.encoding(),
+                self.encoding()
+            )));
         }
         let r = unsafe {
             let offset = chars.start_ptr().add(at);
@@ -709,7 +713,11 @@ impl Regex {
     {
         let (beg, end) = (chars.start_ptr(), chars.limit_ptr());
         if chars.encoding() != self.encoding() {
-            return Err(Error::custom(format!("Regex encoding does not match haystack encoding ({0:?}, {1:?})", chars.encoding(), self.encoding())));
+            return Err(Error::custom(format!(
+                "Regex encoding does not match haystack encoding ({0:?}, {1:?})",
+                chars.encoding(),
+                self.encoding()
+            )));
         }
         let r = unsafe {
             let start = beg.add(from);
@@ -1028,13 +1036,15 @@ mod tests {
         let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
             .expect("regex");
         let string = "Ruby";
-        let is_match = panic::catch_unwind(|| regex.search_with_encoding(
-            string,
-            5,
-            string.len(),
-            SearchOptions::SEARCH_OPTION_NONE,
-            None,
-        ));
+        let is_match = panic::catch_unwind(|| {
+            regex.search_with_encoding(
+                string,
+                5,
+                string.len(),
+                SearchOptions::SEARCH_OPTION_NONE,
+                None,
+            )
+        });
         assert!(is_match.is_err());
     }
 
@@ -1058,12 +1068,9 @@ mod tests {
         let regex = Regex::with_options("R...", RegexOptions::REGEX_OPTION_NONE, Syntax::default())
             .expect("regex");
         let string = "Ruby";
-        let is_match = panic::catch_unwind(|| regex.match_with_encoding(
-            string,
-            5,
-            SearchOptions::SEARCH_OPTION_NONE,
-            None,
-        ));
+        let is_match = panic::catch_unwind(|| {
+            regex.match_with_encoding(string, 5, SearchOptions::SEARCH_OPTION_NONE, None)
+        });
         assert!(is_match.is_err());
     }
 }
