@@ -69,9 +69,9 @@ bitflags! {
         /// `?`
         const SYNTAX_OPERATOR_QMARK_ZERO_ONE
             = (onig_sys::ONIG_SYN_OP_QMARK_ZERO_ONE as u64);
-	/// ?P
-	const SYNTAX_OPERATOR_QMARK_CAPITAL_P_NAME
-	    = (onig_sys::ONIG_SYN_OP2_QMARK_CAPITAL_P_NAME as u64);
+    /// ?P
+    const SYNTAX_OPERATOR_QMARK_CAPITAL_P_NAME
+        = (onig_sys::ONIG_SYN_OP2_QMARK_CAPITAL_P_NAME as u64);
         /// `{lower,upper}`
         const SYNTAX_OPERATOR_BRACE_INTERVAL
             = (onig_sys::ONIG_SYN_OP_BRACE_INTERVAL as u64);

@@ -641,14 +641,14 @@ pub struct OnigCompileInfo {
     pub case_fold_flag: OnigCaseFoldType,
 }
 pub type OnigCallbackEachMatchFunc = ::std::option::Option<
-	unsafe extern "C" fn(
-	    str: *const OnigUChar,
-	    end: *const OnigUChar,
-	    match_start: *const OnigUChar,
-	    region: *mut OnigRegion,
-	    user_data: *mut ::std::os::raw::c_void,
-	) -> ::std::os::raw::c_int,
-    >;
+    unsafe extern "C" fn(
+        str: *const OnigUChar,
+        end: *const OnigUChar,
+        match_start: *const OnigUChar,
+        region: *mut OnigRegion,
+        user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int,
+>;
 pub const OnigCalloutIn_ONIG_CALLOUT_IN_PROGRESS: OnigCalloutIn = 1;
 pub const OnigCalloutIn_ONIG_CALLOUT_IN_RETRACTION: OnigCalloutIn = 2;
 pub type OnigCalloutIn = u32;
