@@ -100,30 +100,40 @@ impl Syntax {
 
     /// Retrieve the operators for this syntax
     pub fn operators(&self) -> SyntaxOperator {
+		SyntaxOperator::from_bits_truncate(self.operators_bits())
+    }
+
+	/// Retrieve the raw operator bits
+	fn operators_bits(&self) -> u64 {
         unsafe {
             let op = onig_sys::onig_get_syntax_op(self.raw_mut());
             let op2 = onig_sys::onig_get_syntax_op2(self.raw_mut());
-            SyntaxOperator::from_bits_truncate(u64::from(op) + (u64::from(op2) << 32))
+            u64::from(op) + (u64::from(op2) << 32)
         }
-    }
+	}
 
     /// Replace the operators for this syntax
     pub fn set_operators(&mut self, operators: SyntaxOperator) {
-        let op = operators.bits() as onig_sys::OnigSyntaxOp;
-        let op2 = (operators.bits() >> 32) as onig_sys::OnigSyntaxOp2;
+		self.set_operators_bits(operators.bits())
+    }
+
+	/// Replace the operators for this syntax with the given raw bits
+	fn set_operators_bits(&mut self, operators_bits: u64) {
+	    let op = operators_bits as onig_sys::OnigSyntaxOp;
+        let op2 = (operators_bits >> 32) as onig_sys::OnigSyntaxOp2;
         unsafe {
             onig_sys::onig_set_syntax_op(&mut self.raw, op);
             onig_sys::onig_set_syntax_op2(&mut self.raw, op2)
         }
-    }
+	}
 
     /// Enable Operators for this Syntax
     ///
     /// Updates the operators for this syntax to enable the chosen
     /// ones.
     pub fn enable_operators(&mut self, operators: SyntaxOperator) {
-        let operators = self.operators() | operators;
-        self.set_operators(operators)
+        let operators = self.operators_bits() | operators.bits();
+        self.set_operators_bits(operators)
     }
 
     /// Disable Operators for this Syntax
@@ -131,8 +141,8 @@ impl Syntax {
     /// Updates the operators for this syntax to remove the specified
     /// operators.
     pub fn disable_operators(&mut self, operators: SyntaxOperator) {
-        let operators = self.operators() & !operators;
-        self.set_operators(operators)
+        let operators = self.operators_bits() & !operators.bits();
+        self.set_operators_bits(operators)
     }
 
     /// Retrieves the syntax behaviours
