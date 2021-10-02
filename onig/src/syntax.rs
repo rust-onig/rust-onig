@@ -207,3 +207,18 @@ impl Syntax {
         &self.raw as *const onig_sys::OnigSyntaxType as *mut onig_sys::OnigSyntaxType
     }
 }
+
+
+#[cfg(test)]
+mod test {
+	use super::*;
+
+	#[test]
+	fn round_trip_bits() {
+		let mut syn = Syntax::python().clone();
+		syn.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8);
+		assert_ne!(Syntax::python().raw, syn.raw);
+		syn.disable_operators(SyntaxOperator::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8);
+		assert_eq!(Syntax::python().raw, syn.raw);
+	}
+}
