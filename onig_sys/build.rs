@@ -37,6 +37,9 @@ impl fmt::Display for LinkType {
 }
 
 fn env_var_bool(name: &str) -> Option<bool> {
+    if !name.starts_with("CARGO") {
+        println!("cargo:rerun-if-env-changed={}", name);
+    }
     env::var(name)
         .ok()
         .map(|s| match &s.to_string().to_lowercase()[..] {
