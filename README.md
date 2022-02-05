@@ -51,7 +51,7 @@ If a version of Oniguruma can be found by `pkg-config` then that will be used. I
 
 By default `rust-onig` will be statically linked to `libonig`. If you would rather that dynamic linking is used then the environment variables `RUSTONIG_STATIC_LIBONIG` and `RUSTONIG_DYNAMIC_LIBONIG` can be set. On *nix:
 
-    $ RUSTONIG_DYNAMIC_LIBONING=1 cargo build
+    $ RUSTONIG_DYNAMIC_LIBONIG=1 cargo build
 
 Or Windows:
 
