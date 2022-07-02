@@ -24,7 +24,7 @@ readme = "../README.md"
 license = "MIT"
 
 [build-dependencies]
-bindgen = { version = "0.60", optional = true, features = [ "runtime" ] }
+bindgen = { version = "0.59", optional = true, features = [ "runtime" ] }
 pkg-config = "^0.3.16"
 cc = "1.0"
 
