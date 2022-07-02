@@ -1,6 +1,6 @@
 [package]
 name = "onig_sys"
-version = "69.7.1"
+version = "69.8.0"
 authors = [
     "Will Speak <will@willspeak.me>",
     "Ivan Ivashchenko <defuz@me.com>"
@@ -24,7 +24,7 @@ readme = "../README.md"
 license = "MIT"
 
 [build-dependencies]
-bindgen = { version = "0.56", optional = true, features = [ "runtime" ] }
+bindgen = { version = "0.60", optional = true, features = [ "runtime" ] }
 pkg-config = "^0.3.16"
 cc = "1.0"
 
