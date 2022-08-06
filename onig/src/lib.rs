@@ -90,11 +90,12 @@
 
 #[macro_use]
 extern crate bitflags;
-#[macro_use]
-extern crate lazy_static;
 #[cfg(windows)]
 extern crate libc;
+extern crate once_cell;
 extern crate onig_sys;
+
+use once_cell::sync::Lazy;
 
 mod buffers;
 mod find;
@@ -213,9 +214,7 @@ impl fmt::Debug for Error {
     }
 }
 
-lazy_static! {
-    static ref REGEX_NEW_MUTEX: Mutex<()> = Mutex::new(());
-}
+static REGEX_NEW_MUTEX: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 
 impl Regex {
     /// Create a Regex
