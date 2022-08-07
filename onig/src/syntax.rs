@@ -100,32 +100,32 @@ impl Syntax {
 
     /// Retrieve the operators for this syntax
     pub fn operators(&self) -> SyntaxOperator {
-		SyntaxOperator::from_bits_truncate(self.operators_bits())
+        SyntaxOperator::from_bits_truncate(self.operators_bits())
     }
 
-	/// Retrieve the raw operator bits
-	fn operators_bits(&self) -> u64 {
+    /// Retrieve the raw operator bits
+    fn operators_bits(&self) -> u64 {
         unsafe {
             let op = onig_sys::onig_get_syntax_op(self.raw_mut());
             let op2 = onig_sys::onig_get_syntax_op2(self.raw_mut());
             u64::from(op) + (u64::from(op2) << 32)
         }
-	}
+    }
 
     /// Replace the operators for this syntax
     pub fn set_operators(&mut self, operators: SyntaxOperator) {
-		self.set_operators_bits(operators.bits())
+        self.set_operators_bits(operators.bits())
     }
 
-	/// Replace the operators for this syntax with the given raw bits
-	fn set_operators_bits(&mut self, operators_bits: u64) {
-	    let op = operators_bits as onig_sys::OnigSyntaxOp;
+    /// Replace the operators for this syntax with the given raw bits
+    fn set_operators_bits(&mut self, operators_bits: u64) {
+        let op = operators_bits as onig_sys::OnigSyntaxOp;
         let op2 = (operators_bits >> 32) as onig_sys::OnigSyntaxOp2;
         unsafe {
             onig_sys::onig_set_syntax_op(&mut self.raw, op);
             onig_sys::onig_set_syntax_op2(&mut self.raw, op2)
         }
-	}
+    }
 
     /// Enable Operators for this Syntax
     ///
@@ -208,17 +208,16 @@ impl Syntax {
     }
 }
 
-
 #[cfg(test)]
 mod test {
-	use super::*;
+    use super::*;
 
-	#[test]
-	fn round_trip_bits() {
-		let mut syn = Syntax::python().clone();
-		syn.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8);
-		assert_ne!(Syntax::python().raw, syn.raw);
-		syn.disable_operators(SyntaxOperator::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8);
-		assert_eq!(Syntax::python().raw, syn.raw);
-	}
+    #[test]
+    fn round_trip_bits() {
+        let mut syn = Syntax::python().clone();
+        syn.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8);
+        assert_ne!(Syntax::python().raw, syn.raw);
+        syn.disable_operators(SyntaxOperator::SYNTAX_OPERATOR_ESC_X_BRACE_HEX8);
+        assert_eq!(Syntax::python().raw, syn.raw);
+    }
 }
