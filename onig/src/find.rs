@@ -30,7 +30,7 @@ impl Regex {
     /// characters:
     ///
     /// ```rust
-    /// # extern crate onig; use onig::Regex;
+    /// # use onig::Regex;
     /// # fn main() {
     /// let text = "Retroactively relinquishing remunerations is reprehensible.";
     /// for pos in Regex::new(r"\b\w{13}\b").unwrap().find_iter(text) {
@@ -63,7 +63,7 @@ impl Regex {
     /// some text, where the movie is formatted like "'Title' (xxxx)":
     ///
     /// ```rust
-    /// # extern crate onig; use onig::Regex;
+    /// # use onig::Regex;
     /// # fn main() {
     /// let re = Regex::new(r"'([^']+)'\s+\((\d{4})\)")
     ///                .unwrap();
@@ -98,7 +98,7 @@ impl Regex {
     /// To split a string delimited by arbitrary amounts of spaces or tabs:
     ///
     /// ```rust
-    /// # extern crate onig; use onig::Regex;
+    /// # use onig::Regex;
     /// # fn main() {
     /// let re = Regex::new(r"[ \t]+").unwrap();
     /// let fields: Vec<&str> = re.split("a b \t  c\td    e").collect();
@@ -127,7 +127,7 @@ impl Regex {
     /// Get the first two words in some text:
     ///
     /// ```rust
-    /// # extern crate onig; use onig::Regex;
+    /// # use onig::Regex;
     /// # fn main() {
     /// let re = Regex::new(r"\W+").unwrap();
     /// let fields: Vec<&str> = re.splitn("Hey! How are you?", 3).collect();

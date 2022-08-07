@@ -1,6 +1,7 @@
 [package]
 name = "onig_sys"
 version = "69.8.0"
+edition = "2018"
 authors = [
     "Will Speak <will@willspeak.me>",
     "Ivan Ivashchenko <defuz@me.com>"

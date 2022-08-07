@@ -2,7 +2,7 @@
 mod bindgened;
 
 #[cfg(feature = "generate")]
-pub use bindgened::*;
+pub use crate::bindgened::*;
 
 #[cfg(not(feature = "generate"))]
 #[allow(non_upper_case_globals)]

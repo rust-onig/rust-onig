@@ -1,5 +1,3 @@
-extern crate onig;
-
 use onig::*;
 
 fn main() {

@@ -44,7 +44,7 @@ impl Regex {
     /// In typical usage, this can just be a normal string:
     ///
     /// ```rust
-    /// # extern crate onig; use onig::Regex;
+    /// # use onig::Regex;
     /// # fn main() {
     /// let re = Regex::new("[^01]+").unwrap();
     /// assert_eq!(re.replace("1078910", ""), "1010");
@@ -57,7 +57,7 @@ impl Regex {
     /// submatches easily:
     ///
     /// ```rust
-    /// # extern crate onig; use onig::Regex;
+    /// # use onig::Regex;
     /// # use onig::Captures; fn main() {
     /// let re = Regex::new(r"([^,\s]+),\s+(\S+)").unwrap();
     /// let result = re.replace("Springsteen, Bruce", |caps: &Captures| {

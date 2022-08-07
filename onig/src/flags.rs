@@ -1,4 +1,4 @@
-use onig_sys;
+use bitflags::bitflags;
 use std::os::raw::c_uint;
 
 bitflags! {

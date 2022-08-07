@@ -1,6 +1,5 @@
 #![allow(clippy::transmute_ptr_to_ref)]
 
-use onig_sys;
 use std::iter::FusedIterator;
 use std::mem::transmute;
 use std::ops::Index;
