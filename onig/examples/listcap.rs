@@ -1,5 +1,3 @@
-extern crate onig;
-
 use onig::*;
 
 fn ex(hay: &str, pattern: &str, syntax: &Syntax) {

@@ -88,10 +88,6 @@
 #![cfg_attr(feature = "std-pattern", feature(pattern))]
 #![deny(missing_docs)]
 
-#[cfg(windows)]
-extern crate libc;
-extern crate once_cell;
-
 use once_cell::sync::Lazy;
 
 mod buffers;

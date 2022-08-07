@@ -1,5 +1,3 @@
-extern crate onig;
-
 use onig::*;
 use std::str;
 

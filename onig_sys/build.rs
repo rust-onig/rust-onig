@@ -1,8 +1,3 @@
-#[cfg(feature = "generate")]
-extern crate bindgen;
-extern crate cc;
-extern crate pkg_config;
-
 use pkg_config::Config;
 use std::env;
 use std::fmt;

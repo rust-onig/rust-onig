@@ -1,5 +1,3 @@
-extern crate onig;
-
 use onig::{Captures, Regex, Replacer};
 use std::borrow::Cow;
 

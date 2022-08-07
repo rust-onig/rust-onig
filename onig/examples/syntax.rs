@@ -1,5 +1,3 @@
-extern crate onig;
-
 use onig::*;
 
 fn exec(syntax: &Syntax, pattern: &str, to_search: &str) {
