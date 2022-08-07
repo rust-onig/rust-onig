@@ -4,8 +4,6 @@
 //! Rust strings into oniguruma char buffers to search and compile
 //! with.
 
-use onig_sys;
-
 /// Encoded String Buffer
 ///
 /// Represents a buffer of characters with encoding information
@@ -116,9 +114,6 @@ impl<'a> EncodedChars for EncodedBytes<'a> {
 
 #[cfg(test)]
 pub mod tests {
-
-    use onig_sys;
-
     use super::*;
 
     #[test]

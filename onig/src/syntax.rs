@@ -2,7 +2,6 @@
 #![allow(clippy::transmute_ptr_to_ref)]
 
 use super::{MetaCharType, RegexOptions, SyntaxBehavior, SyntaxOperator};
-use onig_sys;
 use std::mem::transmute;
 
 /// Meta Character State

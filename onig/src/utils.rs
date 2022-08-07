@@ -1,4 +1,3 @@
-use onig_sys;
 use std::ffi::{CStr, CString};
 use std::mem;
 

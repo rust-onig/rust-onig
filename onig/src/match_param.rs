@@ -3,7 +3,6 @@
 //! Contains the definition for the `MatchParam` struct. This can be
 //! used to control the behavior of searching and matching.
 
-use onig_sys;
 use std::os::raw::{c_uint, c_ulong};
 
 /// Parameters for a Match or Search.

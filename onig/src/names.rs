@@ -2,7 +2,7 @@ use std::os::raw::{c_int, c_void};
 use std::slice;
 use std::str::from_utf8_unchecked;
 
-use onig_sys::{self, OnigRegex, OnigUChar};
+use onig_sys::{OnigRegex, OnigUChar};
 
 use super::Regex;
 

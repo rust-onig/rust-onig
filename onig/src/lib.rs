@@ -93,7 +93,6 @@ extern crate bitflags;
 #[cfg(windows)]
 extern crate libc;
 extern crate once_cell;
-extern crate onig_sys;
 
 use once_cell::sync::Lazy;
 
