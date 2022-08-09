@@ -6,7 +6,7 @@ https://crates.io/crates/onig)
 https://docs.rs/onig)
 ![CI](https://github.com/rust-onig/rust-onig/workflows/CI/badge.svg)
 [![Build status](https://ci.appveyor.com/api/projects/status/7qxdb44xpw4bkjfi/branch/main?svg=true)](https://ci.appveyor.com/project/iwillspeak/rust-onig/branch/main)
-[![dependency status](https://deps.rs/crate/onig/6.3.2/status.svg)](https://deps.rs/crate/onig/6.3.2)
+[![dependency status](https://deps.rs/crate/onig/6.4.0/status.svg)](https://deps.rs/crate/onig/6.4.0)
 
 Rust bindings for the [Oniguruma regex library][Onig_wiki], a powerful and mature regular expression library with support for a wide range of character sets and language syntaxes. Oniguruma is written in C. This repository provides two crates: `onig-sys` which provides the raw Rust FFI bindings, and `onig`, which provides a safe Rust wrapper around them.
 
@@ -83,8 +83,8 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 ## Supported Rust Versions
 
 Rust Onig supports Rust 1.50.0 or later for Windows, Linux, and
-macOS. If the minimum supported rust version is changed then the minor
-version number will be increased. That is v6.3.x should always compile
+macOS. If the minimum supported rust version (MSRV) is changed then the minor
+version number will be increased. That is v6.4.x should always compile
 with the same version of the compiler.
 
 ## Rust-Onig is Open Source
@@ -96,7 +96,7 @@ at our open [easy issues][easy_issues].
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
  [onig_crate_doc]: https://docs.rs/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/main/onig/examples
- [regex_new]: https://docs.rs/onig/6.3.2/onig/struct.Regex.html#method.new
- [regex_is_match]: https://docs.rs/onig/6.3.2/onig/struct.Regex.html#method.is_match
- [regex_find]: https://docs.rs/onig/6.3.2/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/6.4.0/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/6.4.0/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/6.4.0/onig/struct.Regex.html#method.find
  [easy_issues]: https://github.com/rust-onig/rust-onig/issues?q=is%3Aopen+is%3Aissue+label%3AE-Easy
