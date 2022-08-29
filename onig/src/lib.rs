@@ -91,7 +91,7 @@
 use once_cell::sync::Lazy;
 
 mod buffers;
-mod callout;
+pub mod callout;
 mod find;
 mod flags;
 mod match_param;
@@ -452,7 +452,7 @@ impl Regex {
         T: EncodedChars,
     {
         let match_param = MatchParam::default();
-        let result = self.match_with_param(chars, at, options, region, match_param);
+        let result = self.match_with_param(chars, at, options, region, &match_param);
 
         match result {
             Ok(r) => r,
@@ -506,7 +506,7 @@ impl Regex {
         at: usize,
         options: SearchOptions,
         region: Option<&mut Region>,
-        match_param: MatchParam,
+        match_param: &MatchParam,
     ) -> Result<Option<usize>, Error>
     where
         T: EncodedChars,
@@ -642,7 +642,7 @@ impl Regex {
         T: EncodedChars,
     {
         let match_param = MatchParam::default();
-        let result = self.search_with_param(chars, from, to, options, region, match_param);
+        let result = self.search_with_param(chars, from, to, options, region, &match_param);
 
         match result {
             Ok(r) => r,
@@ -699,7 +699,7 @@ impl Regex {
         to: usize,
         options: SearchOptions,
         region: Option<&mut Region>,
-        match_param: MatchParam,
+        match_param: &MatchParam,
     ) -> Result<Option<usize>, Error>
     where
         T: EncodedChars,

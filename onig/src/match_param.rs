@@ -4,7 +4,8 @@
 //! used to control the behavior of searching and matching.
 
 use std::os::raw::{c_uint, c_ulong};
-use std::mem::transmute;
+
+use crate::callout::{Callout, CalloutArgs};
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
@@ -39,9 +40,42 @@ impl MatchParam {
     }
 
     /// Add callout data to the match param.
-    pub fn add_callout(&mut self, data: usize) {
+    pub fn add_callout<C: Callout + 'static>(&mut self, callout: C) {
+        let callout = Box::into_raw(Box::new(callout));
         unsafe {
-            onig_sys::onig_set_callout_user_data_of_match_param(self.raw, transmute(data));
+            onig_sys::onig_set_callout_user_data_of_match_param(self.raw, callout as *mut _);
+            onig_sys::onig_set_progress_callout_of_match_param(
+                self.raw,
+                Some(callout_progress_thunk::<C>),
+            );
+            onig_sys::onig_set_retraction_callout_of_match_param(
+                self.raw,
+                Some(callout_retraction_thunk::<C>),
+            );
+        }
+
+        unsafe extern "C" fn callout_progress_thunk<C: Callout>(
+            args: *mut onig_sys::OnigCalloutArgs,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int {
+            let callout = user_data as *mut C;
+            let callout = &mut *callout;
+
+            let args = CalloutArgs::from_raw(args);
+
+            callout.on_match_progress(args).into()
+        }
+
+        unsafe extern "C" fn callout_retraction_thunk<C: Callout>(
+            args: *mut onig_sys::OnigCalloutArgs,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int {
+            let callout = user_data as *mut C;
+            let callout = &mut *callout;
+
+            let args = CalloutArgs::from_raw(args);
+
+            callout.on_retraction(args).into()
         }
     }
 }
