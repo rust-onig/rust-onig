@@ -496,7 +496,7 @@ impl Regex {
     /// let r = Regex::with_encoding(EncodedBytes::ascii(b".*")).unwrap();
     /// let res = r.match_with_param(EncodedBytes::ascii(b"world"),
     ///                              0, SearchOptions::SEARCH_OPTION_NONE,
-    ///                              None, MatchParam::default());
+    ///                              None, &MatchParam::default());
     /// assert!(res.is_ok()); // matching did not error
     /// assert!(res.unwrap() == Some(5)); // 5 characters matched
     /// ```
@@ -688,7 +688,7 @@ impl Regex {
     /// let r = Regex::with_encoding(EncodedBytes::ascii(b"l{1,2}")).unwrap();
     /// let res = r.search_with_param(EncodedBytes::ascii(b"hello"),
     ///                               0, 5, SearchOptions::SEARCH_OPTION_NONE,
-    ///                               None, MatchParam::default());
+    ///                               None, &MatchParam::default());
     /// assert!(res.is_ok()); // matching did not error
     /// assert!(res.unwrap() == Some(2)); // match starts at character 3
     /// ```
@@ -946,7 +946,7 @@ mod tests {
             0,
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
 
         let e = result.err().unwrap();
@@ -977,7 +977,7 @@ mod tests {
             s.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
 
         let e = result.err().unwrap();
@@ -1009,7 +1009,7 @@ mod tests {
             string.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
         assert!(is_match.is_err());
 
@@ -1019,7 +1019,7 @@ mod tests {
             string.len() + 1,
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
         assert!(is_match.is_err());
     }
@@ -1051,7 +1051,7 @@ mod tests {
             5,
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
         assert!(is_match.is_err());
     }
