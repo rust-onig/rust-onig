@@ -3,13 +3,14 @@
 //! Contains the definition for the `MatchParam` struct. This can be
 //! used to control the behavior of searching and matching.
 
-use std::os::raw::{c_uint, c_ulong};
+use std::{os::raw::{c_uint, c_ulong}, ffi::c_void};
 
 use crate::callout::{Callout, CalloutArgs};
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
     raw: *mut onig_sys::OnigMatchParam,
+    callout: Option<(*mut c_void, fn (*mut c_void))>,
 }
 
 impl MatchParam {
@@ -42,6 +43,7 @@ impl MatchParam {
     /// Add callout data to the match param.
     pub fn add_callout<C: Callout + 'static>(&mut self, callout: C) {
         let callout = Box::into_raw(Box::new(callout));
+        self.callout = Some((callout as *mut _, drop_thunk::<C>));
         unsafe {
             onig_sys::onig_set_callout_user_data_of_match_param(self.raw, callout as *mut _);
             onig_sys::onig_set_progress_callout_of_match_param(
@@ -52,6 +54,10 @@ impl MatchParam {
                 self.raw,
                 Some(callout_retraction_thunk::<C>),
             );
+        }
+
+        fn drop_thunk<C: Callout>(data: *mut std::os::raw::c_void) {
+            drop(unsafe {Box::from_raw(data as *mut C)})
         }
 
         unsafe extern "C" fn callout_progress_thunk<C: Callout>(
@@ -87,7 +93,7 @@ impl Default for MatchParam {
             onig_sys::onig_initialize_match_param(new);
             new
         };
-        MatchParam { raw }
+        MatchParam { raw, callout: None }
     }
 }
 
@@ -95,6 +101,9 @@ impl Drop for MatchParam {
     fn drop(&mut self) {
         unsafe {
             onig_sys::onig_free_match_param(self.raw);
+        }
+        if let Some((callout, dropper)) = self.callout {
+            dropper(callout)
         }
     }
 }
