@@ -26,8 +26,15 @@ impl MatchParam {
         }
     }
 
+    /// Set the retry limit in search
+    pub fn set_retry_limit_in_search(&mut self, limit: u32) {
+        unsafe {
+            onig_sys::onig_set_retry_limit_in_search_of_match_param(self.raw, c_ulong::from(limit));
+        }
+    }
+
     /// Get the Raw `OnigMatchParam` Pointer
-    pub fn as_raw(&self) -> *mut onig_sys::OnigMatchParam {
+    pub(crate) fn as_raw(&self) -> *mut onig_sys::OnigMatchParam {
         self.raw
     }
 
