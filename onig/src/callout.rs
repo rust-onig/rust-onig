@@ -45,7 +45,7 @@ impl CalloutArgs {
 
     /// Returns the current counter value for retry-limit-in-match.
     pub fn retry_counter(&self) -> u64 {
-        unsafe { onig_sys::onig_get_retry_counter_by_callout_args(self.raw) }
+        unsafe { onig_sys::onig_get_retry_counter_by_callout_args(self.raw) as u64 }
     }
 
     /// Returns current used match-stack size.
