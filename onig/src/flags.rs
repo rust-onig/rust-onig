@@ -36,6 +36,9 @@ bitflags! {
         /// Named and no-named group captured.
         const REGEX_OPTION_CAPTURE_GROUP
             = onig_sys::ONIG_OPTION_CAPTURE_GROUP;
+        /// Check that the string is a valid encoding before compiling.
+        const REGEX_OPTION_CHECK_VALIDITY_OF_STRING
+            = onig_sys::ONIG_OPTION_CHECK_VALIDITY_OF_STRING;
     }
 }
 
@@ -51,6 +54,9 @@ bitflags! {
         /// String end isn't considered as end of line.
         const SEARCH_OPTION_NOTEOL
             = onig_sys::ONIG_OPTION_NOTEOL;
+        /// Check that the string is a valid encoding before searching.
+        const SEARCH_OPTION_CHECK_VALIDITY_OF_STRING
+            = onig_sys::ONIG_OPTION_CHECK_VALIDITY_OF_STRING;
     }
 }
 

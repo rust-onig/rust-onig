@@ -91,6 +91,7 @@
 use once_cell::sync::Lazy;
 
 mod buffers;
+mod callout;
 mod find;
 mod flags;
 mod match_param;
@@ -100,7 +101,6 @@ mod replace;
 mod syntax;
 mod tree;
 mod utils;
-mod callout;
 
 #[cfg(feature = "std-pattern")]
 mod pattern;
