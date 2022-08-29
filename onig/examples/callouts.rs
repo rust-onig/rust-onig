@@ -1,4 +1,7 @@
-use onig::{MatchParam, Regex, SearchOptions, callout::CalloutArgs};
+use onig::{
+    callout::{CalloutArgs, CalloutResult},
+    MatchParam, Regex, SearchOptions,
+};
 
 fn test(match_param: &MatchParam, pattern: &str, haystack: &str) {
     let reg = Regex::new(pattern).unwrap();
@@ -20,7 +23,15 @@ fn main() {
     let mut mp = MatchParam::default();
 
     mp.add_callout(|args: CalloutArgs| {
-        println!("Callout: {:?}", args.callout_in());
+        println!(
+            "Callout: {:?} ({:?}, {:?}, {:?}) {:?}",
+            args.callout_num(),
+            args.callout_in(),
+            args.name_id(),
+            args.retry_counter(),
+            args.used_stack_size()
+        );
+        CalloutResult::Success
     });
 
     test(&mp, "a+(?{foo bar baz...}X)$", "aaab");

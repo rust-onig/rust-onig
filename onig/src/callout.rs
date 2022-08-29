@@ -47,6 +47,26 @@ impl CalloutArgs {
     pub fn retry_counter(&self) -> u64 {
         unsafe { onig_sys::onig_get_retry_counter_by_callout_args(self.raw) }
     }
+
+    /// Returns current used match-stack size.
+    /// 
+    /// The returned tuple `(used_num, used_bytes)` is made up of:
+    /// 
+    ///   * `used_num` - number of match-srtack elements
+    ///   * `used_bytes` - used byte size of match stack
+    pub fn used_stack_size(&self) -> Option<(i32, i32)> {
+        let mut used_num = 0;
+        let mut used_bytes = 0;
+        let r = unsafe {
+            onig_sys::onig_get_used_stack_size_in_callout(self.raw, (&mut used_num) as *mut _, (&mut used_bytes) as *mut _)
+        };
+
+        if r == 0 {
+            Some((used_num, used_bytes))
+        } else {
+            None
+        }
+    }
 }
 
 /// Callout Type
