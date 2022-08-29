@@ -22,7 +22,7 @@ fn test(match_param: &MatchParam, pattern: &str, haystack: &str) {
 fn main() {
     let mut mp = MatchParam::default();
 
-    mp.add_callout(|args: CalloutArgs| {
+    mp.set_callout(|args: CalloutArgs| {
         println!(
             "Callout: {:?} ({:?}, {:?}, {:?}) {:?}",
             args.callout_num(),

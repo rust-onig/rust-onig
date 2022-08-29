@@ -3,14 +3,17 @@
 //! Contains the definition for the `MatchParam` struct. This can be
 //! used to control the behavior of searching and matching.
 
-use std::{os::raw::{c_uint, c_ulong}, ffi::c_void};
+use std::{
+    ffi::c_void,
+    os::raw::{c_uint, c_ulong},
+};
 
 use crate::callout::{Callout, CalloutArgs};
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
     raw: *mut onig_sys::OnigMatchParam,
-    callout: Option<(*mut c_void, fn (*mut c_void))>,
+    callout: Option<(*mut c_void, fn(*mut c_void))>,
 }
 
 impl MatchParam {
@@ -41,7 +44,7 @@ impl MatchParam {
     }
 
     /// Add callout data to the match param.
-    pub fn add_callout<C: Callout + 'static>(&mut self, callout: C) {
+    pub fn set_callout<C: Callout + 'static>(&mut self, callout: C) {
         let callout = Box::into_raw(Box::new(callout));
         self.callout = Some((callout as *mut _, drop_thunk::<C>));
         unsafe {
@@ -57,7 +60,7 @@ impl MatchParam {
         }
 
         fn drop_thunk<C: Callout>(data: *mut std::os::raw::c_void) {
-            drop(unsafe {Box::from_raw(data as *mut C)})
+            drop(unsafe { Box::from_raw(data as *mut C) })
         }
 
         unsafe extern "C" fn callout_progress_thunk<C: Callout>(
