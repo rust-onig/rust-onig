@@ -37,6 +37,8 @@ fn main() {
             args.retry_counter(),
             args.used_stack_size()
         );
+        println!("  ! '{:?}'", args.subject());
+        println!("  > '{:?}'", args.contents());
         CalloutResult::Success
     });
 

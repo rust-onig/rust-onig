@@ -3,7 +3,7 @@
 //! Callouts are registered on a regex and provide notifications as a
 //! regex is matched.
 
-use std::ffi::CString;
+use std::ffi::{CStr, CString, NulError};
 
 use onig_sys::OnigCalloutIn;
 
@@ -43,6 +43,25 @@ impl CalloutArgs {
         } else {
             Some(name)
         }
+    }
+
+    /// Returns the contents tring of this callout.
+    pub fn contents(&self) -> Option<CString> {
+        let start = unsafe { onig_sys::onig_get_contents_by_callout_args(self.raw) };
+        let end = unsafe { onig_sys::onig_get_contents_end_by_callout_args(self.raw) };
+        if start.is_null() || end.is_null() {
+            None
+        } else {
+            cstring_from_start_end(start, end).ok()
+        }
+    }
+
+    /// Returns the subject string.
+    pub fn subject(&self) -> CString {
+        let start = unsafe { onig_sys::onig_get_string_by_callout_args(self.raw) };
+        let end = unsafe { onig_sys::onig_get_string_end_by_callout_args(self.raw) };
+
+        cstring_from_start_end(start, end).unwrap()
     }
 
     /// Returns the current counter value for retry-limit-in-match.
@@ -174,6 +193,15 @@ pub fn get_callout_name(name_id: i32) -> Option<CString> {
     if name.is_null() {
         None
     } else {
-        Some(unsafe { CString::from_raw(name as *mut _) })
+        Some(unsafe { CStr::from_ptr(name as *mut _).into() })
+    }
+}
+
+fn cstring_from_start_end(start: *const u8, end: *const u8) -> Result<CString, NulError> {
+    unsafe {
+        CString::new(core::slice::from_raw_parts(
+            start,
+            end.offset_from(start) as usize,
+        ))
     }
 }
