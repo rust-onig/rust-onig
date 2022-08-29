@@ -3,6 +3,8 @@
 //! Callouts are registered on a regex and provide notifications as a
 //! regex is matched.
 
+use std::ffi::CString;
+
 use onig_sys::OnigCalloutIn;
 
 /// The Callout Arguments Structure
@@ -67,6 +69,28 @@ impl CalloutArgs {
 
         if r == 0 {
             Some((used_num, used_bytes))
+        } else {
+            None
+        }
+    }
+
+    /// Returns current capture range position. Position is byte length offset
+    /// from subject string. For uncaptured `mem_num` `None` is returned.
+    ///
+    ///  * `mem_num` - the capture group number to query for.
+    pub fn capture_range(&self, mem_num: i32) -> Option<(i32, i32)> {
+        let mut begin = 0;
+        let mut end = 0;
+        let r = unsafe {
+            onig_sys::onig_get_capture_range_in_callout(
+                self.raw,
+                mem_num,
+                &mut begin as *mut _,
+                &mut end as *mut _,
+            )
+        };
+        if r == 0 && begin != onig_sys::ONIG_REGION_NOTPOS && end != onig_sys::ONIG_REGION_NOTPOS {
+            Some((begin, end))
         } else {
             None
         }
@@ -140,5 +164,16 @@ where
 
     fn on_retraction(&mut self, args: CalloutArgs) -> CalloutResult {
         self(args)
+    }
+}
+
+/// Returns the callout name for the given name id. If an invalid Id is passed
+/// then `None` is returned.
+pub fn get_callout_name(name_id: i32) -> Option<CString> {
+    let name = unsafe { onig_sys::onig_get_callout_name_by_name_id(name_id) };
+    if name.is_null() {
+        None
+    } else {
+        Some(unsafe { CString::from_raw(name as *mut _) })
     }
 }
