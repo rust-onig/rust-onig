@@ -3,11 +3,17 @@
 //! Contains the definition for the `MatchParam` struct. This can be
 //! used to control the behavior of searching and matching.
 
-use std::os::raw::{c_uint, c_ulong};
+use std::{
+    ffi::c_void,
+    os::raw::{c_uint, c_ulong},
+};
+
+use crate::callout::{Callout, CalloutArgs};
 
 /// Parameters for a Match or Search.
 pub struct MatchParam {
     raw: *mut onig_sys::OnigMatchParam,
+    callout: Option<(*mut c_void, fn(*mut c_void))>,
 }
 
 impl MatchParam {
@@ -25,9 +31,61 @@ impl MatchParam {
         }
     }
 
+    /// Set the retry limit in search
+    pub fn set_retry_limit_in_search(&mut self, limit: u32) {
+        unsafe {
+            onig_sys::onig_set_retry_limit_in_search_of_match_param(self.raw, c_ulong::from(limit));
+        }
+    }
+
     /// Get the Raw `OnigMatchParam` Pointer
-    pub fn as_raw(&self) -> *mut onig_sys::OnigMatchParam {
+    pub(crate) fn as_raw(&self) -> *mut onig_sys::OnigMatchParam {
         self.raw
+    }
+
+    /// Add callout data to the match param.
+    pub fn set_callout<C: Callout + 'static>(&mut self, callout: C) {
+        let callout = Box::into_raw(Box::new(callout));
+        self.callout = Some((callout as *mut _, drop_thunk::<C>));
+        unsafe {
+            onig_sys::onig_set_callout_user_data_of_match_param(self.raw, callout as *mut _);
+            onig_sys::onig_set_progress_callout_of_match_param(
+                self.raw,
+                Some(callout_progress_thunk::<C>),
+            );
+            onig_sys::onig_set_retraction_callout_of_match_param(
+                self.raw,
+                Some(callout_retraction_thunk::<C>),
+            );
+        }
+
+        fn drop_thunk<C: Callout>(data: *mut std::os::raw::c_void) {
+            drop(unsafe { Box::from_raw(data as *mut C) })
+        }
+
+        unsafe extern "C" fn callout_progress_thunk<C: Callout>(
+            args: *mut onig_sys::OnigCalloutArgs,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int {
+            let callout = user_data as *mut C;
+            let callout = &mut *callout;
+
+            let args = CalloutArgs::from_raw(args);
+
+            callout.on_match_progress(args).into()
+        }
+
+        unsafe extern "C" fn callout_retraction_thunk<C: Callout>(
+            args: *mut onig_sys::OnigCalloutArgs,
+            user_data: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int {
+            let callout = user_data as *mut C;
+            let callout = &mut *callout;
+
+            let args = CalloutArgs::from_raw(args);
+
+            callout.on_retraction(args).into()
+        }
     }
 }
 
@@ -38,7 +96,7 @@ impl Default for MatchParam {
             onig_sys::onig_initialize_match_param(new);
             new
         };
-        MatchParam { raw }
+        MatchParam { raw, callout: None }
     }
 }
 
@@ -46,6 +104,9 @@ impl Drop for MatchParam {
     fn drop(&mut self) {
         unsafe {
             onig_sys::onig_free_match_param(self.raw);
+        }
+        if let Some((callout, dropper)) = self.callout {
+            dropper(callout)
         }
     }
 }

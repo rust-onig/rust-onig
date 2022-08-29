@@ -91,6 +91,7 @@
 use once_cell::sync::Lazy;
 
 mod buffers;
+pub mod callout;
 mod find;
 mod flags;
 mod match_param;
@@ -451,7 +452,7 @@ impl Regex {
         T: EncodedChars,
     {
         let match_param = MatchParam::default();
-        let result = self.match_with_param(chars, at, options, region, match_param);
+        let result = self.match_with_param(chars, at, options, region, &match_param);
 
         match result {
             Ok(r) => r,
@@ -495,7 +496,7 @@ impl Regex {
     /// let r = Regex::with_encoding(EncodedBytes::ascii(b".*")).unwrap();
     /// let res = r.match_with_param(EncodedBytes::ascii(b"world"),
     ///                              0, SearchOptions::SEARCH_OPTION_NONE,
-    ///                              None, MatchParam::default());
+    ///                              None, &MatchParam::default());
     /// assert!(res.is_ok()); // matching did not error
     /// assert!(res.unwrap() == Some(5)); // 5 characters matched
     /// ```
@@ -505,7 +506,7 @@ impl Regex {
         at: usize,
         options: SearchOptions,
         region: Option<&mut Region>,
-        match_param: MatchParam,
+        match_param: &MatchParam,
     ) -> Result<Option<usize>, Error>
     where
         T: EncodedChars,
@@ -641,7 +642,7 @@ impl Regex {
         T: EncodedChars,
     {
         let match_param = MatchParam::default();
-        let result = self.search_with_param(chars, from, to, options, region, match_param);
+        let result = self.search_with_param(chars, from, to, options, region, &match_param);
 
         match result {
             Ok(r) => r,
@@ -687,7 +688,7 @@ impl Regex {
     /// let r = Regex::with_encoding(EncodedBytes::ascii(b"l{1,2}")).unwrap();
     /// let res = r.search_with_param(EncodedBytes::ascii(b"hello"),
     ///                               0, 5, SearchOptions::SEARCH_OPTION_NONE,
-    ///                               None, MatchParam::default());
+    ///                               None, &MatchParam::default());
     /// assert!(res.is_ok()); // matching did not error
     /// assert!(res.unwrap() == Some(2)); // match starts at character 3
     /// ```
@@ -698,7 +699,7 @@ impl Regex {
         to: usize,
         options: SearchOptions,
         region: Option<&mut Region>,
-        match_param: MatchParam,
+        match_param: &MatchParam,
     ) -> Result<Option<usize>, Error>
     where
         T: EncodedChars,
@@ -945,7 +946,7 @@ mod tests {
             0,
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
 
         let e = result.err().unwrap();
@@ -976,7 +977,7 @@ mod tests {
             s.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
 
         let e = result.err().unwrap();
@@ -1008,7 +1009,7 @@ mod tests {
             string.len(),
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
         assert!(is_match.is_err());
 
@@ -1018,7 +1019,7 @@ mod tests {
             string.len() + 1,
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
         assert!(is_match.is_err());
     }
@@ -1050,7 +1051,7 @@ mod tests {
             5,
             SearchOptions::SEARCH_OPTION_NONE,
             None,
-            MatchParam::default(),
+            &MatchParam::default(),
         );
         assert!(is_match.is_err());
     }
