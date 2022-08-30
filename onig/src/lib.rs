@@ -756,7 +756,7 @@ impl Regex {
     ///
     /// `true` if the pattern matches the whole of `text`, `false` otherwise.
     pub fn is_match(&self, text: &str) -> bool {
-        self.match_with_options(text, 0, SearchOptions::SEARCH_OPTION_NONE, None)
+        self.match_with_options(text, 0, SearchOptions::SEARCH_OPTION_WHOLE_STRING, None)
             .map(|r| r == text.len())
             .unwrap_or(false)
     }
@@ -922,6 +922,13 @@ mod tests {
         let regex = Regex::new("he(l+)o").unwrap();
         assert!(regex.is_match("hello"));
         assert!(!regex.is_match("hello 2.0"));
+    }
+
+    #[test]
+    fn test_is_match_chooses_longest_alternation() {
+        let regex = Regex::new("Greater|GreaterOrEqual").unwrap();
+        assert!(regex.is_match("Greater"));
+        assert!(regex.is_match("GreaterOrEqual"));
     }
 
     #[test]
