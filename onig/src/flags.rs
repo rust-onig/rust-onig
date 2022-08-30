@@ -51,6 +51,9 @@ bitflags! {
         /// String end isn't considered as end of line.
         const SEARCH_OPTION_NOTEOL
             = onig_sys::ONIG_OPTION_NOTEOL;
+        /// Try and match the pattern against the whole string.
+        const SEARCH_OPTION_WHOLE_STRING
+            = onig_sys::ONIG_OPTION_MATCH_WHOLE_STRING;
     }
 }
 
