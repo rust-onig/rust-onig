@@ -3,6 +3,7 @@ use std::os::raw::c_uint;
 
 bitflags! {
     /// Regex parsing and compilation options.
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
     pub struct RegexOptions: onig_sys::OnigOptionType {
         /// Default options.
         const REGEX_OPTION_NONE
@@ -41,6 +42,7 @@ bitflags! {
 
 bitflags! {
     /// Regex evaluation options.
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
     pub struct SearchOptions: onig_sys::OnigOptionType {
         /// Default options.
         const SEARCH_OPTION_NONE
@@ -59,6 +61,7 @@ bitflags! {
 
 bitflags! {
     /// Defines the different operators allowed within a regex syntax.
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
     pub struct SyntaxOperator: u64 {
         /// `.`
         const SYNTAX_OPERATOR_DOT_ANYCHAR
@@ -212,6 +215,7 @@ bitflags! {
 
 bitflags! {
     /// Defines the behaviour of regex operators.
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
     pub struct SyntaxBehavior: onig_sys::OnigSyntaxBehavior {
         /// `?, *, +, {n,m}`
         const SYNTAX_BEHAVIOR_CONTEXT_INDEP_REPEAT_OPS
@@ -263,6 +267,7 @@ bitflags! {
 
 bitflags! {
     /// The order in which traverse callbacks are invoked
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
     pub struct TraverseCallbackAt: c_uint {
         /// Callback before children are wallked
         const CALLBACK_AT_FIRST =
@@ -278,6 +283,7 @@ bitflags! {
 
 bitflags! {
     /// Syntax meta character types
+    #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone, Copy)]
     pub struct MetaCharType: c_uint {
         /// The escape charater for this syntax
         const META_CHAR_ESCAPE = onig_sys::ONIG_META_CHAR_ESCAPE;

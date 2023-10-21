@@ -4,6 +4,11 @@ This file contains the "big hitters" for each release. For more detailed
 information about the exact changes in each release check the source code at
 <https://github.com/rust-onig/rust-onig>.
 
+## 6.5.0
+
+ * Upgrade `bitflags` to at least v2.4.0
+ * MSRV bumped to 1.56.0
+
 ## 6.4.0
 
  * Upgrade to Rust 2018, #170
