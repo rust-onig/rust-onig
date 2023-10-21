@@ -2,6 +2,7 @@
 name = "onig"
 version = "6.5.0"
 edition = "2018"
+rust-version = "1.60.0"
 authors = [
     "Will Speak <will@willspeak.me>",
     "Ivan Ivashchenko <defuz@me.com>"
