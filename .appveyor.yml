@@ -15,7 +15,7 @@ environment:
     FEATURES: ""
   matrix:
   # minimum version
-  - CHANNEL: 1.50.0
+  - CHANNEL: 1.60.0
     ARCH: i686
     ABI: msvc
   # "msvc" ABI
