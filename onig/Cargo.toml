@@ -13,7 +13,7 @@ Oniguruma regular expression library. Oniguruma
 is a modern regex library with support for
 multiple character encodings and regex syntaxes.
 """
-repository = "http://github.com/iwillspeak/rust-onig"
+repository = "https://github.com/iwillspeak/rust-onig"
 documentation = "https://docs.rs/onig/"
 readme = "../README.md"
 license = "MIT"
