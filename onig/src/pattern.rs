@@ -12,17 +12,17 @@ pub struct RegexSearcher<'r, 'a> {
     cached_match: Option<(usize, usize)>,
 }
 
-impl<'r, 'a> Pattern<'a> for &'r Regex {
+impl<'r> Pattern for &'r Regex {
     /// Searcher Type
     ///
     /// The searcher is the type responsible for returning an iterator
     /// of matches in a given string
-    type Searcher = RegexSearcher<'r, 'a>;
+    type Searcher<'a> = RegexSearcher<'r, 'a>;
 
     /// Into Searcher
     ///
     /// Creates a new searcher instance from this `Regex` pattern
-    fn into_searcher(self, haystack: &'a str) -> Self::Searcher {
+    fn into_searcher<'a>(self, haystack: &'a str) -> Self::Searcher<'a> {
         RegexSearcher::new(self, haystack)
     }
 }

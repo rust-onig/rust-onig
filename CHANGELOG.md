@@ -7,7 +7,7 @@ information about the exact changes in each release check the source code at
 ## 6.5.0
 
  * Upgrade `bitflags` to at least v2.4.0
- * MSRV bumped to 1.56.0
+ * MSRV bumped to 1.70.0
 
 ## 6.4.0
 

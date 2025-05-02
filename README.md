@@ -1,4 +1,4 @@
-# Rust Onig
+``# Rust Onig
 
 [![Cargo](https://img.shields.io/crates/v/onig.svg)](
 https://crates.io/crates/onig)
@@ -82,7 +82,7 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
 ## Supported Rust Versions
 
-Rust Onig supports Rust 1.63.0 or later for Windows, Linux, and
+Rust Onig supports Rust 1.70.0 or later (2021 edition) for Windows, Linux, and
 macOS. If the minimum supported rust version (MSRV) is changed then the minor
 version number will be increased. That is v6.5.x should always compile
 with the same version of the compiler.

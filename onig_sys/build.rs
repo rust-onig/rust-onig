@@ -205,6 +205,8 @@ fn bindgen_headers(path: &str) {
     let mut bindgen = bindgen::Builder::default()
         .header(path)
         .derive_eq(true)
+        .rust_target("1.70.0".parse().unwrap())
+        .rust_edition("2021".parse().unwrap())
         .layout_tests(false);
     if let Ok("wasm32") = arch.as_ref().map(String::as_str) {
         bindgen = bindgen.clang_arg("-fvisibility=default");
