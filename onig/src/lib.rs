@@ -84,7 +84,6 @@
 //! features = ["std-pattern"]
 //! ```
 
-#![cfg_attr(not(feature = "cargo-clippy"), allow(unknown_lints))]
 #![cfg_attr(feature = "std-pattern", feature(pattern))]
 #![deny(missing_docs)]
 

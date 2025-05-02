@@ -1,8 +1,8 @@
 [package]
 name = "onig"
 version = "6.5.0"
-edition = "2018"
-rust-version = "1.63.0"
+edition = "2021"
+rust-version = "1.70.0"
 authors = [
     "Will Speak <will@willspeak.me>",
     "Ivan Ivashchenko <defuz@me.com>"
