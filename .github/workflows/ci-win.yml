@@ -1,0 +1,177 @@
+name: CI Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  windows-build:
+    name: Windows ${{ matrix.rust }} - ${{ matrix.arch }}-${{ matrix.abi }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # minimum version
+          - rust: 1.70.0
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: ""
+
+          # "msvc" ABI
+          - rust: stable
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: ""
+          - rust: stable
+            arch: x86_64
+            abi: msvc
+            target: x86_64-pc-windows-msvc
+            features: ""
+          - rust: beta
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: ""
+          - rust: beta
+            arch: x86_64
+            abi: msvc
+            target: x86_64-pc-windows-msvc
+            features: ""
+
+          # "gnu" ABI
+          - rust: stable
+            arch: i686
+            abi: gnu
+            target: i686-pc-windows-gnu
+            features: ""
+          - rust: stable
+            arch: x86_64
+            abi: gnu
+            target: x86_64-pc-windows-gnu
+            features: ""
+
+          # std-pattern feature
+          - rust: nightly
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: "std-pattern"
+            continue-on-error: true
+          - rust: nightly
+            arch: x86_64
+            abi: gnu
+            target: x86_64-pc-windows-gnu
+            features: "std-pattern"
+            continue-on-error: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "10.0"
+          directory: ${{ runner.temp }}/llvm
+
+      - name: Setup environment variables
+        shell: bash
+        run: |
+          echo "LIBCLANG_PATH=${{ runner.temp }}/llvm/lib" >> $GITHUB_ENV
+          if [[ "${{ matrix.abi }}" == "gnu" && "${{ matrix.arch }}" == "i686" ]]; then
+            echo "MINGW_URL=https://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-posix/dwarf/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z" >> $GITHUB_ENV
+          elif [[ "${{ matrix.abi }}" == "gnu" && "${{ matrix.arch }}" == "x86_64" ]]; then
+            echo "MINGW_URL=https://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          target: ${{ matrix.target }}
+          override: true
+
+      # Special setup for GNU ABI (mingw)
+      - name: Install MinGW (GNU ABI)
+        if: matrix.abi == 'gnu'
+        shell: bash
+        run: |
+          curl --insecure -fsSL $MINGW_URL -o mingw.7z
+          7z x -y mingw.7z -oC:/mingw > nul
+          if [[ "${{ matrix.arch }}" == "i686" ]]; then
+            echo "C:/mingw/mingw32/bin" >> $GITHUB_PATH
+            echo "C:/mingw/mingw32/i686-w64-mingw32/bin" >> $GITHUB_PATH
+          else
+            echo "C:/mingw/mingw64/bin" >> $GITHUB_PATH
+            echo "C:/mingw/mingw64/x86_64-w64-mingw32/bin" >> $GITHUB_PATH
+          fi
+
+      # Special workaround for GNU ABI to use MSVC for compilation but GNU for linking
+      - name: Setup GNU ABI workaround
+        if: matrix.abi == 'gnu'
+        shell: bash
+        run: |
+          # Install MSVC toolchain
+          rustup install ${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc
+          rustup default ${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc
+          # Add GNU target
+          rustup target add ${{ matrix.target }}
+          
+          # Copy libs from gcc toolchain to rust toolchain
+          if [[ "${{ matrix.arch }}" == "i686" ]]; then
+            mkdir -p $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
+            cp C:/mingw/mingw32/i686-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
+          else
+            mkdir -p $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
+            cp C:/mingw/mingw64/x86_64-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
+          fi
+      
+      - name: Display toolchain information
+        shell: bash
+        run: |
+          rustc -vV
+          cargo -vV
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            gcc --version
+          fi
+          clang --version
+
+      - name: Build onig_sys
+        shell: bash
+        run: |
+          cd onig_sys
+          cargo build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features
+        continue-on-error: ${{ matrix.continue-on-error || false }}
+
+      - name: Build onig
+        shell: bash
+        run: |
+          cd onig
+          cargo build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features
+        continue-on-error: ${{ matrix.continue-on-error || false }}
+
+      - name: Test onig_sys
+        shell: bash
+        run: |
+          cd onig_sys
+          cargo test --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features
+        continue-on-error: ${{ matrix.continue-on-error || false }}
+
+      - name: Test onig
+        shell: bash
+        run: |
+          cd onig
+          cargo test --target ${{ matrix.target }} --no-fail-fast --features "${{ matrix.features }}" --no-default-features
+        continue-on-error: ${{ matrix.continue-on-error || false }}
