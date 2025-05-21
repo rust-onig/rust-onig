@@ -104,38 +104,45 @@ jobs:
           override: true
 
       # Special setup for GNU ABI (mingw)
-      - name: Install MinGW (GNU ABI)
+      - name: Cache MinGW
         if: matrix.abi == 'gnu'
+        id: cache-mingw
+        uses: actions/cache@v3
+        with:
+          path: C:/mingw
+          key: mingw-${{ matrix.arch }}-v1
+
+      - name: Install MinGW (GNU ABI)
+        if: matrix.abi == 'gnu' && steps.cache-mingw.outputs.cache-hit != 'true'
         shell: bash
         run: |
           curl --insecure -fsSL $MINGW_URL -o mingw.7z
-          7z x -y mingw.7z -oC:/mingw > /dev/null
-          if [[ "${{ matrix.arch }}" == "i686" ]]; then
-            echo "C:/mingw/mingw32/bin" >> $GITHUB_PATH
-            echo "C:/mingw/mingw32/i686-w64-mingw32/bin" >> $GITHUB_PATH
-          else
-            echo "C:/mingw/mingw64/bin" >> $GITHUB_PATH
-            echo "C:/mingw/mingw64/x86_64-w64-mingw32/bin" >> $GITHUB_PATH
-          fi
+          7z x -y mingw.7z -oC:/mingw > nul
+          ls -la C:/mingw
 
       # Special workaround for GNU ABI to use MSVC for compilation but GNU for linking
-      - name: Setup GNU ABI workaround
+      - name: Setup GNU ABI
         if: matrix.abi == 'gnu'
         shell: bash
         run: |
-          # Install MSVC toolchain
-          rustup install ${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc
-          rustup default ${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc
-          # Add GNU target
+          # For GNU targets, we'll use the GNU toolchain directly without the workaround
+          # that was trying to mix MSVC and GNU, which was causing binary format issues
+          rustup default ${{ matrix.rust }}
           rustup target add ${{ matrix.target }}
           
-          # Copy libs from gcc toolchain to rust toolchain
+          # Add missing DLLs to the PATH to ensure tests can run
           if [[ "${{ matrix.arch }}" == "i686" ]]; then
-            mkdir -p $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
-            cp C:/mingw/mingw32/i686-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
+            echo "C:/mingw/mingw32/bin" >> $GITHUB_PATH
+            echo "C:/mingw/mingw32/i686-w64-mingw32/bin" >> $GITHUB_PATH
+            # Copy necessary DLLs to the target directory where tests will look for them
+            mkdir -p D:/a/rust-onig/rust-onig/target/i686-pc-windows-gnu/debug/deps/
+            cp C:/mingw/mingw32/bin/*.dll D:/a/rust-onig/rust-onig/target/i686-pc-windows-gnu/debug/deps/ || true
           else
-            mkdir -p $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
-            cp C:/mingw/mingw64/x86_64-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
+            echo "C:/mingw/mingw64/bin" >> $GITHUB_PATH
+            echo "C:/mingw/mingw64/x86_64-w64-mingw32/bin" >> $GITHUB_PATH
+            # Copy necessary DLLs to the target directory where tests will look for them
+            mkdir -p D:/a/rust-onig/rust-onig/target/x86_64-pc-windows-gnu/debug/deps/
+            cp C:/mingw/mingw64/bin/*.dll D:/a/rust-onig/rust-onig/target/x86_64-pc-windows-gnu/debug/deps/ || true
           fi
       
       - name: Display toolchain information
@@ -166,12 +173,16 @@ jobs:
         shell: bash
         run: |
           cd onig_sys
-          cargo test --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features
+          # Setting LIBCLANG_PATH for test runs too
+          export LIBCLANG_PATH=${{ runner.temp }}/llvm/lib
+          cargo test --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
         continue-on-error: ${{ matrix.continue-on-error || false }}
 
       - name: Test onig
         shell: bash
         run: |
           cd onig
-          cargo test --target ${{ matrix.target }} --no-fail-fast --features "${{ matrix.features }}" --no-default-features
+          # Setting LIBCLANG_PATH for test runs too
+          export LIBCLANG_PATH=${{ runner.temp }}/llvm/lib
+          cargo test --target ${{ matrix.target }} --no-fail-fast --features "${{ matrix.features }}" --no-default-features -v
         continue-on-error: ${{ matrix.continue-on-error || false }}
