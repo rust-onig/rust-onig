@@ -1,23 +1,42 @@
-name: Rust
+name: Publish Crates
 
-on: workflow_dispatch
+on:
+  release:
+    types: [published]
 
 env:
   CARGO_TERM_COLOR: always
   CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
 jobs:
-  build:
-
+  publish:
+    name: Build and Publish Crates
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event.release.tag_name }}
+        
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+        
     - name: Build
       run: cargo build --verbose
+      
     - name: Run tests
       run: cargo test --verbose
+      
     - name: Publish `onig_sys` crate
-      run: (cd onig_sys/ && cargo pubish)
+      run: (cd onig_sys/ && cargo publish --allow-dirty)
+      
     - name: Publish `onig` crate
-      run: (cd onig/ && cargo publish)
+      run: (cd onig/ && cargo publish --allow-dirty)
+      env:
+        # Add a short delay to ensure the onig_sys crate is available on crates.io
+        CARGO_PUBLISH_DELAY: "30"
