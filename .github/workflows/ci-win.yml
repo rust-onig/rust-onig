@@ -131,11 +131,11 @@ jobs:
           
           # Copy libs from gcc toolchain to rust toolchain
           if [[ "${{ matrix.arch }}" == "i686" ]]; then
-            mkdir -p $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
-            cp C:/mingw/mingw32/i686-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
+            mkdir -p $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
+            cp C:/mingw/mingw32/i686-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
           else
-            mkdir -p $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
-            cp C:/mingw/mingw64/x86_64-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/stable-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
+            mkdir -p $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib
+            cp C:/mingw/mingw64/x86_64-w64-mingw32/lib/*.o $HOME/.rustup/toolchains/${{ matrix.rust }}-${{ matrix.arch }}-pc-windows-msvc/lib/rustlib/${{ matrix.target }}/lib/
           fi
       
       - name: Display toolchain information
