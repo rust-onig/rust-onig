@@ -19,5 +19,5 @@ jobs:
       run: cargo test --verbose
     - name: Publish `onig_sys` crate
       run: (cd onig_sys/ && cargo pubish)
-    - name: Pulish `onig` crate
+    - name: Publish `onig` crate
       run: (cd onig/ && cargo publish)
