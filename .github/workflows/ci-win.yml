@@ -89,6 +89,15 @@ jobs:
         shell: bash
         run: |
           echo "LIBCLANG_PATH=${{ runner.temp }}/llvm/lib" >> $GITHUB_ENV
+          
+          # Setup the correct toolchain name to use for all commands
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            echo "TOOLCHAIN=${{ matrix.rust }}-${{ matrix.target }}" >> $GITHUB_ENV
+          else
+            echo "TOOLCHAIN=${{ matrix.rust }}" >> $GITHUB_ENV
+          fi
+          
+          # Setup MinGW URLs for GNU targets
           if [[ "${{ matrix.abi }}" == "gnu" && "${{ matrix.arch }}" == "i686" ]]; then
             echo "MINGW_URL=https://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-posix/dwarf/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z" >> $GITHUB_ENV
           elif [[ "${{ matrix.abi }}" == "gnu" && "${{ matrix.arch }}" == "x86_64" ]]; then
@@ -102,6 +111,13 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.target }}
           override: true
+          
+      # For GNU targets, ensure the specific toolchain is available
+      - name: Set up GNU specific toolchain
+        if: matrix.abi == 'gnu'
+        run: |
+          rustup toolchain install ${{ matrix.rust }}-${{ matrix.target }}
+          # We do NOT set as default here, we'll use +toolchain syntax instead
 
       # Special setup for GNU ABI (mingw)
       - name: Cache MinGW
@@ -125,25 +141,19 @@ jobs:
         if: matrix.abi == 'gnu'
         shell: bash
         run: |
-          # For GNU targets, we'll use the GNU toolchain directly without the workaround
-          # that was trying to mix MSVC and GNU, which was causing binary format issues
-          rustup default ${{ matrix.rust }}
-          rustup target add ${{ matrix.target }}
-          
-          # Add missing DLLs to the PATH to ensure tests can run
+          # Add MinGW binaries to PATH so they can be found during build and test
           if [[ "${{ matrix.arch }}" == "i686" ]]; then
             echo "C:/mingw/mingw32/bin" >> $GITHUB_PATH
             echo "C:/mingw/mingw32/i686-w64-mingw32/bin" >> $GITHUB_PATH
-            # Copy necessary DLLs to the target directory where tests will look for them
-            mkdir -p D:/a/rust-onig/rust-onig/target/i686-pc-windows-gnu/debug/deps/
-            cp C:/mingw/mingw32/bin/*.dll D:/a/rust-onig/rust-onig/target/i686-pc-windows-gnu/debug/deps/ || true
           else
             echo "C:/mingw/mingw64/bin" >> $GITHUB_PATH
             echo "C:/mingw/mingw64/x86_64-w64-mingw32/bin" >> $GITHUB_PATH
-            # Copy necessary DLLs to the target directory where tests will look for them
-            mkdir -p D:/a/rust-onig/rust-onig/target/x86_64-pc-windows-gnu/debug/deps/
-            cp C:/mingw/mingw64/bin/*.dll D:/a/rust-onig/rust-onig/target/x86_64-pc-windows-gnu/debug/deps/ || true
           fi
+          
+          # Force the system to use the GNU compiler and linker
+          echo "CC_${{ matrix.target }}=gcc" >> $GITHUB_ENV
+          echo "CXX_${{ matrix.target }}=g++" >> $GITHUB_ENV
+          echo "LD_${{ matrix.target }}=gcc" >> $GITHUB_ENV
       
       - name: Display toolchain information
         shell: bash
@@ -151,38 +161,56 @@ jobs:
           rustc -vV
           cargo -vV
           if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            echo "===== GNU toolchain info ====="
             gcc --version
+            echo "===== PATH ====="
+            echo $PATH
+            echo "===== DLL files in MinGW bin ====="
+            if [[ "${{ matrix.arch }}" == "i686" ]]; then
+              ls -la C:/mingw/mingw32/bin/*.dll | head -n 20
+            else
+              ls -la C:/mingw/mingw64/bin/*.dll | head -n 20
+            fi
           fi
+          echo "===== Clang info ====="
           clang --version
+          echo "===== LIBCLANG_PATH ====="
+          echo $LIBCLANG_PATH
 
       - name: Build onig_sys
         shell: bash
         run: |
           cd onig_sys
-          cargo build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features
+          # Print the real path to see where cargo and rustc are located
+          which cargo
+          # Use the consistent toolchain approach for all runs
+          cargo +${{ env.TOOLCHAIN }} build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
         continue-on-error: ${{ matrix.continue-on-error || false }}
 
       - name: Build onig
         shell: bash
         run: |
           cd onig
-          cargo build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features
+          # Use the consistent toolchain approach for all runs
+          cargo +${{ env.TOOLCHAIN }} build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
         continue-on-error: ${{ matrix.continue-on-error || false }}
 
       - name: Test onig_sys
         shell: bash
         run: |
           cd onig_sys
-          # Setting LIBCLANG_PATH for test runs too
+          # Setting LIBCLANG_PATH for test runs
           export LIBCLANG_PATH=${{ runner.temp }}/llvm/lib
-          cargo test --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
+          # Use the consistent toolchain approach for all runs
+          cargo +${{ env.TOOLCHAIN }} test --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
         continue-on-error: ${{ matrix.continue-on-error || false }}
 
       - name: Test onig
         shell: bash
         run: |
           cd onig
-          # Setting LIBCLANG_PATH for test runs too
+          # Setting LIBCLANG_PATH for test runs
           export LIBCLANG_PATH=${{ runner.temp }}/llvm/lib
-          cargo test --target ${{ matrix.target }} --no-fail-fast --features "${{ matrix.features }}" --no-default-features -v
+          # Use the consistent toolchain approach for all runs
+          cargo +${{ env.TOOLCHAIN }} test --target ${{ matrix.target }} --no-fail-fast --features "${{ matrix.features }}" --no-default-features -v
         continue-on-error: ${{ matrix.continue-on-error || false }}
