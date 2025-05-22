@@ -111,8 +111,8 @@ jobs:
           
           # Install the requested toolchain and target
           rustup toolchain install ${{ matrix.rust }} --profile minimal
+          rustup target add ${{ matrix.target }} --toolchain ${{ matrix.rust }}
           rustup default ${{ matrix.rust }}
-          rustup target add ${{ matrix.target }}
           
           # Print version info for debugging
           rustc --version
@@ -120,8 +120,6 @@ jobs:
 
           # Print out the default toolchain
           rustup show active-toolchain
-          rustup show targets
-          rustup show installed-toolchains
 
       - name: Setup PATH for Rust
         shell: pwsh
