@@ -182,7 +182,6 @@ jobs:
           rustup show
           
           echo "===== Linker info ====="
-          rustc -vV | grep linker
           rustc -vV | grep "host:"
           rustc -vV | grep "target:"
           
