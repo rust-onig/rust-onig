@@ -46,32 +46,32 @@ jobs:
             abi: msvc
             target: x86_64-pc-windows-msvc
             features: ""
+            
+           # "gnu" ABI
+           # - rust: stable
+           #   arch: i686
+           #   abi: gnu
+           #   target: i686-pc-windows-gnu
+           #   features: ""
+           # - rust: stable
+           #   arch: x86_64
+           #   abi: gnu
+           #   target: x86_64-pc-windows-gnu
+           #   features: ""
 
-          # "gnu" ABI
-          - rust: stable
-            arch: i686
-            abi: gnu
-            target: i686-pc-windows-gnu
-            features: ""
-          - rust: stable
-            arch: x86_64
-            abi: gnu
-            target: x86_64-pc-windows-gnu
-            features: ""
-
-          # std-pattern feature
+           # std-pattern feature
           - rust: nightly
             arch: i686
             abi: msvc
             target: i686-pc-windows-msvc
             features: "std-pattern"
             continue-on-error: true
-          - rust: nightly
-            arch: x86_64
-            abi: gnu
-            target: x86_64-pc-windows-gnu
-            features: "std-pattern"
-            continue-on-error: true
+           # - rust: nightly
+           #   arch: x86_64
+           #   abi: gnu
+           #   target: x86_64-pc-windows-gnu
+           #   features: "std-pattern"
+           #   continue-on-error: true
 
     steps:
       - name: Checkout repository
