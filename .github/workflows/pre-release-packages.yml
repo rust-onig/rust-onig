@@ -1,0 +1,88 @@
+name: Pre-Release Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_suffix:
+        description: 'Version suffix for pre-release (e.g., alpha.1, beta.2)'
+        required: true
+        default: 'dev'
+      publish_to:
+        description: 'Where to publish the packages'
+        required: true
+        default: 'artifact'
+        type: choice
+        options:
+          - artifact
+          - github-packages
+
+jobs:
+  build-packages:
+    name: Build Pre-Release Packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      
+      - name: Build
+        run: cargo build --verbose
+      
+      - name: Run tests
+        run: cargo test --verbose
+      
+      - name: Create temporary version files
+        run: |
+          # Extract current versions
+          ONIG_SYS_VERSION=$(grep -m 1 '^version =' onig_sys/Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
+          ONIG_VERSION=$(grep -m 1 '^version =' onig/Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
+          
+          # Create temporary version files with pre-release suffix
+          echo "$ONIG_SYS_VERSION-${{ github.events.inputs.version_suffix }}" > onig_sys/VERSION
+          echo "$ONIG_VERSION-${{ github.events.inputs.version_suffix }}" > onig/VERSION
+          
+          echo "Pre-release versions:"
+          echo "onig_sys: $(cat onig_sys/VERSION)"
+          echo "onig: $(cat onig/VERSION)"
+      
+      - name: Package crates
+        run: |
+          mkdir -p packages
+          cargo package --manifest-path onig_sys/Cargo.toml --allow-dirty --no-verify -v
+          cargo package --manifest-path onig/Cargo.toml --allow-dirty --no-verify -v
+          
+          # Copy the packaged crates to the packages directory
+          ONIG_SYS_VERSION=$(cat onig_sys/VERSION)
+          ONIG_VERSION=$(cat onig/VERSION)
+          
+          cp target/package/onig_sys-${ONIG_SYS_VERSION}.crate packages/
+          cp target/package/onig-${ONIG_VERSION}.crate packages/
+      
+      - name: Upload as artifacts
+        if: ${{ github.event.inputs.publish_to == 'artifact' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: rust-onig-packages
+          path: packages/
+          retention-days: 14
+      
+      - name: Publish to GitHub Packages
+        if: ${{ github.event.inputs.publish_to == 'github-packages' }}
+        run: |
+              # Set up cargo credentials for GitHub Packages (rust-onig/rust-onig feed)
+              mkdir -p ~/.cargo
+              cat <<EOF > ~/.cargo/config.toml
+              [registries.github]
+              index = "https://github.com/rust-onig/rust-onig-index"
+              token = "${{ secrets.GITHUB_TOKEN }}"
+              EOF
+              
+              # Publish to GitHub Packages
+              (cd onig_sys/ && cargo publish --registry github --allow-dirty)
+              sleep 30
+              (cd onig/ && cargo publish --registry github --allow-dirty)
