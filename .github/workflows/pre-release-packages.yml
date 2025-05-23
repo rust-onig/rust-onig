@@ -43,8 +43,8 @@ jobs:
           ONIG_VERSION=$(grep -m 1 '^version =' onig/Cargo.toml | sed -E 's/version = "([^"]+)"/\1/')
           
           # Create temporary version files with pre-release suffix
-          echo "$ONIG_SYS_VERSION-${{ github.inputs.version_suffix }}" > onig_sys/VERSION
-          echo "$ONIG_VERSION-${{ github.inputs.version_suffix }}" > onig/VERSION
+          echo "$ONIG_SYS_VERSION-${{ github.events.inputs.version_suffix }}" > onig_sys/VERSION
+          echo "$ONIG_VERSION-${{ github.events.inputs.version_suffix }}" > onig/VERSION
           
           echo "Pre-release versions:"
           echo "onig_sys: $(cat onig_sys/VERSION)"
