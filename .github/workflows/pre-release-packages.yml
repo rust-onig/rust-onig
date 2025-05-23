@@ -78,7 +78,7 @@ jobs:
               mkdir -p ~/.cargo
               cat <<EOF > ~/.cargo/config.toml
               [registries.github]
-              index = "https://npm.pkg.github.com/rust-onig/rust-onig"
+              index = "https://github.com/rust-onig/rust-onig-index"
               token = "${{ secrets.GITHUB_TOKEN }}"
               EOF
               
