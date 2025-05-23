@@ -183,7 +183,6 @@ jobs:
           
           echo "===== Linker info ====="
           rustc -vV | grep "host:"
-          rustc -vV | grep "target:"
           
           if [[ "${{ matrix.abi }}" == "gnu" ]]; then
             echo "===== GNU toolchain info ====="
