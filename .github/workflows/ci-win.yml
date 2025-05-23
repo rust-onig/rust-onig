@@ -1,0 +1,291 @@
+name: CI Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  windows-build:
+    name: Windows ${{ matrix.rust }} - ${{ matrix.arch }}-${{ matrix.abi }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # minimum version
+          - rust: 1.70.0
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: ""
+
+          # "msvc" ABI
+          - rust: stable
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: ""
+          - rust: stable
+            arch: x86_64
+            abi: msvc
+            target: x86_64-pc-windows-msvc
+            features: ""
+          - rust: beta
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: ""
+          - rust: beta
+            arch: x86_64
+            abi: msvc
+            target: x86_64-pc-windows-msvc
+            features: ""
+            
+           # "gnu" ABI
+           # - rust: stable
+           #   arch: i686
+           #   abi: gnu
+           #   target: i686-pc-windows-gnu
+           #   features: ""
+           # - rust: stable
+           #   arch: x86_64
+           #   abi: gnu
+           #   target: x86_64-pc-windows-gnu
+           #   features: ""
+
+           # std-pattern feature
+          - rust: nightly
+            arch: i686
+            abi: msvc
+            target: i686-pc-windows-msvc
+            features: "std-pattern"
+            continue-on-error: true
+           # - rust: nightly
+           #   arch: x86_64
+           #   abi: gnu
+           #   target: x86_64-pc-windows-gnu
+           #   features: "std-pattern"
+           #   continue-on-error: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "10.0"
+          directory: ${{ runner.temp }}/llvm
+
+      - name: Setup environment variables
+        shell: bash
+        run: |
+          echo "LIBCLANG_PATH=${{ runner.temp }}/llvm/lib" >> $GITHUB_ENV
+          
+          # Setup MinGW URLs for GNU targets
+          if [[ "${{ matrix.abi }}" == "gnu" && "${{ matrix.arch }}" == "i686" ]]; then
+            echo "MINGW_URL=https://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/8.1.0/threads-posix/dwarf/i686-8.1.0-release-posix-dwarf-rt_v6-rev0.7z" >> $GITHUB_ENV
+          elif [[ "${{ matrix.abi }}" == "gnu" && "${{ matrix.arch }}" == "x86_64" ]]; then
+            echo "MINGW_URL=https://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Rust
+        shell: pwsh
+        run: |
+          # Download rustup-init.exe for Windows
+          Invoke-WebRequest https://win.rustup.rs -UseBasicParsing -OutFile rustup-init.exe
+          
+          # Install Rust without prompting
+          .\rustup-init.exe -y --default-toolchain none --profile minimal
+          
+          # Refresh PATH
+          $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
+          
+          # Install toolchain with the correct host triple for GNU targets
+          if ("${{ matrix.abi }}" -eq "gnu") {
+            # For GNU targets, install the toolchain with the GNU host triple
+            $host_triple = "${{ matrix.target }}"
+            Write-Host "Installing GNU-based toolchain: ${{ matrix.rust }}-$host_triple"
+            rustup toolchain install ${{ matrix.rust }}-$host_triple --profile minimal
+            rustup default ${{ matrix.rust }}-$host_triple
+          } else {
+            # For MSVC targets, use the standard approach
+            Write-Host "Installing MSVC-based toolchain: ${{ matrix.rust }}"
+            rustup toolchain install ${{ matrix.rust }} --profile minimal
+            rustup target add ${{ matrix.target }} --toolchain ${{ matrix.rust }}
+            rustup default ${{ matrix.rust }}
+          }
+          
+          # Print version info for debugging
+          rustc --version
+          cargo --version
+
+          # Print out the default toolchain and targets
+          rustup show
+          rustup target list --installed
+
+      - name: Setup PATH for Rust
+        shell: pwsh
+        run: |
+          echo "$env:USERPROFILE\.cargo\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          
+      # Special setup for GNU ABI (mingw)
+      - name: Cache MinGW
+        if: matrix.abi == 'gnu'
+        id: cache-mingw
+        uses: actions/cache@v3
+        with:
+          path: C:/mingw
+          key: mingw-${{ matrix.arch }}-v1
+
+      - name: Install MinGW (GNU ABI)
+        if: matrix.abi == 'gnu' && steps.cache-mingw.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          curl --insecure -fsSL $MINGW_URL -o mingw.7z
+          7z x -y mingw.7z -oC:/mingw > nul
+          ls -la C:/mingw
+
+      # Special workaround for GNU ABI to use MSVC for compilation but GNU for linking
+      - name: Setup GNU ABI
+        if: matrix.abi == 'gnu'
+        shell: bash
+        run: |
+          # Add MinGW binaries to PATH so they can be found during build and test
+          if [[ "${{ matrix.arch }}" == "i686" ]]; then
+            echo "C:/mingw/mingw32/bin" >> $GITHUB_PATH
+            echo "C:/mingw/mingw32/i686-w64-mingw32/bin" >> $GITHUB_PATH
+          else
+            echo "C:/mingw/mingw64/bin" >> $GITHUB_PATH
+            echo "C:/mingw/mingw64/x86_64-w64-mingw32/bin" >> $GITHUB_PATH
+          fi
+          
+          # Force the system to use the GNU compiler and linker
+          echo "CC_${{ matrix.target }}=gcc" >> $GITHUB_ENV
+          echo "CXX_${{ matrix.target }}=g++" >> $GITHUB_ENV
+          echo "LD_${{ matrix.target }}=gcc" >> $GITHUB_ENV
+      
+      - name: Display toolchain information
+        shell: bash
+        run: |
+          echo "===== Rust toolchain info ====="
+          rustc -vV
+          cargo -vV
+          rustup show
+          
+          echo "===== Linker info ====="
+          rustc -vV | grep "host:"
+          
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            echo "===== GNU toolchain info ====="
+            gcc --version
+            echo "===== PATH ====="
+            echo $PATH
+            echo "===== DLL files in MinGW bin ====="
+            if [[ "${{ matrix.arch }}" == "i686" ]]; then
+              ls -la C:/mingw/mingw32/bin/*.dll | head -n 20
+            else
+              ls -la C:/mingw/mingw64/bin/*.dll | head -n 20
+            fi
+          fi
+          
+          echo "===== Clang info ====="
+          clang --version
+          echo "===== LIBCLANG_PATH ====="
+          echo $LIBCLANG_PATH
+
+      - name: Build onig_sys
+        shell: bash
+        run: |
+          cd onig_sys
+          
+          # For GNU targets, make sure the output directories are correct
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            # Clean any mixed target directories that might have incorrect binary formats
+            rm -rf D:/a/rust-onig/rust-onig/target/debug
+            
+            # Set explicit target directory to avoid mixing MSVC and GNU binaries
+            export CARGO_TARGET_DIR="D:/a/rust-onig/rust-onig/target/${{ matrix.target }}"
+            
+            # Print debug info
+            echo "Using target directory: $CARGO_TARGET_DIR"
+            
+            # Double-check toolchain before build
+            echo "===== Current Rust toolchain before build ====="
+            rustc -vV
+            rustup show
+          fi
+          
+          # Build with the installed toolchain (now default)
+          cargo build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
+          
+          # For GNU targets, check the binary format
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            echo "===== Checking binary format of built files ====="
+            find "D:/a/rust-onig/rust-onig/target/${{ matrix.target }}" -name "*.exe" -o -name "*.dll" | head -n 5 | xargs file || echo "No binaries found or 'file' command not available"
+          fi
+        continue-on-error: ${{ matrix.continue-on-error || false }}
+
+      - name: Build onig
+        shell: bash
+        run: |
+          cd onig
+          
+          # For GNU targets, make sure the output directories are correct
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            # Set explicit target directory to avoid mixing MSVC and GNU binaries
+            export CARGO_TARGET_DIR="D:/a/rust-onig/rust-onig/target/${{ matrix.target }}"
+            
+            # Double-check toolchain before build
+            echo "===== Current Rust toolchain before build ====="
+            rustc -vV
+            rustup show
+          fi
+          
+          # Build with the installed toolchain (now default)
+          cargo build --target ${{ matrix.target }} --features "${{ matrix.features }}" --no-default-features -v
+          
+          # For GNU targets, check the binary format
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            echo "===== Checking binary format of built files ====="
+            find "D:/a/rust-onig/rust-onig/target/${{ matrix.target }}" -name "*.exe" -o -name "*.dll" | head -n 5 | xargs file || echo "No binaries found or 'file' command not available"
+          fi
+        continue-on-error: ${{ matrix.continue-on-error || false }}
+
+      - name: Test onig
+        shell: bash
+        run: |
+          # Setting LIBCLANG_PATH for test runs
+          export LIBCLANG_PATH=${{ runner.temp }}/llvm/lib
+          
+          # For GNU targets, make sure the output directories are correct
+          if [[ "${{ matrix.abi }}" == "gnu" ]]; then
+            # Set explicit target directory to avoid mixing MSVC and GNU binaries
+            export CARGO_TARGET_DIR="D:/a/rust-onig/rust-onig/target/${{ matrix.target }}"
+            
+            # For GNU targets, check the binary format of test files
+            echo "===== Checking binary format of test files ====="
+            find "$CARGO_TARGET_DIR/debug/deps" -name "*.exe" | head -n 5 | xargs file || echo "No binaries found or 'file' command not available"
+            
+            # Add DLL directories to PATH explicitly to help the test find required DLLs
+            if [[ "${{ matrix.arch }}" == "i686" ]]; then
+              export PATH="C:/mingw/mingw32/bin:C:/mingw/mingw32/i686-w64-mingw32/bin:$PATH"
+            else
+              export PATH="C:/mingw/mingw64/bin:C:/mingw/mingw64/x86_64-w64-mingw32/bin:$PATH"
+            fi
+            
+            echo "===== Updated PATH for test run ====="
+            echo $PATH
+          fi
+          
+          # Test with the installed toolchain (now default)
+          cargo test --target ${{ matrix.target }} --no-fail-fast --features "${{ matrix.features }}" --no-default-features -v
+        continue-on-error: ${{ matrix.continue-on-error || false }}
