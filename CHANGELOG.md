@@ -4,6 +4,10 @@ This file contains the "big hitters" for each release. For more detailed
 information about the exact changes in each release check the source code at
 <https://github.com/rust-onig/rust-onig>.
 
+## 6.6.0 (unreleased)
+
+* Expose RegSet in rust-onig
+
 ## 6.5.0
 
  * Upgrade `bitflags` to at least v2.4.0
@@ -23,7 +27,7 @@ information about the exact changes in each release check the source code at
 ## 6.3.0
 
  * MSRV bumped to 1.50.0
- * Proper support for round-tripping of syntax feature falgs, including new
+ * Proper support for round-tripping of syntax feature flags, including new
    flags that we don't recognise yet.
  * Support for the `p` syntax flag.
 

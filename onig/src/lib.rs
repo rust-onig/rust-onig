@@ -3,6 +3,8 @@
 //!
 //! # Examples
 //!
+//! ## Single Regex Usage
+//!
 //! ```rust
 //! use onig::Regex;
 //!
@@ -14,6 +16,17 @@
 //!          None =>
 //!              println!("Group {} is not captured", i)
 //!     }
+//! }
+//! ```
+//!
+//! ## Multiple Regex Usage with RegSet
+//!
+//! ```rust
+//! use onig::RegSet;
+//!
+//! let set = RegSet::new(&[r"\d+", r"[a-z]+", r"[A-Z]+"]).unwrap();
+//! if let Some((regex_index, pos)) = set.find("hello123WORLD") {
+//!     println!("Regex {} matched at position {}", regex_index, pos);
 //! }
 //! ```
 //!
@@ -95,6 +108,7 @@ mod flags;
 mod match_param;
 mod names;
 mod region;
+mod regset;
 mod replace;
 mod syntax;
 mod tree;
@@ -111,6 +125,7 @@ pub use crate::find::{
 pub use crate::flags::*;
 pub use crate::match_param::MatchParam;
 pub use crate::region::Region;
+pub use crate::regset::{RegSet, RegSetLead};
 pub use crate::replace::Replacer;
 pub use crate::syntax::{MetaChar, Syntax};
 pub use crate::tree::{CaptureTreeNode, CaptureTreeNodeIter};
@@ -831,6 +846,11 @@ impl Regex {
     /// Get the Size of the Capture Histories for this Pattern
     pub fn capture_histories_len(&self) -> usize {
         unsafe { onig_sys::onig_number_of_capture_histories(self.raw) as usize }
+    }
+
+    /// Get the raw Oniguruma regex pointer
+    pub(crate) fn as_raw(&self) -> onig_sys::OnigRegex {
+        self.raw
     }
 }
 

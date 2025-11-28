@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
 members = [
-        "onig",
-        "onig_sys"
+  "onig",
+  "onig_sys",
 ]
