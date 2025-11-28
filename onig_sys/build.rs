@@ -205,6 +205,7 @@ fn bindgen_headers(path: &str) {
     let mut bindgen = bindgen::Builder::default()
         .header(path)
         .derive_eq(true)
+        .no_partialeq("OnigEncodingTypeST")
         .rust_target("1.70.0".parse().unwrap())
         .rust_edition("2021".parse().unwrap())
         .layout_tests(false);

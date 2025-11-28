@@ -23,7 +23,7 @@ pub trait EncodedChars {
 
     /// The encoding of the contents of the buffer
     fn encoding(&self) -> onig_sys::OnigEncoding {
-        unsafe { &mut onig_sys::OnigEncodingUTF8 }
+        &raw mut onig_sys::OnigEncodingUTF8
     }
 
     /// The length of this buffer
@@ -89,7 +89,7 @@ impl<'a> EncodedBytes<'a> {
     pub fn ascii(bytes: &'a [u8]) -> EncodedBytes<'a> {
         EncodedBytes {
             bytes,
-            enc: unsafe { &mut onig_sys::OnigEncodingASCII },
+            enc: &raw mut onig_sys::OnigEncodingASCII,
         }
     }
 }
@@ -120,13 +120,13 @@ pub mod tests {
     pub fn rust_string_encoding_is_utf8() {
         let foo = "foo";
         assert_eq!(
-            unsafe { &mut onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
+            &raw mut onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding,
             foo.encoding()
         );
 
         let bar = String::from(".*");
         assert_eq!(
-            unsafe { &mut onig_sys::OnigEncodingUTF8 } as onig_sys::OnigEncoding,
+            &raw mut onig_sys::OnigEncodingUTF8 as onig_sys::OnigEncoding,
             bar.encoding()
         );
     }
@@ -136,7 +136,7 @@ pub mod tests {
         let fizz = b"fizz";
         let buff = EncodedBytes::ascii(fizz);
         assert_eq!(
-            unsafe { &mut onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
+            &raw mut onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding,
             buff.encoding()
         );
     }
@@ -163,10 +163,9 @@ pub mod tests {
     #[test]
     pub fn byte_buffer_create() {
         let buff = b"hello world";
-        let enc_buffer =
-            EncodedBytes::from_parts(buff, unsafe { &mut onig_sys::OnigEncodingASCII });
+        let enc_buffer = EncodedBytes::from_parts(buff, &raw mut onig_sys::OnigEncodingASCII);
         assert_eq!(
-            unsafe { &mut onig_sys::OnigEncodingASCII } as onig_sys::OnigEncoding,
+            &raw mut onig_sys::OnigEncodingASCII as onig_sys::OnigEncoding,
             enc_buffer.encoding()
         );
         assert_eq!(

@@ -35,61 +35,61 @@ pub struct Syntax {
 impl Syntax {
     /// Python syntax
     pub fn python() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxPython) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxPython) }
     }
     /// Plain text syntax
     pub fn asis() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxASIS) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxASIS) }
     }
 
     /// POSIX Basic RE syntax
     pub fn posix_basic() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxPosixBasic) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxPosixBasic) }
     }
 
     /// POSIX Extended RE syntax
     pub fn posix_extended() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxPosixExtended) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxPosixExtended) }
     }
 
     /// Emacs syntax
     pub fn emacs() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxEmacs) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxEmacs) }
     }
 
     /// Grep syntax
     pub fn grep() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxGrep) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxGrep) }
     }
 
     /// GNU regex syntax
     pub fn gnu_regex() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxGnuRegex) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxGnuRegex) }
     }
 
     /// Java (Sun java.util.regex) syntax
     pub fn java() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxJava) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxJava) }
     }
 
     /// Perl syntax
     pub fn perl() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxPerl) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxPerl) }
     }
 
     /// Perl + named group syntax
     pub fn perl_ng() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxPerl_NG) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxPerl_NG) }
     }
 
     /// Ruby syntax
     pub fn ruby() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxRuby) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxRuby) }
     }
 
     /// Oniguruma Syntax
     pub fn oniguruma() -> &'static Syntax {
-        unsafe { transmute(&onig_sys::OnigSyntaxOniguruma) }
+        unsafe { transmute(&raw const onig_sys::OnigSyntaxOniguruma) }
     }
 
     /// Default syntax (Ruby syntax)

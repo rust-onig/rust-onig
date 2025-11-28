@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           # minimum version
-          - rust: 1.70.0
+          - rust: 1.83.0
             arch: i686
             abi: msvc
             target: i686-pc-windows-msvc
