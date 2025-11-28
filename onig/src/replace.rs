@@ -11,12 +11,12 @@ use std::borrow::Cow;
 pub trait Replacer {
     /// Returns a possibly owned string that is used to replace the match
     /// corresponding to the `caps` capture group.
-    fn reg_replace(&mut self, caps: &Captures) -> Cow<str>;
+    fn reg_replace(&mut self, caps: &Captures) -> Cow<'_, str>;
 }
 
 /// Replacement using Literal Strings
 impl<'t> Replacer for &'t str {
-    fn reg_replace(&mut self, _: &Captures) -> Cow<str> {
+    fn reg_replace(&mut self, _: &Captures) -> Cow<'_, str> {
         (*self).into()
     }
 }

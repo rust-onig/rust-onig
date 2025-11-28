@@ -14,7 +14,7 @@ fn capture_str<'t>(caps: &'t Captures, cap_ref: &str) -> Option<&'t str> {
 }
 
 impl<'a> Replacer for Dollarified<'a> {
-    fn reg_replace(&mut self, caps: &Captures) -> Cow<str> {
+    fn reg_replace(&mut self, caps: &Captures) -> Cow<'_, str> {
         let mut replacement = String::new();
         let mut pattern = self.0;
         while !pattern.is_empty() {
