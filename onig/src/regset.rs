@@ -276,7 +276,7 @@ impl RegSet {
     /// }
     /// ```
     pub fn captures<'t>(&self, text: &'t str) -> Option<(usize, Captures<'t>)> {
-        self.captures_with_encoding(
+        self.captures_with_options(
             text,
             0,
             text.len(),
@@ -296,7 +296,7 @@ impl RegSet {
     /// use onig::{RegSet, RegSetLead, SearchOptions, EncodedBytes};
     ///
     /// let set = RegSet::new(&[r"(\d+)", r"([a-z]+)"]).unwrap();
-    /// if let Some((regex_index, captures)) = set.captures_with_encoding(
+    /// if let Some((regex_index, captures)) = set.captures_with_options(
     ///     "hello123",
     ///     0,
     ///     8,
@@ -308,19 +308,16 @@ impl RegSet {
     ///     println!("First capture group: {:?}", captures.at(1));
     /// }
     /// ```
-    pub fn captures_with_encoding<'t, T>(
+    pub fn captures_with_options<'t>(
         &self,
-        chars: T,
+        text: &'t str,
         from: usize,
         to: usize,
         lead: RegSetLead,
         options: SearchOptions,
-    ) -> Option<(usize, Captures<'t>)>
-    where
-        T: EncodedChars,
-    {
+    ) -> Option<(usize, Captures<'t>)> {
         if let Some((regex_index, match_pos)) =
-            self.do_search_with_encoding(&chars, from, to, lead, options)
+            self.do_search_with_encoding(&text, from, to, lead, options)
         {
             let region_ptr =
                 unsafe { onig_sys::onig_regset_get_region(self.raw, regex_index as c_int) };
@@ -333,15 +330,6 @@ impl RegSet {
                 unsafe {
                     onig_sys::onig_region_copy(&mut region.raw, region_ptr);
                 }
-
-                // Extract text from chars only when we need it for Captures
-                // SAFETY: Assumes UTF-8 encoding (safe for current EncodedChars impls)
-                let text = unsafe {
-                    let start_ptr = chars.start_ptr();
-                    let len = chars.len();
-                    let slice = std::slice::from_raw_parts(start_ptr, len);
-                    std::str::from_utf8_unchecked(slice)
-                };
 
                 let captures = Captures::new(text, region, match_pos);
                 return Some((regex_index, captures));
@@ -540,10 +528,10 @@ mod tests {
     }
 
     #[test]
-    fn test_regset_captures_with_encoding() {
+    fn test_regset_captures_with_options() {
         let set = RegSet::new(&[r"(\d+)", r"([a-z]+)"]).unwrap();
 
-        if let Some((regex_index, captures)) = set.captures_with_encoding(
+        if let Some((regex_index, captures)) = set.captures_with_options(
             "hello123",
             0,
             8,
