@@ -36,7 +36,6 @@ pub struct RegSet {
 }
 
 unsafe impl Send for RegSet {}
-unsafe impl Sync for RegSet {}
 
 impl RegSet {
     /// Create a new RegSet from a slice of pattern strings
