@@ -7,6 +7,7 @@ information about the exact changes in each release check the source code at
 ## 6.6.0 (unreleased)
 
 * Expose RegSet in rust-onig
+* Expose 2 more SearchOption: SEARCH_OPTION_NOT_BEGIN_STRING and SEARCH_OPTION_NOT_BEGIN_POSITION
 
 ## 6.5.0
 
