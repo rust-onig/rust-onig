@@ -94,6 +94,7 @@ fn compile() {
             cc.define("HAVE_UNISTD_H", Some("1"));
             cc.define("HAVE_SYS_TYPES_H", Some("1"));
             cc.define("HAVE_SYS_TIME_H", Some("1"));
+            cc.define("HAVE_ALLOCA_H", Some("1"));
         }
 
         // Can't use size_of::<c_long>(), because it'd refer to build arch, not target arch.
