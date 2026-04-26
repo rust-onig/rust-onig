@@ -95,10 +95,16 @@ fn compile() {
             cc.define("HAVE_UNISTD_H", Some("1"));
             cc.define("HAVE_SYS_TYPES_H", Some("1"));
             cc.define("HAVE_SYS_TIME_H", Some("1"));
-            // On musl targets, alloca is provided as a compiler built-in and
-            // alloca.h may not be in the compiler's search path in all
-            // configurations (e.g., when using musl-gcc with a custom sysroot).
-            if target_env.as_deref() != Ok("musl") {
+            // On musl and BSD targets, alloca is provided as a compiler
+            // built-in and alloca.h may not be in the compiler's search path
+            // in all configurations (e.g., when using musl-gcc with a custom
+            // sysroot, or on NetBSD/OpenBSD/FreeBSD/DragonFly where alloca.h
+            // is not available as a standard header).
+            let is_bsd = matches!(
+                os.as_deref(),
+                Ok("netbsd") | Ok("openbsd") | Ok("freebsd") | Ok("dragonfly")
+            );
+            if target_env.as_deref() != Ok("musl") && !is_bsd {
                 cc.define("HAVE_ALLOCA_H", Some("1"));
             }
         }
