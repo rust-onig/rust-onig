@@ -1,6 +1,6 @@
 [package]
 name = "onig_sys"
-version = "69.9.1"
+version = "69.9.2"
 edition = "2021"
 rust-version = "1.70.0"
 authors = [
@@ -20,8 +20,8 @@ You probably don't want to link to this crate directly;
 instead check out the `onig` crate.
 """
 categories = ["external-ffi-bindings"]
-repository = "https://github.com/iwillspeak/rust-onig"
-documentation = "https://rust-onig.github.io/rust-onig/onig_sys/"
+repository = "https://github.com/rust-onig/rust-onig"
+documentation = "https://docs.rs/onig_sys"
 readme = "../README.md"
 license = "MIT"
 

@@ -80,6 +80,35 @@ jobs:
         run: cd onig && cargo test --features="std-pattern" --verbose
 
 
+  tests-musl:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
+      - name: Build and test onig_sys in Alpine (musl) container
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            rust:alpine \
+            sh -c "apk add --no-cache musl-dev && \
+                   cd onig_sys && cargo test --no-default-features --verbose"
+
+      - name: Build and test onig in Alpine (musl) container
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            rust:alpine \
+            sh -c "apk add --no-cache musl-dev && \
+                   cd onig && cargo test --no-default-features --verbose"
+
+
   tests-generate:
     runs-on: ${{ matrix.os }}
 

@@ -85,6 +85,7 @@ fn compile() {
     let arch = env::var("CARGO_CFG_TARGET_ARCH");
     let os = env::var("CARGO_CFG_TARGET_OS");
     let bits = env::var("CARGO_CFG_TARGET_POINTER_WIDTH").unwrap();
+    let target_env = env::var("CARGO_CFG_TARGET_ENV");
     if let Ok("windows") = os.as_ref().map(String::as_str) {
         fs::copy(src.join(format!("config.h.win{}", bits)), config_h)
             .expect("Can't copy config.h.win??");
@@ -94,6 +95,12 @@ fn compile() {
             cc.define("HAVE_UNISTD_H", Some("1"));
             cc.define("HAVE_SYS_TYPES_H", Some("1"));
             cc.define("HAVE_SYS_TIME_H", Some("1"));
+            // On musl targets, alloca is provided as a compiler built-in and
+            // alloca.h may not be in the compiler's search path in all
+            // configurations (e.g., when using musl-gcc with a custom sysroot).
+            if target_env.as_deref() != Ok("musl") {
+                cc.define("HAVE_ALLOCA_H", Some("1"));
+            }
         }
 
         // Can't use size_of::<c_long>(), because it'd refer to build arch, not target arch.
@@ -127,6 +134,18 @@ fn compile() {
                 "ONIG_EXTERN",
                 Some(r#"__attribute__((visibility("default")))"#),
             );
+        }
+    }
+
+    // On native musl hosts (e.g., Alpine Linux), the musl-gcc wrapper or the
+    // cross-compiler selected by the cc crate may use a sysroot (typically
+    // /usr/local/musl) whose include directory does not exist on native musl
+    // systems. On Alpine the C standard library headers live in /usr/include.
+    // Explicitly add that directory so that stdlib.h / limits.h can be found.
+    if let Ok("musl") = target_env.as_ref().map(String::as_str) {
+        let host = env::var("HOST").unwrap_or_default();
+        if host.contains("musl") && Path::new("/usr/include/stdlib.h").exists() {
+            cc.flag("-isystem").flag("/usr/include");
         }
     }
 
