@@ -116,6 +116,7 @@ pub use crate::syntax::{MetaChar, Syntax};
 pub use crate::tree::{CaptureTreeNode, CaptureTreeNodeIter};
 pub use crate::utils::{copyright, define_user_property, version};
 
+use std::marker::PhantomData;
 use std::os::raw::c_int;
 use std::ptr::{null, null_mut};
 use std::sync::Mutex;
@@ -136,13 +137,20 @@ pub struct Error {
 /// This struct is a wrapper around an Oniguruma regular expression
 /// pointer. This represents a compiled regex which can be used in
 /// search and match operations.
+///
+/// The lifetime parameter `'syntax` ensures that any custom [`Syntax`] object
+/// passed during construction is not dropped while this `Regex` is still alive.
+/// When using the default (static) syntax via [`Regex::new`] or
+/// [`Regex::with_encoding`], the lifetime is `'static` and imposes no
+/// additional restriction.
 #[derive(Debug, Eq, PartialEq)]
-pub struct Regex {
+pub struct Regex<'syntax> {
     raw: onig_sys::OnigRegex,
+    _syntax: PhantomData<&'syntax Syntax>,
 }
 
-unsafe impl Send for Regex {}
-unsafe impl Sync for Regex {}
+unsafe impl<'syntax> Send for Regex<'syntax> {}
+unsafe impl<'syntax> Sync for Regex<'syntax> {}
 
 impl Error {
     fn from_code_and_info(code: c_int, info: &onig_sys::OnigErrorInfo) -> Self {
@@ -208,7 +216,7 @@ impl fmt::Debug for Error {
 
 static REGEX_NEW_MUTEX: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 
-impl Regex {
+impl<'syntax> Regex<'syntax> {
     /// Create a Regex
     ///
     /// Simple regular expression constructor. Compiles a new regular
@@ -227,7 +235,7 @@ impl Regex {
     /// let r = Regex::new(r#"hello (\w+)"#);
     /// assert!(r.is_ok());
     /// ```
-    pub fn new(pattern: &str) -> Result<Self, Error> {
+    pub fn new(pattern: &str) -> Result<Regex<'static>, Error> {
         Regex::with_encoding(pattern)
     }
 
@@ -250,7 +258,7 @@ impl Regex {
     /// let ascii = Regex::with_encoding(EncodedBytes::ascii(b"world"));
     /// assert!(ascii.is_ok());
     /// ```
-    pub fn with_encoding<T>(pattern: T) -> Result<Regex, Error>
+    pub fn with_encoding<T>(pattern: T) -> Result<Regex<'static>, Error>
     where
         T: EncodedChars,
     {
@@ -274,6 +282,11 @@ impl Regex {
     ///  * `options` - The regex compilation options.
     ///  * `syntax`  - The syntax which the regex is written in.
     ///
+    /// The returned `Regex` borrows the provided `syntax` for its entire
+    /// lifetime. If a syntax with `'static` lifetime is passed (e.g.
+    /// `Syntax::default()`), the returned `Regex` also has a `'static`
+    /// lifetime and imposes no additional restrictions.
+    ///
     /// # Examples
     ///
     /// ```
@@ -285,11 +298,11 @@ impl Regex {
     /// ```
     ///
     /// [regex_new]: ./onig_sys/fn.onig_new.html
-    pub fn with_options(
+    pub fn with_options<'s>(
         pattern: &str,
         option: RegexOptions,
-        syntax: &Syntax,
-    ) -> Result<Regex, Error> {
+        syntax: &'s Syntax,
+    ) -> Result<Regex<'s>, Error> {
         Regex::with_options_and_encoding(pattern, option, syntax)
     }
 
@@ -309,6 +322,11 @@ impl Regex {
     ///  * `options` - The regex compilation options.
     ///  * `syntax`  - The syntax which the regex is written in.
     ///
+    /// The returned `Regex` borrows the provided `syntax` for its entire
+    /// lifetime. If a syntax with `'static` lifetime is passed (e.g.
+    /// `Syntax::default()`), the returned `Regex` also has a `'static`
+    /// lifetime and imposes no additional restrictions.
+    ///
     /// # Examples
     /// ```
     /// use onig::{Regex, Syntax, EncodedBytes, RegexOptions};
@@ -318,11 +336,11 @@ impl Regex {
     ///                                          Syntax::default());
     /// assert!(r.is_ok());
     /// ```
-    pub fn with_options_and_encoding<T>(
+    pub fn with_options_and_encoding<'s, T>(
         pattern: T,
         option: RegexOptions,
-        syntax: &Syntax,
-    ) -> Result<Self, Error>
+        syntax: &'s Syntax,
+    ) -> Result<Regex<'s>, Error>
     where
         T: EncodedChars,
     {
@@ -355,7 +373,10 @@ impl Regex {
         };
 
         if err == onig_sys::ONIG_NORMAL as i32 {
-            Ok(Regex { raw: reg })
+            Ok(Regex {
+                raw: reg,
+                _syntax: PhantomData,
+            })
         } else {
             Err(Error::from_code_and_info(err, &error))
         }
@@ -834,7 +855,7 @@ impl Regex {
     }
 }
 
-impl Drop for Regex {
+impl<'syntax> Drop for Regex<'syntax> {
     fn drop(&mut self) {
         unsafe {
             onig_sys::onig_free(self.raw);
@@ -1070,5 +1091,21 @@ mod tests {
             regex.match_with_encoding(string, 5, SearchOptions::SEARCH_OPTION_NONE, None)
         });
         assert!(is_match.is_err());
+    }
+
+    #[test]
+    fn test_regex_with_custom_syntax_lifetime() {
+        // Verify that a Regex created with a custom Syntax can be used
+        // while the Syntax is alive.
+        let mut custom_syntax = *Syntax::default();
+        let regex =
+            Regex::with_options("hello", RegexOptions::REGEX_OPTION_NONE, &custom_syntax)
+                .unwrap();
+        assert!(regex.is_match("hello"));
+        // regex must be dropped before custom_syntax goes out of scope.
+        // The compiler enforces this via the 'syntax lifetime on Regex.
+        drop(regex);
+        // Now it's safe to modify/drop custom_syntax.
+        custom_syntax.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_DOT_ANYCHAR);
     }
 }

@@ -1,7 +1,7 @@
 use super::{Regex, Region, SearchOptions};
 use std::iter::FusedIterator;
 
-impl Regex {
+impl<'syntax> Regex<'syntax> {
     /// Returns the capture groups corresponding to the leftmost-first match
     /// in text. Capture group `0` always corresponds to the entire match.
     /// If no match is found, then `None` is returned.
@@ -354,7 +354,7 @@ impl<'t> ExactSizeIterator for SubCapturesPos<'t> {}
 /// `'r` is the lifetime of the `Regex` struct and `'t` is the lifetime
 /// of the matched string.
 pub struct FindMatches<'r, 't> {
-    regex: &'r Regex,
+    regex: &'r Regex<'r>,
     region: Region,
     text: &'t str,
     last_end: usize,
@@ -406,7 +406,7 @@ impl<'r, 't> FusedIterator for FindMatches<'r, 't> {}
 /// `'r` is the lifetime of the `Regex` struct and `'t` is the lifetime
 /// of the matched string.
 pub struct FindCaptures<'r, 't> {
-    regex: &'r Regex,
+    regex: &'r Regex<'r>,
     text: &'t str,
     last_end: usize,
     last_match_end: Option<usize>,

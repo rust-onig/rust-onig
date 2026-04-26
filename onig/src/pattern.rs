@@ -12,7 +12,7 @@ pub struct RegexSearcher<'r, 'a> {
     cached_match: Option<(usize, usize)>,
 }
 
-impl<'r> Pattern for &'r Regex {
+impl<'r> Pattern for &'r Regex<'r> {
     /// Searcher Type
     ///
     /// The searcher is the type responsible for returning an iterator
@@ -32,7 +32,7 @@ impl<'r, 'a> RegexSearcher<'r, 'a> {
     ///
     /// Create a regex searcher which uses the given regex to search a
     /// given pattern.
-    pub fn new(reg: &'r Regex, haystack: &'a str) -> Self {
+    pub fn new(reg: &'r Regex<'r>, haystack: &'a str) -> Self {
         RegexSearcher::<'r, 'a> {
             iter: reg.find_iter(haystack),
             pos: 0,
