@@ -5,19 +5,19 @@ use std::str::pattern::{Pattern, SearchStep, Searcher};
 ///
 /// Represents the state of an ongoing search over a given string
 /// slice.
-pub struct RegexSearcher<'r, 'a> {
-    iter: FindMatches<'r, 'a>,
+pub struct RegexSearcher<'r, 'syntax, 'a> {
+    iter: FindMatches<'r, 'syntax, 'a>,
     pos: usize,
     hay: &'a str,
     cached_match: Option<(usize, usize)>,
 }
 
-impl<'r> Pattern for &'r Regex<'r> {
+impl<'r, 'syntax> Pattern for &'r Regex<'syntax> {
     /// Searcher Type
     ///
     /// The searcher is the type responsible for returning an iterator
     /// of matches in a given string
-    type Searcher<'a> = RegexSearcher<'r, 'a>;
+    type Searcher<'a> = RegexSearcher<'r, 'syntax, 'a>;
 
     /// Into Searcher
     ///
@@ -27,13 +27,13 @@ impl<'r> Pattern for &'r Regex<'r> {
     }
 }
 
-impl<'r, 'a> RegexSearcher<'r, 'a> {
+impl<'r, 'syntax, 'a> RegexSearcher<'r, 'syntax, 'a> {
     /// New
     ///
     /// Create a regex searcher which uses the given regex to search a
     /// given pattern.
-    pub fn new(reg: &'r Regex<'r>, haystack: &'a str) -> Self {
-        RegexSearcher::<'r, 'a> {
+    pub fn new(reg: &'r Regex<'syntax>, haystack: &'a str) -> Self {
+        RegexSearcher::<'r, 'syntax, 'a> {
             iter: reg.find_iter(haystack),
             pos: 0,
             hay: haystack,
@@ -42,7 +42,7 @@ impl<'r, 'a> RegexSearcher<'r, 'a> {
     }
 }
 
-unsafe impl<'r, 'a> Searcher<'a> for RegexSearcher<'r, 'a> {
+unsafe impl<'r, 'syntax, 'a> Searcher<'a> for RegexSearcher<'r, 'syntax, 'a> {
     /// Haystack Accessor
     ///
     /// Return the contained reference to the haystack being searched.
