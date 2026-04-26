@@ -80,6 +80,34 @@ jobs:
         run: cd onig && cargo test --features="std-pattern" --verbose
 
 
+  tests-musl:
+    runs-on: ubuntu-latest
+    container:
+      image: rust:alpine
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+
+      - name: Install musl build dependencies
+        run: apk add --no-cache musl-dev
+
+      - name: Build onig_sys
+        run: cd onig_sys && cargo build --no-default-features --verbose
+
+      - name: Test onig_sys
+        run: cd onig_sys && cargo test --no-default-features --verbose
+
+      - name: Build onig
+        run: cd onig && cargo build --no-default-features --verbose
+
+      - name: Test onig
+        run: cd onig && cargo test --no-default-features --verbose
+
+
   tests-generate:
     runs-on: ${{ matrix.os }}
 
