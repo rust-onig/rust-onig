@@ -78,7 +78,9 @@ impl Region {
     ///
     ///  * `new_capacity` - The new number of groups in the region.
     pub fn reserve(&mut self, new_capacity: usize) {
-        let r = unsafe { onig_sys::onig_region_resize(&mut self.raw, new_capacity as c_int) };
+        let new_capacity =
+            c_int::try_from(new_capacity).expect("Region::reserve: capacity overflow");
+        let r = unsafe { onig_sys::onig_region_resize(&mut self.raw, new_capacity) };
         if r != onig_sys::ONIG_NORMAL as i32 {
             panic!("Onig: fail to memory allocation during region resize")
         }
@@ -296,6 +298,13 @@ mod tests {
             let region = Region::with_capacity(10);
             assert!(region.capacity() == 10);
         }
+    }
+
+    #[test]
+    #[should_panic(expected = "capacity overflow")]
+    fn test_region_reserve_overflow() {
+        let mut region = Region::new();
+        region.reserve(usize::MAX);
     }
 
     #[test]
