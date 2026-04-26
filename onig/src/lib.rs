@@ -1103,7 +1103,7 @@ mod tests {
                 .unwrap();
         assert!(regex.is_match("hello"));
         // regex must be dropped before custom_syntax goes out of scope.
-        // The compiler enforces this via the 'syntax lifetime on Regex.
+        // The compiler enforces this via the `'syntax` lifetime on `Regex`.
         drop(regex);
         // Now it's safe to modify/drop custom_syntax.
         custom_syntax.enable_operators(SyntaxOperator::SYNTAX_OPERATOR_DOT_ANYCHAR);
