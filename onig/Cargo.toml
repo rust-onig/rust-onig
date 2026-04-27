@@ -1,8 +1,8 @@
 [package]
 name = "onig"
-version = "6.5.3"
+version = "7.0.0"
 edition = "2021"
-rust-version = "1.70.0"
+rust-version = "1.83.0"
 authors = [
     "Will Speak <will@willspeak.me>",
     "Ivan Ivashchenko <defuz@me.com>"
@@ -37,6 +37,6 @@ once_cell = "1.12"
 libc = "0.2"
 
 [dependencies.onig_sys]
-version = "69.9.3"
+version = "69.9.4"
 path = "../onig_sys"
 default-features = false
