@@ -4,10 +4,30 @@ This file contains the "big hitters" for each release. For more detailed
 information about the exact changes in each release check the source code at
 <https://github.com/rust-onig/rust-onig>.
 
-## 6.6.0 (unreleased)
+## 7.0.0 (Unreleased)
 
-* Expose RegSet in rust-onig
-* Expose 2 more SearchOption: SEARCH_OPTION_NOT_BEGIN_STRING and SEARCH_OPTION_NOT_BEGIN_POSITION
+ * `Regex` now carries a lifetime parameter `Regex<'_>` to bind it to any
+   custom `Syntax` it was compiled with, preventing use-after-free.
+ * MSRV bumped to 1.83.0 (affects both `onig` and `onig_sys`)
+ * `onig_sys` bumped to 69.9.4 for the MSRV change
+ * Expose RegSet in rust-onig
+ * Expose 2 more SearchOption: SEARCH_OPTION_NOT_BEGIN_STRING and SEARCH_OPTION_NOT_BEGIN_POSITION
+
+## 6.5.3
+
+ * Fix build failure on BSD platforms due to missing `alloca.h`
+
+## 6.5.2
+
+ * Fixup Windows Build
+ * Update bindgen and remove all warnings
+ * Fix documentation link of `onig_sys` crate on crates.io
+ * Fix heap-buffer-overflow in `Region::reserve()` via checked `usize` → `c_int` cast
+ * Fix build failure on musl targets (e.g. Alpine Linux)
+
+## 6.5.1
+
+ * Version bumps
 
 ## 6.5.0
 

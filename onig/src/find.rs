@@ -1,7 +1,7 @@
 use super::{Regex, Region, SearchOptions};
 use std::iter::FusedIterator;
 
-impl Regex {
+impl<'syntax> Regex<'syntax> {
     /// Returns the capture groups corresponding to the leftmost-first match
     /// in text. Capture group `0` always corresponds to the entire match.
     /// If no match is found, then `None` is returned.
@@ -43,7 +43,7 @@ impl Regex {
     /// // (45, 58)
     /// # }
     /// ```
-    pub fn find_iter<'r, 't>(&'r self, text: &'t str) -> FindMatches<'r, 't> {
+    pub fn find_iter<'r, 't>(&'r self, text: &'t str) -> FindMatches<'r, 'syntax, 't> {
         FindMatches {
             regex: self,
             region: Region::new(),
@@ -77,7 +77,7 @@ impl Regex {
     /// // Movie: M, Released: 1931
     /// # }
     /// ```
-    pub fn captures_iter<'r, 't>(&'r self, text: &'t str) -> FindCaptures<'r, 't> {
+    pub fn captures_iter<'r, 't>(&'r self, text: &'t str) -> FindCaptures<'r, 'syntax, 't> {
         FindCaptures {
             regex: self,
             text,
@@ -105,7 +105,7 @@ impl Regex {
     /// assert_eq!(fields, vec!("a", "b", "c", "d", "e"));
     /// # }
     /// ```
-    pub fn split<'r, 't>(&'r self, text: &'t str) -> RegexSplits<'r, 't> {
+    pub fn split<'r, 't>(&'r self, text: &'t str) -> RegexSplits<'r, 'syntax, 't> {
         RegexSplits {
             finder: self.find_iter(text),
             last: 0,
@@ -134,7 +134,7 @@ impl Regex {
     /// assert_eq!(fields, vec!("Hey", "How", "are you?"));
     /// # }
     /// ```
-    pub fn splitn<'r, 't>(&'r self, text: &'t str, limit: usize) -> RegexSplitsN<'r, 't> {
+    pub fn splitn<'r, 't>(&'r self, text: &'t str, limit: usize) -> RegexSplitsN<'r, 'syntax, 't> {
         RegexSplitsN {
             splits: self.split(text),
             n: limit,
@@ -361,17 +361,18 @@ impl<'t> ExactSizeIterator for SubCapturesPos<'t> {}
 /// of the match. The indices are byte offsets. The iterator stops when no more
 /// matches can be found.
 ///
-/// `'r` is the lifetime of the `Regex` struct and `'t` is the lifetime
-/// of the matched string.
-pub struct FindMatches<'r, 't> {
-    regex: &'r Regex,
+/// `'r` is the lifetime of the `Regex` struct, `'syntax` is the lifetime of
+/// the [`Syntax`](crate::Syntax) used to compile the regex, and `'t` is the
+/// lifetime of the matched string.
+pub struct FindMatches<'r, 'syntax, 't> {
+    regex: &'r Regex<'syntax>,
     region: Region,
     text: &'t str,
     last_end: usize,
     last_match_end: Option<usize>,
 }
 
-impl<'r, 't> Iterator for FindMatches<'r, 't> {
+impl<'r, 'syntax, 't> Iterator for FindMatches<'r, 'syntax, 't> {
     type Item = (usize, usize);
 
     fn next(&mut self) -> Option<(usize, usize)> {
@@ -406,23 +407,24 @@ impl<'r, 't> Iterator for FindMatches<'r, 't> {
     }
 }
 
-impl<'r, 't> FusedIterator for FindMatches<'r, 't> {}
+impl<'r, 'syntax, 't> FusedIterator for FindMatches<'r, 'syntax, 't> {}
 
 /// An iterator that yields all non-overlapping capture groups matching a
 /// particular regular expression.
 ///
 /// The iterator stops when no more matches can be found.
 ///
-/// `'r` is the lifetime of the `Regex` struct and `'t` is the lifetime
-/// of the matched string.
-pub struct FindCaptures<'r, 't> {
-    regex: &'r Regex,
+/// `'r` is the lifetime of the `Regex` struct, `'syntax` is the lifetime of
+/// the [`Syntax`](crate::Syntax) used to compile the regex, and `'t` is the
+/// lifetime of the matched string.
+pub struct FindCaptures<'r, 'syntax, 't> {
+    regex: &'r Regex<'syntax>,
     text: &'t str,
     last_end: usize,
     last_match_end: Option<usize>,
 }
 
-impl<'r, 't> Iterator for FindCaptures<'r, 't> {
+impl<'r, 'syntax, 't> Iterator for FindCaptures<'r, 'syntax, 't> {
     type Item = Captures<'t>;
 
     fn next(&mut self) -> Option<Captures<'t>> {
@@ -461,18 +463,19 @@ impl<'r, 't> Iterator for FindCaptures<'r, 't> {
     }
 }
 
-impl<'r, 't> FusedIterator for FindCaptures<'r, 't> {}
+impl<'r, 'syntax, 't> FusedIterator for FindCaptures<'r, 'syntax, 't> {}
 
 /// Yields all substrings delimited by a regular expression match.
 ///
-/// `'r` is the lifetime of the compiled expression and `'t` is the lifetime
-/// of the string being split.
-pub struct RegexSplits<'r, 't> {
-    finder: FindMatches<'r, 't>,
+/// `'r` is the lifetime of the compiled expression, `'syntax` is the lifetime
+/// of the [`Syntax`](crate::Syntax) used to compile the regex, and `'t` is
+/// the lifetime of the string being split.
+pub struct RegexSplits<'r, 'syntax, 't> {
+    finder: FindMatches<'r, 'syntax, 't>,
     last: usize,
 }
 
-impl<'r, 't> Iterator for RegexSplits<'r, 't> {
+impl<'r, 'syntax, 't> Iterator for RegexSplits<'r, 'syntax, 't> {
     type Item = &'t str;
 
     fn next(&mut self) -> Option<&'t str> {
@@ -496,20 +499,21 @@ impl<'r, 't> Iterator for RegexSplits<'r, 't> {
     }
 }
 
-impl<'r, 't> FusedIterator for RegexSplits<'r, 't> {}
+impl<'r, 'syntax, 't> FusedIterator for RegexSplits<'r, 'syntax, 't> {}
 
 /// Yields at most `N` substrings delimited by a regular expression match.
 ///
 /// The last substring will be whatever remains after splitting.
 ///
-/// `'r` is the lifetime of the compiled expression and `'t` is the lifetime
-/// of the string being split.
-pub struct RegexSplitsN<'r, 't> {
-    splits: RegexSplits<'r, 't>,
+/// `'r` is the lifetime of the compiled expression, `'syntax` is the lifetime
+/// of the [`Syntax`](crate::Syntax) used to compile the regex, and `'t` is
+/// the lifetime of the string being split.
+pub struct RegexSplitsN<'r, 'syntax, 't> {
+    splits: RegexSplits<'r, 'syntax, 't>,
     n: usize,
 }
 
-impl<'r, 't> Iterator for RegexSplitsN<'r, 't> {
+impl<'r, 'syntax, 't> Iterator for RegexSplitsN<'r, 'syntax, 't> {
     type Item = &'t str;
 
     fn next(&mut self) -> Option<&'t str> {
@@ -530,7 +534,7 @@ impl<'r, 't> Iterator for RegexSplitsN<'r, 't> {
     }
 }
 
-impl<'r, 't> FusedIterator for RegexSplitsN<'r, 't> {}
+impl<'r, 'syntax, 't> FusedIterator for RegexSplitsN<'r, 'syntax, 't> {}
 
 #[cfg(test)]
 mod tests {
