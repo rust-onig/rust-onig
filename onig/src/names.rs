@@ -6,7 +6,7 @@ use onig_sys::{OnigRegex, OnigUChar};
 
 use super::Regex;
 
-impl Regex {
+impl<'syntax> Regex<'syntax> {
     /// Returns the number of named groups into regex.
     pub fn capture_names_len(&self) -> usize {
         unsafe { onig_sys::onig_number_of_names(self.raw) as usize }

@@ -31,7 +31,7 @@ where
     }
 }
 
-impl Regex {
+impl<'syntax> Regex<'syntax> {
     /// Replaces the leftmost-first match with the replacement provided.
     /// The replacement can be a regular string or a function that takes
     /// the matches `Captures` and returns the replaced string.
