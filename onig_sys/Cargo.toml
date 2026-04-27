@@ -1,6 +1,6 @@
 [package]
 name = "onig_sys"
-version = "70.0.0"
+version = "69.9.4"
 edition = "2021"
 rust-version = "1.83.0"
 authors = [
