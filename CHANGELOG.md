@@ -8,7 +8,8 @@ information about the exact changes in each release check the source code at
 
  * `Regex` now carries a lifetime parameter `Regex<'_>` to bind it to any
    custom `Syntax` it was compiled with, preventing use-after-free.
- * MSRV bumped to 1.83.0
+ * MSRV bumped to 1.83.0 (affects both `onig` and `onig_sys`)
+ * `onig_sys` bumped to 69.9.4 for the MSRV change
 
 ## 6.5.3
 
