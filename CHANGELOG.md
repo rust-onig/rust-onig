@@ -4,6 +4,12 @@ This file contains the "big hitters" for each release. For more detailed
 information about the exact changes in each release check the source code at
 <https://github.com/rust-onig/rust-onig>.
 
+## 7.0.0 (Unreleased)
+
+ * `Regex` now carries a lifetime parameter `Regex<'_>` to bind it to any
+   custom `Syntax` it was compiled with, preventing use-after-free.
+ * MSRV bumped to 1.83.0
+
 ## 6.5.3
 
  * Fix build failure on BSD platforms due to missing `alloca.h`

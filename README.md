@@ -6,7 +6,7 @@ https://crates.io/crates/onig)
 https://docs.rs/onig)
 ![CI](https://github.com/rust-onig/rust-onig/workflows/CI/badge.svg)
 [![CI Windows](https://github.com/rust-onig/rust-onig/actions/workflows/ci-win.yml/badge.svg)](https://github.com/rust-onig/rust-onig/actions/workflows/ci-win.yml)
-[![dependency status](https://deps.rs/crate/onig/6.5.3/status.svg)](https://deps.rs/crate/onig/6.5.3)
+[![dependency status](https://deps.rs/crate/onig/7.0.0/status.svg)](https://deps.rs/crate/onig/7.0.0)
 
 Rust bindings for the [Oniguruma regex library][Onig_wiki], a powerful and mature regular expression library with support for a wide range of character sets and language syntaxes. Oniguruma is written in C. This repository provides two crates: `onig-sys` which provides the raw Rust FFI bindings, and `onig`, which provides a safe Rust wrapper around them.
 
@@ -20,7 +20,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-onig = "6"
+onig = "7"
 ```
 
 Add the following extern to your crate root if you are not using edition 2018:
@@ -64,7 +64,7 @@ By default `onig` uses `bindgen` to generate bindings for libonig. If you plan t
 
 ```toml
 [dependencies]
-onig = { version = "6", default-features = false }
+onig = { version = "7", default-features = false }
 ```
 
 ## Debugging
@@ -82,9 +82,9 @@ With all that combined, here's an example command to debug the pattern `a|b`:
 
 ## Supported Rust Versions
 
-Rust Onig supports Rust 1.70.0 or later (2021 edition) for Windows, Linux, and
+Rust Onig supports Rust 1.83.0 or later (2021 edition) for Windows, Linux, and
 macOS. If the minimum supported rust version (MSRV) is changed then the minor
-version number will be increased. That is v6.5.x should always compile
+version number will be increased. That is v7.0.x should always compile
 with the same version of the compiler.
 
 ## Rust-Onig is Open Source
@@ -96,7 +96,7 @@ at our open [easy issues][easy_issues].
  [Onig_wiki]: https://en.wikipedia.org/wiki/Oniguruma
  [onig_crate_doc]: https://docs.rs/onig/
  [examples_folder]: https://github.com/rust-onig/rust-onig/tree/main/onig/examples
- [regex_new]: https://docs.rs/onig/6.5.3/onig/struct.Regex.html#method.new
- [regex_is_match]: https://docs.rs/onig/6.5.3/onig/struct.Regex.html#method.is_match
- [regex_find]: https://docs.rs/onig/6.5.3/onig/struct.Regex.html#method.find
+ [regex_new]: https://docs.rs/onig/7.0.0/onig/struct.Regex.html#method.new
+ [regex_is_match]: https://docs.rs/onig/7.0.0/onig/struct.Regex.html#method.is_match
+ [regex_find]: https://docs.rs/onig/7.0.0/onig/struct.Regex.html#method.find
  [easy_issues]: https://github.com/rust-onig/rust-onig/issues?q=is%3Aopen+is%3Aissue+label%3AE-Easy
