@@ -4,6 +4,22 @@ This file contains the "big hitters" for each release. For more detailed
 information about the exact changes in each release check the source code at
 <https://github.com/rust-onig/rust-onig>.
 
+## 6.5.3
+
+ * Fix build failure on BSD platforms due to missing `alloca.h`
+
+## 6.5.2
+
+ * Fixup Windows Build
+ * Update bindgen and remove all warnings
+ * Fix documentation link of `onig_sys` crate on crates.io
+ * Fix heap-buffer-overflow in `Region::reserve()` via checked `usize` → `c_int` cast
+ * Fix build failure on musl targets (e.g. Alpine Linux)
+
+## 6.5.1
+
+ * Version bumps
+
 ## 6.5.0
 
  * Upgrade `bitflags` to at least v2.4.0
