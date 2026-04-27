@@ -14,8 +14,8 @@ Oniguruma regular expression library. Oniguruma
 is a modern regex library with support for
 multiple character encodings and regex syntaxes.
 """
-repository = "https://github.com/iwillspeak/rust-onig"
-documentation = "https://docs.rs/onig/"
+repository = "https://github.com/Keats/rust-onig"
+documentation = "https://docs.rs/onig-regset/"
 readme = "../README.md"
 license = "MIT"
 

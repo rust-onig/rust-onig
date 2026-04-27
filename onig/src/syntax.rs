@@ -19,7 +19,7 @@ pub enum MetaChar {
 
 /// Onig Syntax Wrapper
 ///
-/// Each syntax dfines a flavour of regex syntax. This type allows
+/// Each syntax defines a flavour of regex syntax. This type allows
 /// interaction with the built-in syntaxes through the static accessor
 /// functions (`Syntax::emacs()`, `Syntax::default()` etc.) and the
 /// creation of custom syntaxes.

@@ -10,6 +10,8 @@ information about the exact changes in each release check the source code at
    custom `Syntax` it was compiled with, preventing use-after-free.
  * MSRV bumped to 1.83.0 (affects both `onig` and `onig_sys`)
  * `onig_sys` bumped to 69.9.4 for the MSRV change
+ * Expose RegSet in rust-onig
+ * Expose 2 more SearchOption: SEARCH_OPTION_NOT_BEGIN_STRING and SEARCH_OPTION_NOT_BEGIN_POSITION
 
 ## 6.5.3
 
@@ -46,7 +48,7 @@ information about the exact changes in each release check the source code at
 ## 6.3.0
 
  * MSRV bumped to 1.50.0
- * Proper support for round-tripping of syntax feature falgs, including new
+ * Proper support for round-tripping of syntax feature flags, including new
    flags that we don't recognise yet.
  * Support for the `p` syntax flag.
 

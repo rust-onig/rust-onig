@@ -56,6 +56,12 @@ bitflags! {
         /// Try and match the pattern against the whole string.
         const SEARCH_OPTION_WHOLE_STRING
             = onig_sys::ONIG_OPTION_MATCH_WHOLE_STRING;
+        /// Do not regard the beginning of (str) as the beginning of a string (* fail \A)
+        const SEARCH_OPTION_NOT_BEGIN_STRING
+            = onig_sys::ONIG_OPTION_NOT_BEGIN_STRING;
+        /// Do not regard (start) as start position of search (* fail \G)
+        const SEARCH_OPTION_NOT_BEGIN_POSITION
+            = onig_sys::ONIG_OPTION_NOT_BEGIN_POSITION;
     }
 }
 

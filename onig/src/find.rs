@@ -231,6 +231,16 @@ pub struct Captures<'t> {
 }
 
 impl<'t> Captures<'t> {
+    /// This constructor is primarily intended for internal use by other parts
+    /// of the onig crate, such as RegSet.
+    pub(crate) fn new(text: &'t str, region: Region, offset: usize) -> Self {
+        Captures {
+            text,
+            region,
+            offset,
+        }
+    }
+
     /// Returns the start and end positions of the Nth capture group. Returns
     /// `None` if i is not a valid capture group or if the capture group did
     /// not match anything. The positions returned are always byte indices with
